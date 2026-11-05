@@ -54,7 +54,7 @@ const functionResult = {
 const builder = createAnalysisReportBuilder();
 const input = {
   project,
-  report: { generator: { name: 'branch-scenarios-generator', version: '1.0.0-rc.5' }, generatedAt: '2026-11-05T10:00:00.000Z', sourceLanguage: 'typescript', functions: [{ name: 'check' }] },
+  report: { generator: { name: 'branch-scenarios-generator', version: '1.0.0-rc.6' }, generatedAt: '2026-11-05T10:00:00.000Z', sourceLanguage: 'typescript', functions: [{ name: 'check' }] },
   functionResults: [functionResult],
   functionUnits: [{ functionId: 'src/check.ts::check@0', name: 'check', relativeFile: 'src/check.ts', sourceSpan: { file: 'src/check.ts', startLine: 1 } }],
   sessions: [{ analysisSnapshot: { constraintStats: { irAttempts: 2, irSolved: 1, legacyFallback: 1, fallbackReasons: { unsupported: 1 } }, unsupportedBranches: [] } }],

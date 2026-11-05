@@ -16,7 +16,7 @@ try {
   assert.equal(run.status, 0, `CLI integration failed:\n${run.stdout}\n${run.stderr}`);
   const report = JSON.parse(fs.readFileSync(output, 'utf8'));
   assert.equal(report.generator.name, 'branch-scenarios-generator');
-  assert.equal(report.generator.version, '1.0.0-rc.5');
+  assert.equal(report.generator.version, '1.0.0-rc.6');
   assert.ok(report.functions.length >= 1);
   const scenarios = report.functions.flatMap(fn => fn.scenarios);
   assert.ok(scenarios.length > 0);

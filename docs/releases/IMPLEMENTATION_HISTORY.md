@@ -109,3 +109,8 @@ Data Flow evidence доведено до ScenarioCase/MockPlan, добавлен
 ### v1.0.0-rc.5 — reusable real-run report handoff
 
 Added a companion execution-results form linked to the analysis report by `reportId`. It pre-populates generated Scenario IDs, records actual Jest statuses/duration/failures, runner and environment versions, coverage metrics and artifact paths, and distinguishes `not-run` from passed cases. A finalizer validates the form and merges it into a shareable `*.final.json`. Privacy controls omit absolute artifact paths and redact path/token patterns from manually entered failure details. The purpose is to let maintainers attach the exact static analysis and corresponding observed runtime evidence in one final report.
+
+
+### v1.0.0-rc.6 — Jest 26.6.0 dependency
+
+Pinned Jest 26.6.0 as a development dependency, added an exact-version dependency check, and changed real-Jest integration from a silent skip to a required check. The runner still resolves the consuming project's Jest first; `JEST_BIN` supports explicit selection. No jest-unit dependency is added.

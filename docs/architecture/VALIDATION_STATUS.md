@@ -1,4 +1,4 @@
-# Validation status — v1.0.0-rc.5
+# Validation status — v1.0.0-rc.6
 
 ## Исправления по межфайловому аудиту rc.3
 
@@ -77,3 +77,11 @@
 - `node tests/test-batching.mjs`: passed; stable signatures, grouping, isolation and fallback.
 
 The full `npm test` one-shot run and real Jest integration are not claimed as passed. Jest is not installed in this environment; the synthetic Jest-compatible runner verifies the generated harness but does not replace the real Jest matrix.
+
+
+## v1.0.0-rc.6 — Jest dependency
+
+- `jest@26.6.0` закреплён в `devDependencies`; `jest-unit` не используется.
+- Added `tests/jest-dependency.mjs` to verify exact manifest and installed versions.
+- `tests/real-jest.integration.mjs` now fails fast if Jest is missing instead of returning success with `skipped`.
+- The integration matrix is not executed in the packaging environment because npm registry DNS resolution failed; install with `npm install`, then run `npm run test:jest-dependency` and `npm run test:real-jest`.

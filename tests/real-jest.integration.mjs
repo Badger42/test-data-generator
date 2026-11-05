@@ -6,6 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const projectDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const expectedJestVersion = JSON.parse(fs.readFileSync(path.join(projectDir, 'package.json'), 'utf8')).devDependencies?.jest;
 const cli = path.join(projectDir, 'branch-scenarios.mjs');
 const configuredJest = process.env.JEST_BIN;
 function findJest() {
@@ -32,8 +33,19 @@ function findJest() {
 
 const jestBin = findJest();
 if (!jestBin) {
-  console.log('Real Jest integration test skipped: Jest is not installed here. Set JEST_BIN to run it against your project Jest.');
-  process.exit(0);
+  throw new Error('Real Jest integration requires Jest 26.6.0. Run `npm install` in the generator repository or set JEST_BIN to an explicit Jest executable.');
+}
+
+if (!configuredJest) {
+  const candidates = [
+    path.join(path.dirname(jestBin), '..', 'package.json'),
+    path.join(path.dirname(jestBin), 'package.json'),
+  ];
+  const resolvedPackage = candidates.find(candidate => fs.existsSync(candidate));
+  if (resolvedPackage) {
+    const installedVersion = JSON.parse(fs.readFileSync(resolvedPackage, 'utf8')).version;
+    assert.equal(installedVersion, expectedJestVersion, `Generator integration expects Jest ${expectedJestVersion}, found ${installedVersion}. Set JEST_BIN to test another consuming-project version explicitly.`);
+  }
 }
 
 const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'branch-scenarios-real-jest-'));

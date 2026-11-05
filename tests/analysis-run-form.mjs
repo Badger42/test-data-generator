@@ -9,7 +9,7 @@ import { runFinalizeAnalysisReport } from '../tools/finalize-analysis-report.mjs
 
 const analysisReport = {
   reportType: 'branch-scenarios-analysis-report', schemaVersion: '1.0.0', reportId: 'report-abc123',
-  generatedAt: '2026-11-05T10:00:00.000Z', generator: { name: 'branch-scenarios-generator', version: '1.0.0-rc.5' },
+  generatedAt: '2026-11-05T10:00:00.000Z', generator: { name: 'branch-scenarios-generator', version: '1.0.0-rc.6' },
   environment: { node: 'v22.16.0', platform: 'linux', architecture: 'x64', typescript: '5.8.3' },
   project: { root: '.', fingerprint: 'b'.repeat(64), source: { file: 'src/app.ts', sha256: 'a'.repeat(64), projectFingerprint: 'b'.repeat(64) }, sourceFileCount: 2 },
   run: { valueMode: 'shape' }, summary: { scenarios: 2 },

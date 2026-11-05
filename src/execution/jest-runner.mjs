@@ -12,7 +12,13 @@ function findJestRunner(explicitPath, sourceFile, jestConfig) {
     };
   }
 
-  const searchRoots = [...new Set([process.cwd(), path.dirname(sourceFile), ...(jestConfig ? [path.dirname(path.resolve(jestConfig))] : [])])];
+  // Prefer the consuming project's Jest over the generator's own devDependency.
+  // A config path is the strongest project hint; the source file is next.
+  const searchRoots = [...new Set([
+    ...(jestConfig ? [path.dirname(path.resolve(jestConfig))] : []),
+    path.dirname(sourceFile),
+    process.cwd(),
+  ])];
   for (const root of searchRoots) {
     let current = path.resolve(root);
     while (true) {

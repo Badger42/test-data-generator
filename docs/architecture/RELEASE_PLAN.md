@@ -1,6 +1,6 @@
 # План стабилизации v1.0.0
 
-Текущая версия разработки: **1.0.0-rc.5**. Переход к стабильной версии определяется критериями ниже, а не только изменением номера версии.
+Текущая версия разработки: **1.0.0-rc.6**. Переход к стабильной версии определяется критериями ниже, а не только изменением номера версии.
 
 ## Обязательные release gates
 
@@ -22,7 +22,7 @@
 
 - **RC.4 (текущий):** исправлены межфайловые helper summaries, Points-to unknown/top propagation, recursive summary widening, mock classification/override semantics и обязательный row-level Jest reset. Добавлены adversarial inter-file fixtures и Node compatibility check.
 - **RC.5 (текущий):** shareable real-run handoff — диагностический отчёт, заполняемая execution form, проверка Scenario ID/reportId и финализация общего JSON.
-- **RC.6:** real Jest matrix + batching runtime assertions на настоящем Jest; ESM/CJS конфигурации consuming project и V8/Babel providers.
+- **RC.6 (current):** Jest `26.6.0` закреплён в `devDependencies`; real-Jest integration обязателен для `npm test`, без молчаливого skip. Runner продолжает предпочитать Jest целевого проекта; `JEST_BIN` используется для явной проверки другой установки. Следующая задача — matrix ESM/CJS и V8/Babel в consuming project.
 - **RC.7:** escaped-reference/interprocedural heap scope, performance/memory budgets, deterministic partial results и полный evidence audit.
 - **Stable 1.0.0:** все gates закрыты либо каждый ограниченный capability явно принят как documented non-goal; нет известных output regressions.
 
@@ -30,3 +30,11 @@
 ### v1.0.0-rc.5 — real-run analysis handoff (implemented)
 
 Every `--analysis-report` run also produces a fillable `*.analysis-run-form.json`. After tests execute in the consuming project, fill the per-scenario results and coverage/artifact metadata, then merge it with the diagnostic report using `tools/finalize-analysis-report.mjs`. Stable release still requires real Jest matrix and performance verification.
+
+### v1.0.0-rc.6 — Jest 26.6.0 development dependency
+
+- Added exact `jest: 26.6.0` devDependency.
+- Added a dependency-contract test that verifies the manifest pin and installed Jest version.
+- Real Jest integration is no longer reported as a successful skip when Jest is missing.
+- Jest discovery still prefers the consuming project's installation; `--jest-bin`/`JEST_BIN` remains available for explicit selection.
+- `jest-unit` is intentionally not included.
