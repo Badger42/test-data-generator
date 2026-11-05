@@ -1,0 +1,61 @@
+{
+  "baselineVersion": "0.18.0",
+  "purpose": "Frozen characterization fixtures from the pre-modular v0.18.0 distribution. Hashes guard against accidental fixture/schema edits. The passenger MC/DC snapshot is also used for a differential v0.18 vs v0.19 generation test.",
+  "files": [
+    {
+      "path": "examples/array-dataflow.js",
+      "sha256": "69330261faa3458d594a2530e3d718696654e3c5ced76dc42091649f883bf74d",
+      "bytes": 823
+    },
+    {
+      "path": "examples/array-dataflow.scenarios.json",
+      "sha256": "d10aae633c58104ee447cba68ca4805dff3e10c9d5b25d88c86370f89e061377",
+      "bytes": 681506
+    },
+    {
+      "path": "examples/mcdc-callbacks-advanced.js",
+      "sha256": "b9ad3427b0dda5e5e6caa81a842c2b54c0b9b436514abb7f4246f1c3b5d4b0f9",
+      "bytes": 1523
+    },
+    {
+      "path": "examples/mcdc-callbacks-advanced.scenarios.json",
+      "sha256": "5319e917ca11dde998b8e37ef9396b35bb48731cb1629fce2658034294caf7ab",
+      "bytes": 121681
+    },
+    {
+      "path": "examples/coverage-feedback-iterative-target.js",
+      "sha256": "9852bd5ddc207ccbfac75136de3bb16c856f26b5504b61024d370f949395ae91",
+      "bytes": 246
+    },
+    {
+      "path": "examples/coverage-feedback-iterative.example.json",
+      "sha256": "ab504731727358967ea9a0cc9fcb8d859b0432d4ceed1efef9937ecbffd57c61",
+      "bytes": 14695
+    },
+    {
+      "path": "examples/minimal-suite-target.js",
+      "sha256": "705caf487085d4b829662f9f3f01c4d5e9ed93f3c7e6151b72044d224d74bbd5",
+      "bytes": 168
+    },
+    {
+      "path": "examples/minimal-suite-output.example.json",
+      "sha256": "d145e9560f5bcd63c77d3cc57634841b85104626d50d9b597ed4ff3ba61d1f6a",
+      "bytes": 13672
+    },
+    {
+      "path": "examples/control-flow-and-array-methods.js",
+      "sha256": "678c68cd172e2769d3b5dbab6a023f0446998cb830aefd37efcf2051b1c412dc",
+      "bytes": 1735
+    },
+    {
+      "path": "examples/control-flow-and-array-methods.scenarios.json",
+      "sha256": "2d02c3db9c41c22853de636eb553ef8c8ed22b2ca91e139ec2425cb8758266c9",
+      "bytes": 76284
+    },
+    {
+      "path": "tests/golden/passenger-category-v0.18.json",
+      "sha256": "098451d2dc7205b14b42c57a4006e189a723164f8a31f2afda99bb30cb6dc2a2",
+      "bytes": 29999
+    }
+  ]
+}

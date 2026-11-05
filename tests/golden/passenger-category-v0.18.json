@@ -1,0 +1,787 @@
+{
+  "generator": {
+    "name": "branch-scenarios-generator",
+    "version": "0.18.0"
+  },
+  "source": "examples/passenger.js",
+  "sourceLanguage": "javascript",
+  "limitations": [
+    "Static MVP: generated scenarios are candidates; run the function and verify actual branch coverage with Jest/Istanbul.",
+    "MC/DC mode uses unique-cause independence: for each atomic condition, a pair must differ only in that condition while the full decision changes. This is static candidate generation; execute and verify the pairs in the target runtime.",
+    "JavaScript is supported via the TypeScript parser with allowJs. Without JSDoc, property types are inferred from comparisons, truthiness checks, switch cases, nested accesses and .length; inferredProperties reports confidence and evidence.",
+    "Supported conditions: direct parameter paths, literals, truthiness, !, &&, ||, equality, numeric comparisons, and simple numeric comparisons between two input paths. Unknown truthy/falsy properties use boolean representatives unless nested access implies an object/array.",
+    "Supported control flow: if/else, switch with literal cases, ternary expressions, for/for...of/for...in/while/do...while loops, plus break/continue path termination inside loops and switch clauses.",
+    "Loop scenarios: for...of and for...in generate zero-, one- and multiple-iteration collection shapes; loop-body aliases are mapped to a representative first item. Classic for loops support literal counter initializers and simple increment/decrement steps; while/do...while support simple property constraints and local numeric counter cases.",
+    "Loop analysis is an approximation: common break/continue transfers stop analysis of the current path; break inside switch exits the switch, while continue propagates to the enclosing loop. Labelled transfers, full iteration-state propagation and switch fallthrough are not modeled. Mutations to iterated collections, custom iterators, async iterator side effects, and complex counter updates are unsupported.",
+    "Array callback support: forEach/map/flatMap/some/every/filter/find/findIndex/findLast/findLastIndex/sort/toSorted and reduce with inline callbacks and collections resolved to function input paths. Predicate callbacks support concise expressions and block callbacks with a single return; safe top-level const aliases are expanded before MC/DC analysis. Block callbacks with explicit if decisions also expand safe const aliases in their conditions. For predicates that use the callback index parameter, unique-cause MC/DC searches representative callback indexes 0 and 1 and can emit a cross-index independence pair; pair scenarios carry the actual iterationIndex. Only immutable const declarations with side-effect-free initializers are inlined; let/var, destructuring, reassignment, helper calls, getters and mutation-dependent values are not symbolically expanded. Direct find()/findLast() checks and comparisons with null/undefined are supported, as are findIndex()/findLastIndex() comparisons against numeric literals. sort()/toSorted() comparator callbacks use two distinct representative source elements; flat() propagates nested element paths through literal depths 0\u20133. some/every have representative match/no-match scenarios. flatMap chains support a direct array-property projection (for example group => group.passengers). flat() chains support default and literal depths 0\u20133. sort()/toSorted() comparator branches are analyzed with a two-element collection. reduce analyzes callback indexes through 2 with an initial value and through 3 without one, replaying up to two prior callback invocations over bounded candidate items. This is concrete interpretation, not general symbolic execution; unsupported reducer statements are not replaced with a fabricated initial accumulator state.",
+    "Array pipeline data-flow (v0.15.0): each function reports arrayPipelines summaries with stage order, source/output aliases, object projections, upstream filter constraints and comparator-order assumptions. Branch scenarios carry arrayPipelineTrace and MC/DC callback contexts carry pipeline metadata. The analyzer materializes representative outputs for all source elements needed by downstream callbacks, including comparator pairs. This is a bounded representative mapping: flatMap uses one representative child per source item; flat() uses the first nested child per item; recognized sort comparators preserve mapping by constructing an input already in comparator order, not by simulating arbitrary sort permutations. Inspect arrayPipelines[].warnings and assumptions, and execute generated scenarios.",
+    "Undefined values are encoded as {\"$undefined\":true}; omit the corresponding argument/property or hydrate this marker before calling the function.",
+    "Mock templates are type-derived suggestions. For Jest coverage feedback, configure project mocks in --jest-setup; the setup can read globalThis.__BRANCH_SCENARIO__ and globalThis.__BRANCH_SCENARIO_MOCKS__ or define globalThis.__BRANCH_SCENARIO_APPLY_MOCKS__."
+  ],
+  "functions": [
+    {
+      "name": "getPassengerCategory",
+      "parameters": [
+        {
+          "name": "passenger",
+          "type": "Passenger | null | undefined",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "passenger",
+          "inferredType": "object",
+          "confidence": "declared",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value",
+            "Inferred from nested property access: passenger.age",
+            "Inferred from nested property access: passenger.isPremium",
+            "Inferred from nested property access: passenger.country",
+            "Confirmed by TypeScript/JSDoc type: Passenger | null | undefined"
+          ]
+        },
+        {
+          "path": "passenger.age",
+          "inferredType": "number",
+          "confidence": "declared",
+          "evidence": [
+            "Compared with numeric literal 18",
+            "Confirmed by TypeScript/JSDoc type: number"
+          ]
+        },
+        {
+          "path": "passenger.country",
+          "inferredType": "string",
+          "confidence": "declared",
+          "evidence": [
+            "Compared with string literal \"NL\"",
+            "Confirmed by TypeScript/JSDoc type: string"
+          ]
+        },
+        {
+          "path": "passenger.isPremium",
+          "inferredType": "boolean",
+          "confidence": "declared",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value",
+            "Confirmed by TypeScript/JSDoc type: boolean"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 8,
+        "scenariosGenerated": 9,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 0,
+        "loopScenariosGenerated": 0,
+        "mcdcDecisionsAnalyzed": 4,
+        "mcdcConditionsAnalyzed": 5,
+        "mcdcIndependencePairsFound": 5,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "if-10-7-true-1",
+          "target": {
+            "branchId": "if-10-7",
+            "kind": "if",
+            "line": 10,
+            "column": 7,
+            "startOffset": 240,
+            "endOffset": 250,
+            "endLine": 10,
+            "endColumn": 17,
+            "sourceText": "!passenger",
+            "coverageOutcomeIndex": 0,
+            "condition": "!passenger",
+            "outcome": true,
+            "coverageAnchor": "if-statement",
+            "coverageLine": 10,
+            "coverageColumn": 3,
+            "coverageStartOffset": 236,
+            "coverageEndOffset": 279,
+            "runtimeDecisionId": "mcdc-if-10-7"
+          },
+          "arguments": [
+            {
+              "$undefined": true
+            }
+          ],
+          "assumptions": [
+            "passenger"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-10-7-false-1",
+          "target": {
+            "branchId": "if-10-7",
+            "kind": "if",
+            "line": 10,
+            "column": 7,
+            "startOffset": 240,
+            "endOffset": 250,
+            "endLine": 10,
+            "endColumn": 17,
+            "sourceText": "!passenger",
+            "coverageOutcomeIndex": 1,
+            "condition": "!passenger",
+            "outcome": false,
+            "coverageAnchor": "if-statement",
+            "coverageLine": 10,
+            "coverageColumn": 3,
+            "coverageStartOffset": 236,
+            "coverageEndOffset": 279,
+            "runtimeDecisionId": "mcdc-if-10-7"
+          },
+          "arguments": [
+            {
+              "age": 1,
+              "isPremium": false,
+              "country": "test"
+            }
+          ],
+          "assumptions": [
+            "passenger"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-14-7-true-1",
+          "target": {
+            "branchId": "if-14-7",
+            "kind": "if",
+            "line": 14,
+            "column": 7,
+            "startOffset": 287,
+            "endOffset": 305,
+            "endLine": 14,
+            "endColumn": 25,
+            "sourceText": "passenger.age < 18",
+            "coverageOutcomeIndex": 0,
+            "condition": "passenger.age < 18",
+            "outcome": true,
+            "coverageAnchor": "if-statement",
+            "coverageLine": 14,
+            "coverageColumn": 3,
+            "coverageStartOffset": 283,
+            "coverageEndOffset": 332,
+            "runtimeDecisionId": "mcdc-if-14-7"
+          },
+          "arguments": [
+            {
+              "age": 17,
+              "isPremium": false,
+              "country": "test"
+            }
+          ],
+          "assumptions": [
+            "passenger",
+            "passenger.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-14-7-false-1",
+          "target": {
+            "branchId": "if-14-7",
+            "kind": "if",
+            "line": 14,
+            "column": 7,
+            "startOffset": 287,
+            "endOffset": 305,
+            "endLine": 14,
+            "endColumn": 25,
+            "sourceText": "passenger.age < 18",
+            "coverageOutcomeIndex": 1,
+            "condition": "passenger.age < 18",
+            "outcome": false,
+            "coverageAnchor": "if-statement",
+            "coverageLine": 14,
+            "coverageColumn": 3,
+            "coverageStartOffset": 283,
+            "coverageEndOffset": 332,
+            "runtimeDecisionId": "mcdc-if-14-7"
+          },
+          "arguments": [
+            {
+              "age": 18,
+              "isPremium": false,
+              "country": "test"
+            }
+          ],
+          "assumptions": [
+            "passenger",
+            "passenger.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-18-7-true-1",
+          "target": {
+            "branchId": "if-18-7",
+            "kind": "if",
+            "line": 18,
+            "column": 7,
+            "startOffset": 340,
+            "endOffset": 389,
+            "endLine": 18,
+            "endColumn": 56,
+            "sourceText": "passenger.isPremium && passenger.country === 'NL'",
+            "coverageOutcomeIndex": 0,
+            "condition": "passenger.isPremium && passenger.country === 'NL'",
+            "outcome": true,
+            "coverageAnchor": "if-statement",
+            "coverageLine": 18,
+            "coverageColumn": 3,
+            "coverageStartOffset": 336,
+            "coverageEndOffset": 421,
+            "runtimeDecisionId": "mcdc-if-18-7"
+          },
+          "arguments": [
+            {
+              "age": 18,
+              "isPremium": true,
+              "country": "NL"
+            }
+          ],
+          "assumptions": [
+            "passenger",
+            "passenger.age",
+            "passenger.isPremium",
+            "passenger.country"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-18-7-false-1",
+          "target": {
+            "branchId": "if-18-7",
+            "kind": "if",
+            "line": 18,
+            "column": 7,
+            "startOffset": 340,
+            "endOffset": 389,
+            "endLine": 18,
+            "endColumn": 56,
+            "sourceText": "passenger.isPremium && passenger.country === 'NL'",
+            "coverageOutcomeIndex": 1,
+            "condition": "passenger.isPremium && passenger.country === 'NL'",
+            "outcome": false,
+            "coverageAnchor": "if-statement",
+            "coverageLine": 18,
+            "coverageColumn": 3,
+            "coverageStartOffset": 336,
+            "coverageEndOffset": 421,
+            "runtimeDecisionId": "mcdc-if-18-7"
+          },
+          "arguments": [
+            {
+              "age": 18,
+              "isPremium": false,
+              "country": "test"
+            }
+          ],
+          "assumptions": [
+            "passenger",
+            "passenger.age",
+            "passenger.isPremium"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-18-7-false-2",
+          "target": {
+            "branchId": "if-18-7",
+            "kind": "if",
+            "line": 18,
+            "column": 7,
+            "startOffset": 340,
+            "endOffset": 389,
+            "endLine": 18,
+            "endColumn": 56,
+            "sourceText": "passenger.isPremium && passenger.country === 'NL'",
+            "coverageOutcomeIndex": 1,
+            "condition": "passenger.isPremium && passenger.country === 'NL'",
+            "outcome": false,
+            "coverageAnchor": "if-statement",
+            "coverageLine": 18,
+            "coverageColumn": 3,
+            "coverageStartOffset": 336,
+            "coverageEndOffset": 421,
+            "runtimeDecisionId": "mcdc-if-18-7"
+          },
+          "arguments": [
+            {
+              "age": 18,
+              "isPremium": true,
+              "country": "NL_other"
+            }
+          ],
+          "assumptions": [
+            "passenger",
+            "passenger.age",
+            "passenger.isPremium",
+            "passenger.country"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-22-7-true-1",
+          "target": {
+            "branchId": "if-22-7",
+            "kind": "if",
+            "line": 22,
+            "column": 7,
+            "startOffset": 429,
+            "endOffset": 448,
+            "endLine": 22,
+            "endColumn": 26,
+            "sourceText": "passenger.isPremium",
+            "coverageOutcomeIndex": 0,
+            "condition": "passenger.isPremium",
+            "outcome": true,
+            "coverageAnchor": "if-statement",
+            "coverageLine": 22,
+            "coverageColumn": 3,
+            "coverageStartOffset": 425,
+            "coverageEndOffset": 477,
+            "runtimeDecisionId": "mcdc-if-22-7"
+          },
+          "arguments": [
+            {
+              "age": 18,
+              "isPremium": true,
+              "country": "NL_other"
+            }
+          ],
+          "assumptions": [
+            "passenger",
+            "passenger.age",
+            "passenger.isPremium",
+            "passenger.country"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-22-7-false-1",
+          "target": {
+            "branchId": "if-22-7",
+            "kind": "if",
+            "line": 22,
+            "column": 7,
+            "startOffset": 429,
+            "endOffset": 448,
+            "endLine": 22,
+            "endColumn": 26,
+            "sourceText": "passenger.isPremium",
+            "coverageOutcomeIndex": 1,
+            "condition": "passenger.isPremium",
+            "outcome": false,
+            "coverageAnchor": "if-statement",
+            "coverageLine": 22,
+            "coverageColumn": 3,
+            "coverageStartOffset": 425,
+            "coverageEndOffset": 477,
+            "runtimeDecisionId": "mcdc-if-22-7"
+          },
+          "arguments": [
+            {
+              "age": 18,
+              "isPremium": false,
+              "country": "test"
+            }
+          ],
+          "assumptions": [
+            "passenger",
+            "passenger.age",
+            "passenger.isPremium",
+            "passenger.country"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 4,
+        "conditionsAnalyzed": 5,
+        "independencePairsFound": 5,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-if-10-7",
+            "kind": "if",
+            "line": 10,
+            "column": 7,
+            "expression": "!passenger",
+            "runtimeExpressionRange": {
+              "startOffset": 240,
+              "endOffset": 250
+            },
+            "criterion": "unique-cause",
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "passenger",
+                "runtimeExpressionRange": {
+                  "startOffset": 241,
+                  "endOffset": 250
+                },
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-10-7-C1-pair-1",
+                    "fixedConditions": {},
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": true,
+                      "conditionTrue": false
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-10-7-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "$undefined": true
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "passenger"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-10-7-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "age": 1,
+                            "isPremium": false,
+                            "country": "test"
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "passenger"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          },
+          {
+            "decisionId": "mcdc-if-14-7",
+            "kind": "if",
+            "line": 14,
+            "column": 7,
+            "expression": "passenger.age < 18",
+            "runtimeExpressionRange": {
+              "startOffset": 287,
+              "endOffset": 305
+            },
+            "criterion": "unique-cause",
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "passenger.age < 18",
+                "runtimeExpressionRange": {
+                  "startOffset": 287,
+                  "endOffset": 305
+                },
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-14-7-C1-pair-1",
+                    "fixedConditions": {},
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-14-7-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "age": 18,
+                            "isPremium": false,
+                            "country": "test"
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "passenger",
+                          "passenger.age"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-14-7-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "age": 17,
+                            "isPremium": false,
+                            "country": "test"
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "passenger",
+                          "passenger.age"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          },
+          {
+            "decisionId": "mcdc-if-18-7",
+            "kind": "if",
+            "line": 18,
+            "column": 7,
+            "expression": "passenger.isPremium && passenger.country === 'NL'",
+            "runtimeExpressionRange": {
+              "startOffset": 340,
+              "endOffset": 389
+            },
+            "criterion": "unique-cause",
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "passenger.isPremium",
+                "runtimeExpressionRange": {
+                  "startOffset": 340,
+                  "endOffset": 359
+                },
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-18-7-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-18-7-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "age": 18,
+                            "isPremium": false,
+                            "country": "NL"
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "passenger",
+                          "passenger.age",
+                          "passenger.isPremium",
+                          "passenger.country"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-18-7-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "age": 18,
+                            "isPremium": true,
+                            "country": "NL"
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "passenger",
+                          "passenger.age",
+                          "passenger.isPremium",
+                          "passenger.country"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "passenger.country === 'NL'",
+                "runtimeExpressionRange": {
+                  "startOffset": 363,
+                  "endOffset": 389
+                },
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-18-7-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-18-7-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "age": 18,
+                            "isPremium": true,
+                            "country": "NL_other"
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "passenger",
+                          "passenger.age",
+                          "passenger.isPremium",
+                          "passenger.country"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-18-7-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "age": 18,
+                            "isPremium": true,
+                            "country": "NL"
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "passenger",
+                          "passenger.age",
+                          "passenger.isPremium",
+                          "passenger.country"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          },
+          {
+            "decisionId": "mcdc-if-22-7",
+            "kind": "if",
+            "line": 22,
+            "column": 7,
+            "expression": "passenger.isPremium",
+            "runtimeExpressionRange": {
+              "startOffset": 429,
+              "endOffset": 448
+            },
+            "criterion": "unique-cause",
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "passenger.isPremium",
+                "runtimeExpressionRange": {
+                  "startOffset": 429,
+                  "endOffset": 448
+                },
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-22-7-C1-pair-1",
+                    "fixedConditions": {},
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-22-7-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "age": 18,
+                            "isPremium": false,
+                            "country": "test"
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "passenger",
+                          "passenger.age",
+                          "passenger.isPremium"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-22-7-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "age": 18,
+                            "isPremium": true,
+                            "country": "NL_other"
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "passenger",
+                          "passenger.age",
+                          "passenger.isPremium",
+                          "passenger.country"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 9,
+        "column": 1
+      }
+    }
+  ]
+}

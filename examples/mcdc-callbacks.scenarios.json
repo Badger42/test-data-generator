@@ -1,0 +1,4952 @@
+{
+  "generator": {
+    "name": "branch-scenarios-generator",
+    "version": "0.10.0"
+  },
+  "source": "examples/mcdc-callbacks.js",
+  "sourceLanguage": "javascript",
+  "generatedAt": "2026-11-03T06:49:31.566Z",
+  "limitations": [
+    "Static MVP: generated scenarios are candidates; run the function and verify actual branch coverage with Jest/Istanbul.",
+    "MC/DC mode uses unique-cause independence: for each atomic condition, a pair must differ only in that condition while the full decision changes. This is static candidate generation; execute and verify the pairs in the target runtime.",
+    "JavaScript is supported via the TypeScript parser with allowJs. Without JSDoc, property types are inferred from comparisons, truthiness checks, switch cases, nested accesses and .length; inferredProperties reports confidence and evidence.",
+    "Supported conditions: direct parameter paths, literals, truthiness, !, &&, ||, equality, numeric comparisons, and simple numeric comparisons between two input paths. Unknown truthy/falsy properties use boolean representatives unless nested access implies an object/array.",
+    "Supported control flow: if/else, switch with literal cases, ternary expressions, for/for...of/for...in/while/do...while loops, plus break/continue path termination inside loops and switch clauses.",
+    "Loop scenarios: for...of and for...in generate zero-, one- and multiple-iteration collection shapes; loop-body aliases are mapped to a representative first item. Classic for loops support literal counter initializers and simple increment/decrement steps; while/do...while support simple property constraints and local numeric counter cases.",
+    "Loop analysis is an approximation: common break/continue transfers stop analysis of the current path; break inside switch exits the switch, while continue propagates to the enclosing loop. Labelled transfers, full iteration-state propagation and switch fallthrough are not modeled. Mutations to iterated collections, custom iterators, async iterator side effects, and complex counter updates are unsupported.",
+    "Array callback support: forEach/map/flatMap/some/every/filter/find/findIndex and reduce with inline callbacks and collections resolved to function input paths. Predicate callbacks support simple return expressions; in --mcdc mode these expressions are analyzed as independent decisions using unique-cause MC/DC, with callback parameters mapped to representative source items. Block callbacks with explicit if decisions are analyzed through normal control-flow traversal. Callback index-dependent MC/DC may be reported as infeasible when the index is fixed to the representative invocation. Direct find() checks and find() comparisons with null/undefined are supported, as are findIndex() comparisons against numeric literals. some/every have representative match/no-match scenarios. flatMap chains support a direct array-property projection (for example group => group.passengers). reduce analyzes callback indexes through 2 with an initial value and through 3 without one, replaying up to two prior callback invocations over bounded candidate items. This is concrete interpretation, not general symbolic execution; unsupported reducer statements are not replaced with a fabricated initial accumulator state.",
+    "Undefined values are encoded as {\"$undefined\":true}; omit the corresponding argument/property or hydrate this marker before calling the function.",
+    "Mock templates are type-derived suggestions and are not automatically connected to branch scenarios."
+  ],
+  "functions": [
+    {
+      "name": "someAdults",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.passengers",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.age"
+          ]
+        },
+        {
+          "path": "input.passengers",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method some()",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.age"
+          ]
+        },
+        {
+          "path": "input.passengers.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.age"
+          ]
+        },
+        {
+          "path": "input.passengers.0.age",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 18"
+          ]
+        },
+        {
+          "path": "input.passengers.0.isActive",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 6,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 2,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-2-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-2-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 2,
+            "column": 10,
+            "condition": "input.passengers.some(passenger => passenger.isActive && passenger.age >= 18)",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.passengers",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "passengers": []
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-2-10-one-callback-1",
+          "target": {
+            "branchId": "loop-2-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 2,
+            "column": 10,
+            "condition": "input.passengers.some(passenger => passenger.isActive && passenger.age >= 18)",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.passengers",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": false,
+                  "age": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-2-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-2-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 2,
+            "column": 10,
+            "condition": "input.passengers.some(passenger => passenger.isActive && passenger.age >= 18)",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.passengers",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": false,
+                  "age": 1
+                },
+                {
+                  "isActive": false,
+                  "age": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-2-45-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-2-45",
+            "kind": "array-predicate",
+            "line": 2,
+            "column": 45,
+            "condition": "passenger.isActive && passenger.age >= 18",
+            "outcome": true,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": true,
+                  "age": 18
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isActive",
+            "input.passengers.0.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-2-45-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-2-45",
+            "kind": "array-predicate",
+            "line": 2,
+            "column": 45,
+            "condition": "passenger.isActive && passenger.age >= 18",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": false,
+                  "age": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isActive"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-2-45-false-iteration-0-2",
+          "target": {
+            "branchId": "array-predicate-2-45",
+            "kind": "array-predicate",
+            "line": 2,
+            "column": 45,
+            "condition": "passenger.isActive && passenger.age >= 18",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": true,
+                  "age": 17
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isActive",
+            "input.passengers.0.age"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 2,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-array-predicate-some-2-45",
+            "kind": "array-predicate-some",
+            "line": 2,
+            "column": 45,
+            "expression": "passenger.isActive && passenger.age >= 18",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "some",
+              "collection": "input.passengers",
+              "iterationIndex": 0,
+              "parameters": [
+                "passenger"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "passenger.isActive",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-some-2-45-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-some-2-45-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": false,
+                                "age": 18
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.age"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-some-2-45-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": true,
+                                "age": 18
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.age"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "passenger.age >= 18",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-some-2-45-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-some-2-45-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": true,
+                                "age": 17
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.age"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-some-2-45-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": true,
+                                "age": 18
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.age"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.passengers.some",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 1,
+        "column": 1
+      }
+    },
+    {
+      "name": "everyAllowed",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.passengers",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.role"
+          ]
+        },
+        {
+          "path": "input.passengers",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method every()",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.role"
+          ]
+        },
+        {
+          "path": "input.passengers.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.role"
+          ]
+        },
+        {
+          "path": "input.passengers.0.isActive",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.passengers.0.role",
+          "inferredType": "string",
+          "confidence": "high",
+          "evidence": [
+            "Compared with string literal \"admin\""
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 6,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 2,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-6-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-6-10",
+            "kind": "loop",
+            "loopType": "array-every",
+            "line": 6,
+            "column": 10,
+            "condition": "input.passengers.every(passenger => passenger.isActive || passenger.role === 'admin')",
+            "outcome": "zero-callbacks",
+            "phase": "before-first-callback",
+            "collection": "input.passengers",
+            "callbackMethod": "every"
+          },
+          "arguments": [
+            {
+              "passengers": []
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-6-10-one-callback-1",
+          "target": {
+            "branchId": "loop-6-10",
+            "kind": "loop",
+            "loopType": "array-every",
+            "line": 6,
+            "column": 10,
+            "condition": "input.passengers.every(passenger => passenger.isActive || passenger.role === 'admin')",
+            "outcome": "one-callback",
+            "phase": "first-callback",
+            "collection": "input.passengers",
+            "callbackMethod": "every"
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": false,
+                  "role": "test"
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-6-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-6-10",
+            "kind": "loop",
+            "loopType": "array-every",
+            "line": 6,
+            "column": 10,
+            "condition": "input.passengers.every(passenger => passenger.isActive || passenger.role === 'admin')",
+            "outcome": "multiple-callbacks",
+            "phase": "repeated-callback",
+            "collection": "input.passengers",
+            "callbackMethod": "every"
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": false,
+                  "role": "test"
+                },
+                {
+                  "isActive": false,
+                  "role": "test"
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-6-46-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-6-46",
+            "kind": "array-predicate",
+            "line": 6,
+            "column": 46,
+            "condition": "passenger.isActive || passenger.role === 'admin'",
+            "outcome": true,
+            "callbackMethod": "every",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": true,
+                  "role": "test"
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isActive"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-6-46-true-iteration-0-2",
+          "target": {
+            "branchId": "array-predicate-6-46",
+            "kind": "array-predicate",
+            "line": 6,
+            "column": 46,
+            "condition": "passenger.isActive || passenger.role === 'admin'",
+            "outcome": true,
+            "callbackMethod": "every",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": false,
+                  "role": "admin"
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isActive",
+            "input.passengers.0.role"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-6-46-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-6-46",
+            "kind": "array-predicate",
+            "line": 6,
+            "column": 46,
+            "condition": "passenger.isActive || passenger.role === 'admin'",
+            "outcome": false,
+            "callbackMethod": "every",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": false,
+                  "role": "admin_other"
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isActive",
+            "input.passengers.0.role"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 2,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-array-predicate-every-6-46",
+            "kind": "array-predicate-every",
+            "line": 6,
+            "column": 46,
+            "expression": "passenger.isActive || passenger.role === 'admin'",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "every",
+              "collection": "input.passengers",
+              "iterationIndex": 0,
+              "parameters": [
+                "passenger"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "passenger.isActive",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-every-6-46-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": false
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-every-6-46-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": false,
+                                "role": "admin_other"
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "every",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.role"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-every-6-46-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": true,
+                                "role": "admin_other"
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "every",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.role"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "passenger.role === 'admin'",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-every-6-46-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": false
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-every-6-46-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": false,
+                                "role": "admin_other"
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "every",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.role"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-every-6-46-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": false,
+                                "role": "admin"
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "every",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.role"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.passengers.every",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 5,
+        "column": 1
+      }
+    },
+    {
+      "name": "filterEligible",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.passengers",
+            "Inferred from nested property access: input.passengers.0.isBlocked",
+            "Inferred from nested property access: input.passengers.0.score",
+            "Inferred from nested property access: input.passengers.0.isVerified"
+          ]
+        },
+        {
+          "path": "input.passengers",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method filter()",
+            "Inferred from nested property access: input.passengers.0.isBlocked",
+            "Inferred from nested property access: input.passengers.0.score",
+            "Inferred from nested property access: input.passengers.0.isVerified"
+          ]
+        },
+        {
+          "path": "input.passengers.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.passengers.0.isBlocked",
+            "Inferred from nested property access: input.passengers.0.score",
+            "Inferred from nested property access: input.passengers.0.isVerified"
+          ]
+        },
+        {
+          "path": "input.passengers.0.isBlocked",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.passengers.0.isVerified",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.passengers.0.score",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 0"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 7,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 3,
+        "mcdcIndependencePairsFound": 3,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-10-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-10-10",
+            "kind": "loop",
+            "loopType": "array-filter",
+            "line": 10,
+            "column": 10,
+            "condition": "input.passengers.filter(passenger => !passenger.isBlocked && (passenger.score > 0 || passenger.isVerified))",
+            "outcome": "zero-callbacks",
+            "phase": "before-first-callback",
+            "collection": "input.passengers",
+            "callbackMethod": "filter"
+          },
+          "arguments": [
+            {
+              "passengers": []
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-10-10-one-callback-1",
+          "target": {
+            "branchId": "loop-10-10",
+            "kind": "loop",
+            "loopType": "array-filter",
+            "line": 10,
+            "column": 10,
+            "condition": "input.passengers.filter(passenger => !passenger.isBlocked && (passenger.score > 0 || passenger.isVerified))",
+            "outcome": "one-callback",
+            "phase": "first-callback",
+            "collection": "input.passengers",
+            "callbackMethod": "filter"
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isBlocked": false,
+                  "score": 1,
+                  "isVerified": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-10-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-10-10",
+            "kind": "loop",
+            "loopType": "array-filter",
+            "line": 10,
+            "column": 10,
+            "condition": "input.passengers.filter(passenger => !passenger.isBlocked && (passenger.score > 0 || passenger.isVerified))",
+            "outcome": "multiple-callbacks",
+            "phase": "repeated-callback",
+            "collection": "input.passengers",
+            "callbackMethod": "filter"
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isBlocked": false,
+                  "score": 1,
+                  "isVerified": false
+                },
+                {
+                  "isBlocked": false,
+                  "score": 1,
+                  "isVerified": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-10-47-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-10-47",
+            "kind": "array-predicate",
+            "line": 10,
+            "column": 47,
+            "condition": "!passenger.isBlocked && (passenger.score > 0 || passenger.isVerified)",
+            "outcome": true,
+            "callbackMethod": "filter",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isBlocked": false,
+                  "score": 1,
+                  "isVerified": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isBlocked",
+            "input.passengers.0.score"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-10-47-true-iteration-0-2",
+          "target": {
+            "branchId": "array-predicate-10-47",
+            "kind": "array-predicate",
+            "line": 10,
+            "column": 47,
+            "condition": "!passenger.isBlocked && (passenger.score > 0 || passenger.isVerified)",
+            "outcome": true,
+            "callbackMethod": "filter",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isBlocked": false,
+                  "score": 0,
+                  "isVerified": true
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isBlocked",
+            "input.passengers.0.score",
+            "input.passengers.0.isVerified"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-10-47-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-10-47",
+            "kind": "array-predicate",
+            "line": 10,
+            "column": 47,
+            "condition": "!passenger.isBlocked && (passenger.score > 0 || passenger.isVerified)",
+            "outcome": false,
+            "callbackMethod": "filter",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isBlocked": true,
+                  "score": 1,
+                  "isVerified": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isBlocked"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-10-47-false-iteration-0-2",
+          "target": {
+            "branchId": "array-predicate-10-47",
+            "kind": "array-predicate",
+            "line": 10,
+            "column": 47,
+            "condition": "!passenger.isBlocked && (passenger.score > 0 || passenger.isVerified)",
+            "outcome": false,
+            "callbackMethod": "filter",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isBlocked": false,
+                  "score": 0,
+                  "isVerified": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isBlocked",
+            "input.passengers.0.score",
+            "input.passengers.0.isVerified"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 3,
+        "independencePairsFound": 3,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-array-predicate-filter-10-47",
+            "kind": "array-predicate-filter",
+            "line": 10,
+            "column": 47,
+            "expression": "!passenger.isBlocked && (passenger.score > 0 || passenger.isVerified)",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "filter",
+              "collection": "input.passengers",
+              "iterationIndex": 0,
+              "parameters": [
+                "passenger"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "passenger.isBlocked",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-filter-10-47-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true,
+                      "C3": false
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": true,
+                      "conditionTrue": false
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-filter-10-47-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isBlocked": false,
+                                "score": 1,
+                                "isVerified": false
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "filter",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true,
+                          "C3": false
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isBlocked",
+                          "input.passengers.0.score",
+                          "input.passengers.0.isVerified"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-filter-10-47-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isBlocked": true,
+                                "score": 1,
+                                "isVerified": false
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "filter",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true,
+                          "C3": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isBlocked",
+                          "input.passengers.0.score",
+                          "input.passengers.0.isVerified"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "passenger.score > 0",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-filter-10-47-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": false,
+                      "C3": false
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-filter-10-47-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isBlocked": false,
+                                "score": 0,
+                                "isVerified": false
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "filter",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": false,
+                          "C3": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isBlocked",
+                          "input.passengers.0.score",
+                          "input.passengers.0.isVerified"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-filter-10-47-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isBlocked": false,
+                                "score": 1,
+                                "isVerified": false
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "filter",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true,
+                          "C3": false
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isBlocked",
+                          "input.passengers.0.score",
+                          "input.passengers.0.isVerified"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C3",
+                "expression": "passenger.isVerified",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-filter-10-47-C3-pair-1",
+                    "fixedConditions": {
+                      "C1": false,
+                      "C2": false
+                    },
+                    "changedCondition": "C3",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-filter-10-47-C3-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isBlocked": false,
+                                "score": 0,
+                                "isVerified": false
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "filter",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": false,
+                          "C3": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isBlocked",
+                          "input.passengers.0.score",
+                          "input.passengers.0.isVerified"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-filter-10-47-C3-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isBlocked": false,
+                                "score": 0,
+                                "isVerified": true
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "filter",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": false,
+                          "C3": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isBlocked",
+                          "input.passengers.0.score",
+                          "input.passengers.0.isVerified"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.passengers.filter",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 9,
+        "column": 1
+      }
+    },
+    {
+      "name": "findEligible",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.passengers",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.country"
+          ]
+        },
+        {
+          "path": "input.passengers",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method find()",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.country"
+          ]
+        },
+        {
+          "path": "input.passengers.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.country"
+          ]
+        },
+        {
+          "path": "input.passengers.0.country",
+          "inferredType": "string",
+          "confidence": "high",
+          "evidence": [
+            "Compared with string literal \"NL\""
+          ]
+        },
+        {
+          "path": "input.passengers.0.isActive",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 6,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 2,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-14-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-14-10",
+            "kind": "loop",
+            "loopType": "array-find",
+            "line": 14,
+            "column": 10,
+            "condition": "input.passengers.find(passenger => passenger.isActive && passenger.country === 'NL')",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.passengers",
+            "callbackMethod": "find"
+          },
+          "arguments": [
+            {
+              "passengers": []
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-14-10-one-callback-1",
+          "target": {
+            "branchId": "loop-14-10",
+            "kind": "loop",
+            "loopType": "array-find",
+            "line": 14,
+            "column": 10,
+            "condition": "input.passengers.find(passenger => passenger.isActive && passenger.country === 'NL')",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.passengers",
+            "callbackMethod": "find"
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": false,
+                  "country": "test"
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-14-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-14-10",
+            "kind": "loop",
+            "loopType": "array-find",
+            "line": 14,
+            "column": 10,
+            "condition": "input.passengers.find(passenger => passenger.isActive && passenger.country === 'NL')",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.passengers",
+            "callbackMethod": "find"
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": false,
+                  "country": "test"
+                },
+                {
+                  "isActive": false,
+                  "country": "test"
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-14-45-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-14-45",
+            "kind": "array-predicate",
+            "line": 14,
+            "column": 45,
+            "condition": "passenger.isActive && passenger.country === 'NL'",
+            "outcome": true,
+            "callbackMethod": "find",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": true,
+                  "country": "NL"
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isActive",
+            "input.passengers.0.country"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-14-45-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-14-45",
+            "kind": "array-predicate",
+            "line": 14,
+            "column": 45,
+            "condition": "passenger.isActive && passenger.country === 'NL'",
+            "outcome": false,
+            "callbackMethod": "find",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": false,
+                  "country": "test"
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isActive"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-14-45-false-iteration-0-2",
+          "target": {
+            "branchId": "array-predicate-14-45",
+            "kind": "array-predicate",
+            "line": 14,
+            "column": 45,
+            "condition": "passenger.isActive && passenger.country === 'NL'",
+            "outcome": false,
+            "callbackMethod": "find",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": true,
+                  "country": "NL_other"
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isActive",
+            "input.passengers.0.country"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 2,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-array-predicate-find-14-45",
+            "kind": "array-predicate-find",
+            "line": 14,
+            "column": 45,
+            "expression": "passenger.isActive && passenger.country === 'NL'",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "find",
+              "collection": "input.passengers",
+              "iterationIndex": 0,
+              "parameters": [
+                "passenger"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "passenger.isActive",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-find-14-45-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-find-14-45-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": false,
+                                "country": "NL"
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "find",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.country"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-find-14-45-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": true,
+                                "country": "NL"
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "find",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.country"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "passenger.country === 'NL'",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-find-14-45-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-find-14-45-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": true,
+                                "country": "NL_other"
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "find",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.country"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-find-14-45-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": true,
+                                "country": "NL"
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "find",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.country"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.passengers.find",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 13,
+        "column": 1
+      }
+    },
+    {
+      "name": "findIndexEligible",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.passengers",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.age",
+            "Inferred from nested property access: input.minimumAge"
+          ]
+        },
+        {
+          "path": "input.minimumAge",
+          "inferredType": "number",
+          "confidence": "medium",
+          "evidence": [
+            "Compared numerically with another input property"
+          ]
+        },
+        {
+          "path": "input.passengers",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method findIndex()",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.age"
+          ]
+        },
+        {
+          "path": "input.passengers.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.age"
+          ]
+        },
+        {
+          "path": "input.passengers.0.age",
+          "inferredType": "number",
+          "confidence": "medium",
+          "evidence": [
+            "Compared numerically with another input property"
+          ]
+        },
+        {
+          "path": "input.passengers.0.isActive",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 6,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 2,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-18-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-18-10",
+            "kind": "loop",
+            "loopType": "array-findIndex",
+            "line": 18,
+            "column": 10,
+            "condition": "input.passengers.findIndex(passenger => passenger.isActive && passenger.age > input.minimumAge)",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.passengers",
+            "callbackMethod": "findIndex"
+          },
+          "arguments": [
+            {
+              "passengers": [],
+              "minimumAge": 1
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-18-10-one-callback-1",
+          "target": {
+            "branchId": "loop-18-10",
+            "kind": "loop",
+            "loopType": "array-findIndex",
+            "line": 18,
+            "column": 10,
+            "condition": "input.passengers.findIndex(passenger => passenger.isActive && passenger.age > input.minimumAge)",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.passengers",
+            "callbackMethod": "findIndex"
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": false,
+                  "age": 1
+                }
+              ],
+              "minimumAge": 1
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-18-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-18-10",
+            "kind": "loop",
+            "loopType": "array-findIndex",
+            "line": 18,
+            "column": 10,
+            "condition": "input.passengers.findIndex(passenger => passenger.isActive && passenger.age > input.minimumAge)",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.passengers",
+            "callbackMethod": "findIndex"
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": false,
+                  "age": 1
+                },
+                {
+                  "isActive": false,
+                  "age": 1
+                }
+              ],
+              "minimumAge": 1
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-18-50-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-18-50",
+            "kind": "array-predicate",
+            "line": 18,
+            "column": 50,
+            "condition": "passenger.isActive && passenger.age > input.minimumAge",
+            "outcome": true,
+            "callbackMethod": "findIndex",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": true,
+                  "age": 1
+                }
+              ],
+              "minimumAge": 0
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isActive",
+            "input.passengers.0.age",
+            "input.minimumAge"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-18-50-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-18-50",
+            "kind": "array-predicate",
+            "line": 18,
+            "column": 50,
+            "condition": "passenger.isActive && passenger.age > input.minimumAge",
+            "outcome": false,
+            "callbackMethod": "findIndex",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": false,
+                  "age": 1
+                }
+              ],
+              "minimumAge": 1
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isActive"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-18-50-false-iteration-0-2",
+          "target": {
+            "branchId": "array-predicate-18-50",
+            "kind": "array-predicate",
+            "line": 18,
+            "column": 50,
+            "condition": "passenger.isActive && passenger.age > input.minimumAge",
+            "outcome": false,
+            "callbackMethod": "findIndex",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": true,
+                  "age": 0
+                }
+              ],
+              "minimumAge": 1
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isActive",
+            "input.passengers.0.age",
+            "input.minimumAge"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 2,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-array-predicate-findIndex-18-50",
+            "kind": "array-predicate-findIndex",
+            "line": 18,
+            "column": 50,
+            "expression": "passenger.isActive && passenger.age > input.minimumAge",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "findIndex",
+              "collection": "input.passengers",
+              "iterationIndex": 0,
+              "parameters": [
+                "passenger"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "passenger.isActive",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-findIndex-18-50-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-findIndex-18-50-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": false,
+                                "age": 1
+                              }
+                            ],
+                            "minimumAge": 0
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "findIndex",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.age",
+                          "input.minimumAge"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-findIndex-18-50-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": true,
+                                "age": 1
+                              }
+                            ],
+                            "minimumAge": 0
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "findIndex",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.age",
+                          "input.minimumAge"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "passenger.age > input.minimumAge",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-findIndex-18-50-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-findIndex-18-50-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": true,
+                                "age": 0
+                              }
+                            ],
+                            "minimumAge": 1
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "findIndex",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.age",
+                          "input.minimumAge"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-findIndex-18-50-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": true,
+                                "age": 1
+                              }
+                            ],
+                            "minimumAge": 0
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "findIndex",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.age",
+                          "input.minimumAge"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.passengers.findIndex",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 17,
+        "column": 1
+      }
+    },
+    {
+      "name": "blockReturnPredicate",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.passengers",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.age"
+          ]
+        },
+        {
+          "path": "input.passengers",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method some()",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.age"
+          ]
+        },
+        {
+          "path": "input.passengers.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.age"
+          ]
+        },
+        {
+          "path": "input.passengers.0.age",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 18"
+          ]
+        },
+        {
+          "path": "input.passengers.0.isActive",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 6,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 2,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-22-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-22-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 22,
+            "column": 10,
+            "condition": "input.passengers.some(passenger => {\n    return passenger.isActive && passenger.age >= 18;\n  })",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.passengers",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "passengers": []
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-22-10-one-callback-1",
+          "target": {
+            "branchId": "loop-22-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 22,
+            "column": 10,
+            "condition": "input.passengers.some(passenger => {\n    return passenger.isActive && passenger.age >= 18;\n  })",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.passengers",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": false,
+                  "age": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-22-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-22-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 22,
+            "column": 10,
+            "condition": "input.passengers.some(passenger => {\n    return passenger.isActive && passenger.age >= 18;\n  })",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.passengers",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": false,
+                  "age": 1
+                },
+                {
+                  "isActive": false,
+                  "age": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-23-12-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-23-12",
+            "kind": "array-predicate",
+            "line": 23,
+            "column": 12,
+            "condition": "passenger.isActive && passenger.age >= 18",
+            "outcome": true,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": true,
+                  "age": 18
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isActive",
+            "input.passengers.0.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-23-12-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-23-12",
+            "kind": "array-predicate",
+            "line": 23,
+            "column": 12,
+            "condition": "passenger.isActive && passenger.age >= 18",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": false,
+                  "age": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isActive"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-23-12-false-iteration-0-2",
+          "target": {
+            "branchId": "array-predicate-23-12",
+            "kind": "array-predicate",
+            "line": 23,
+            "column": 12,
+            "condition": "passenger.isActive && passenger.age >= 18",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": true,
+                  "age": 17
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isActive",
+            "input.passengers.0.age"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 2,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-array-predicate-some-23-12",
+            "kind": "array-predicate-some",
+            "line": 23,
+            "column": 12,
+            "expression": "passenger.isActive && passenger.age >= 18",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "some",
+              "collection": "input.passengers",
+              "iterationIndex": 0,
+              "parameters": [
+                "passenger"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "passenger.isActive",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-some-23-12-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-some-23-12-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": false,
+                                "age": 18
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.age"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-some-23-12-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": true,
+                                "age": 18
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.age"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "passenger.age >= 18",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-some-23-12-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-some-23-12-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": true,
+                                "age": 17
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.age"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-some-23-12-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": true,
+                                "age": 18
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.age"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.passengers.some",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 21,
+        "column": 1
+      }
+    },
+    {
+      "name": "blockIfPredicate",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.passengers",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.age"
+          ]
+        },
+        {
+          "path": "input.passengers",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method some()",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.age"
+          ]
+        },
+        {
+          "path": "input.passengers.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.age"
+          ]
+        },
+        {
+          "path": "input.passengers.0.age",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 18"
+          ]
+        },
+        {
+          "path": "input.passengers.0.isActive",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 6,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 2,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-28-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-28-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 28,
+            "column": 10,
+            "condition": "input.passengers.some(passenger => {\n    if (passenger.isActive && passenger.age >= 18) return true;\n    return false;\n  })",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.passengers",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "passengers": []
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-28-10-one-callback-1",
+          "target": {
+            "branchId": "loop-28-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 28,
+            "column": 10,
+            "condition": "input.passengers.some(passenger => {\n    if (passenger.isActive && passenger.age >= 18) return true;\n    return false;\n  })",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.passengers",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": false,
+                  "age": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-28-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-28-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 28,
+            "column": 10,
+            "condition": "input.passengers.some(passenger => {\n    if (passenger.isActive && passenger.age >= 18) return true;\n    return false;\n  })",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.passengers",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": false,
+                  "age": 1
+                },
+                {
+                  "isActive": false,
+                  "age": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-29-9-true-iteration-0-1",
+          "target": {
+            "branchId": "if-29-9",
+            "kind": "if",
+            "line": 29,
+            "column": 9,
+            "condition": "passenger.isActive && passenger.age >= 18",
+            "outcome": true,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": true,
+                  "age": 18
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isActive",
+            "input.passengers.0.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-29-9-false-iteration-0-1",
+          "target": {
+            "branchId": "if-29-9",
+            "kind": "if",
+            "line": 29,
+            "column": 9,
+            "condition": "passenger.isActive && passenger.age >= 18",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": false,
+                  "age": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isActive"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-29-9-false-iteration-0-2",
+          "target": {
+            "branchId": "if-29-9",
+            "kind": "if",
+            "line": 29,
+            "column": 9,
+            "condition": "passenger.isActive && passenger.age >= 18",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "isActive": true,
+                  "age": 17
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.isActive",
+            "input.passengers.0.age"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 2,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-if-29-9",
+            "kind": "if",
+            "line": 29,
+            "column": 9,
+            "expression": "passenger.isActive && passenger.age >= 18",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "some",
+              "collection": "input.passengers",
+              "iterationIndex": 0,
+              "parameters": [
+                "passenger"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "passenger.isActive",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-29-9-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-29-9-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": false,
+                                "age": 18
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.age"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-29-9-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": true,
+                                "age": 18
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.age"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "passenger.age >= 18",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-29-9-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-29-9-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": true,
+                                "age": 17
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.age"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-29-9-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "isActive": true,
+                                "age": 18
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.age"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.passengers.some",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 27,
+        "column": 1
+      }
+    },
+    {
+      "name": "chainedPredicate",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.passengers",
+            "Inferred from nested property access: input.passengers.0.country",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.age"
+          ]
+        },
+        {
+          "path": "input.passengers",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method some()",
+            "Inferred from nested property access: input.passengers.0.country",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.age"
+          ]
+        },
+        {
+          "path": "input.passengers.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.passengers.0.country",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.age"
+          ]
+        },
+        {
+          "path": "input.passengers.0.age",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 18"
+          ]
+        },
+        {
+          "path": "input.passengers.0.country",
+          "inferredType": "string",
+          "confidence": "high",
+          "evidence": [
+            "Compared with string literal \"NL\""
+          ]
+        },
+        {
+          "path": "input.passengers.0.isActive",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 7,
+        "scenariosGenerated": 8,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 2,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 2,
+        "mcdcConditionsAnalyzed": 3,
+        "mcdcIndependencePairsFound": 3,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-35-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-35-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 35,
+            "column": 10,
+            "condition": "input.passengers\n    .filter(passenger => passenger.country === 'NL')\n    .some(passenger => passenger.isActive && passenger.age >= 18)",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.passengers",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "passengers": []
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-35-10-one-callback-1",
+          "target": {
+            "branchId": "loop-35-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 35,
+            "column": 10,
+            "condition": "input.passengers\n    .filter(passenger => passenger.country === 'NL')\n    .some(passenger => passenger.isActive && passenger.age >= 18)",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.passengers",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "country": "NL",
+                  "isActive": false,
+                  "age": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.country"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-35-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-35-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 35,
+            "column": 10,
+            "condition": "input.passengers\n    .filter(passenger => passenger.country === 'NL')\n    .some(passenger => passenger.isActive && passenger.age >= 18)",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.passengers",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "country": "NL",
+                  "isActive": false,
+                  "age": 1
+                },
+                {
+                  "country": "NL",
+                  "isActive": false,
+                  "age": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.country",
+            "input.passengers.1.country"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-37-24-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-37-24",
+            "kind": "array-predicate",
+            "line": 37,
+            "column": 24,
+            "condition": "passenger.isActive && passenger.age >= 18",
+            "outcome": true,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "country": "NL",
+                  "isActive": true,
+                  "age": 18
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.country",
+            "input.passengers.0.isActive",
+            "input.passengers.0.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-37-24-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-37-24",
+            "kind": "array-predicate",
+            "line": 37,
+            "column": 24,
+            "condition": "passenger.isActive && passenger.age >= 18",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "country": "NL",
+                  "isActive": false,
+                  "age": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.country",
+            "input.passengers.0.isActive"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-37-24-false-iteration-0-2",
+          "target": {
+            "branchId": "array-predicate-37-24",
+            "kind": "array-predicate",
+            "line": 37,
+            "column": 24,
+            "condition": "passenger.isActive && passenger.age >= 18",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "country": "NL",
+                  "isActive": true,
+                  "age": 17
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.country",
+            "input.passengers.0.isActive",
+            "input.passengers.0.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-36-26-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-36-26",
+            "kind": "array-predicate",
+            "line": 36,
+            "column": 26,
+            "condition": "passenger.country === 'NL'",
+            "outcome": true,
+            "callbackMethod": "filter",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "country": "NL",
+                  "isActive": false,
+                  "age": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.country"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-36-26-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-36-26",
+            "kind": "array-predicate",
+            "line": 36,
+            "column": 26,
+            "condition": "passenger.country === 'NL'",
+            "outcome": false,
+            "callbackMethod": "filter",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "country": "NL_other",
+                  "isActive": false,
+                  "age": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.country"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 2,
+        "conditionsAnalyzed": 3,
+        "independencePairsFound": 3,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-array-predicate-some-37-24",
+            "kind": "array-predicate-some",
+            "line": 37,
+            "column": 24,
+            "expression": "passenger.isActive && passenger.age >= 18",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "some",
+              "collection": "input.passengers",
+              "iterationIndex": 0,
+              "parameters": [
+                "passenger"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "passenger.isActive",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-some-37-24-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-some-37-24-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "country": "NL",
+                                "isActive": false,
+                                "age": 18
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.country",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.age"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-some-37-24-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "country": "NL",
+                                "isActive": true,
+                                "age": 18
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.country",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.age"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "passenger.age >= 18",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-some-37-24-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-some-37-24-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "country": "NL",
+                                "isActive": true,
+                                "age": 17
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.country",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.age"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-some-37-24-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "country": "NL",
+                                "isActive": true,
+                                "age": 18
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.country",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.age"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          },
+          {
+            "decisionId": "mcdc-array-predicate-filter-36-26",
+            "kind": "array-predicate-filter",
+            "line": 36,
+            "column": 26,
+            "expression": "passenger.country === 'NL'",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "filter",
+              "collection": "input.passengers",
+              "iterationIndex": 0,
+              "parameters": [
+                "passenger"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "passenger.country === 'NL'",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-filter-36-26-C1-pair-1",
+                    "fixedConditions": {},
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-filter-36-26-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "country": "NL_other",
+                                "isActive": false,
+                                "age": 1
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "filter",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.country"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-filter-36-26-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "country": "NL",
+                                "isActive": false,
+                                "age": 1
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "filter",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.country"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.passengers\n    .filter(passenger => passenger.country === 'NL')\n    .some",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        },
+        {
+          "call": "input.passengers\n    .filter",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 34,
+        "column": 1
+      }
+    },
+    {
+      "name": "nestedPredicate",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.groups",
+            "Inferred from nested property access: input.groups.0.passengers",
+            "Inferred from nested property access: input.groups.0.passengers.0.isActive",
+            "Inferred from nested property access: input.groups.0.passengers.0.age"
+          ]
+        },
+        {
+          "path": "input.groups",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method some()",
+            "Inferred from nested property access: input.groups.0.passengers",
+            "Inferred from nested property access: input.groups.0.passengers.0.isActive",
+            "Inferred from nested property access: input.groups.0.passengers.0.age"
+          ]
+        },
+        {
+          "path": "input.groups.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.groups.0.passengers",
+            "Inferred from nested property access: input.groups.0.passengers.0.isActive",
+            "Inferred from nested property access: input.groups.0.passengers.0.age"
+          ]
+        },
+        {
+          "path": "input.groups.0.passengers",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method every()",
+            "Inferred from nested property access: input.groups.0.passengers.0.isActive",
+            "Inferred from nested property access: input.groups.0.passengers.0.age"
+          ]
+        },
+        {
+          "path": "input.groups.0.passengers.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.groups.0.passengers.0.isActive",
+            "Inferred from nested property access: input.groups.0.passengers.0.age"
+          ]
+        },
+        {
+          "path": "input.groups.0.passengers.0.age",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 18"
+          ]
+        },
+        {
+          "path": "input.groups.0.passengers.0.isActive",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 10,
+        "scenariosGenerated": 12,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 2,
+        "loopScenariosGenerated": 6,
+        "mcdcDecisionsAnalyzed": 2,
+        "mcdcConditionsAnalyzed": 3,
+        "mcdcIndependencePairsFound": 3,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-41-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-41-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 41,
+            "column": 10,
+            "condition": "input.groups.some(group => group.passengers.every(passenger => passenger.isActive && passenger.age >= 18))",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.groups",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "groups": []
+            }
+          ],
+          "assumptions": [
+            "input.groups"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-41-10-one-callback-1",
+          "target": {
+            "branchId": "loop-41-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 41,
+            "column": 10,
+            "condition": "input.groups.some(group => group.passengers.every(passenger => passenger.isActive && passenger.age >= 18))",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.groups",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "groups": [
+                {
+                  "passengers": [
+                    {
+                      "isActive": false,
+                      "age": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.groups"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-41-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-41-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 41,
+            "column": 10,
+            "condition": "input.groups.some(group => group.passengers.every(passenger => passenger.isActive && passenger.age >= 18))",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.groups",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "groups": [
+                {
+                  "passengers": [
+                    {
+                      "isActive": false,
+                      "age": 1
+                    }
+                  ]
+                },
+                {
+                  "passengers": [
+                    {
+                      "isActive": false,
+                      "age": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.groups"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-41-37-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-41-37",
+            "kind": "loop",
+            "loopType": "array-every",
+            "line": 41,
+            "column": 37,
+            "condition": "group.passengers.every(passenger => passenger.isActive && passenger.age >= 18)",
+            "outcome": "zero-callbacks",
+            "phase": "before-first-callback",
+            "collection": "input.groups.0.passengers",
+            "callbackMethod": "every"
+          },
+          "arguments": [
+            {
+              "groups": [
+                {
+                  "passengers": []
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.groups",
+            "input.groups.0.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-41-37-one-callback-1",
+          "target": {
+            "branchId": "loop-41-37",
+            "kind": "loop",
+            "loopType": "array-every",
+            "line": 41,
+            "column": 37,
+            "condition": "group.passengers.every(passenger => passenger.isActive && passenger.age >= 18)",
+            "outcome": "one-callback",
+            "phase": "first-callback",
+            "collection": "input.groups.0.passengers",
+            "callbackMethod": "every"
+          },
+          "arguments": [
+            {
+              "groups": [
+                {
+                  "passengers": [
+                    {
+                      "isActive": false,
+                      "age": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.groups",
+            "input.groups.0.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-41-37-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-41-37",
+            "kind": "loop",
+            "loopType": "array-every",
+            "line": 41,
+            "column": 37,
+            "condition": "group.passengers.every(passenger => passenger.isActive && passenger.age >= 18)",
+            "outcome": "multiple-callbacks",
+            "phase": "repeated-callback",
+            "collection": "input.groups.0.passengers",
+            "callbackMethod": "every"
+          },
+          "arguments": [
+            {
+              "groups": [
+                {
+                  "passengers": [
+                    {
+                      "isActive": false,
+                      "age": 1
+                    },
+                    {
+                      "isActive": false,
+                      "age": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.groups",
+            "input.groups.0.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-41-73-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-41-73",
+            "kind": "array-predicate",
+            "line": 41,
+            "column": 73,
+            "condition": "passenger.isActive && passenger.age >= 18",
+            "outcome": true,
+            "callbackMethod": "every",
+            "collection": "input.groups.0.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "groups": [
+                {
+                  "passengers": [
+                    {
+                      "isActive": true,
+                      "age": 18
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.groups",
+            "input.groups.0.passengers",
+            "input.groups.0.passengers.0.isActive",
+            "input.groups.0.passengers.0.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-41-73-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-41-73",
+            "kind": "array-predicate",
+            "line": 41,
+            "column": 73,
+            "condition": "passenger.isActive && passenger.age >= 18",
+            "outcome": false,
+            "callbackMethod": "every",
+            "collection": "input.groups.0.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "groups": [
+                {
+                  "passengers": [
+                    {
+                      "isActive": false,
+                      "age": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.groups",
+            "input.groups.0.passengers",
+            "input.groups.0.passengers.0.isActive"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-41-73-false-iteration-0-2",
+          "target": {
+            "branchId": "array-predicate-41-73",
+            "kind": "array-predicate",
+            "line": 41,
+            "column": 73,
+            "condition": "passenger.isActive && passenger.age >= 18",
+            "outcome": false,
+            "callbackMethod": "every",
+            "collection": "input.groups.0.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "groups": [
+                {
+                  "passengers": [
+                    {
+                      "isActive": true,
+                      "age": 17
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.groups",
+            "input.groups.0.passengers",
+            "input.groups.0.passengers.0.isActive",
+            "input.groups.0.passengers.0.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-41-37-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-41-37",
+            "kind": "array-predicate",
+            "line": 41,
+            "column": 37,
+            "condition": "group.passengers.every(passenger => passenger.isActive && passenger.age >= 18)",
+            "outcome": true,
+            "callbackMethod": "some",
+            "collection": "input.groups",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "group"
+            ]
+          },
+          "arguments": [
+            {
+              "groups": [
+                {
+                  "passengers": [
+                    {
+                      "isActive": true,
+                      "age": 18
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.groups",
+            "input.groups.0.passengers",
+            "input.groups.0.passengers.0.isActive",
+            "input.groups.0.passengers.0.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-41-37-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-41-37",
+            "kind": "array-predicate",
+            "line": 41,
+            "column": 37,
+            "condition": "group.passengers.every(passenger => passenger.isActive && passenger.age >= 18)",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.groups",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "group"
+            ]
+          },
+          "arguments": [
+            {
+              "groups": [
+                {
+                  "passengers": [
+                    {
+                      "isActive": false,
+                      "age": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.groups",
+            "input.groups.0.passengers",
+            "input.groups.0.passengers.0.isActive"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-41-37-false-iteration-0-2",
+          "target": {
+            "branchId": "array-predicate-41-37",
+            "kind": "array-predicate",
+            "line": 41,
+            "column": 37,
+            "condition": "group.passengers.every(passenger => passenger.isActive && passenger.age >= 18)",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.groups",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "group"
+            ]
+          },
+          "arguments": [
+            {
+              "groups": [
+                {
+                  "passengers": [
+                    {
+                      "isActive": true,
+                      "age": 17
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.groups",
+            "input.groups.0.passengers",
+            "input.groups.0.passengers.0.isActive",
+            "input.groups.0.passengers.0.age"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 2,
+        "conditionsAnalyzed": 3,
+        "independencePairsFound": 3,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-array-predicate-every-41-73",
+            "kind": "array-predicate-every",
+            "line": 41,
+            "column": 73,
+            "expression": "passenger.isActive && passenger.age >= 18",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "every",
+              "collection": "input.groups.0.passengers",
+              "iterationIndex": 0,
+              "parameters": [
+                "passenger"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "passenger.isActive",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-every-41-73-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-every-41-73-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "groups": [
+                              {
+                                "passengers": [
+                                  {
+                                    "isActive": false,
+                                    "age": 18
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "every",
+                          "collection": "input.groups.0.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.groups",
+                          "input.groups.0.passengers",
+                          "input.groups.0.passengers.0.isActive",
+                          "input.groups.0.passengers.0.age"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-every-41-73-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "groups": [
+                              {
+                                "passengers": [
+                                  {
+                                    "isActive": true,
+                                    "age": 18
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "every",
+                          "collection": "input.groups.0.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.groups",
+                          "input.groups.0.passengers",
+                          "input.groups.0.passengers.0.isActive",
+                          "input.groups.0.passengers.0.age"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "passenger.age >= 18",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-every-41-73-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-every-41-73-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "groups": [
+                              {
+                                "passengers": [
+                                  {
+                                    "isActive": true,
+                                    "age": 17
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "every",
+                          "collection": "input.groups.0.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.groups",
+                          "input.groups.0.passengers",
+                          "input.groups.0.passengers.0.isActive",
+                          "input.groups.0.passengers.0.age"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-every-41-73-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "groups": [
+                              {
+                                "passengers": [
+                                  {
+                                    "isActive": true,
+                                    "age": 18
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "every",
+                          "collection": "input.groups.0.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.groups",
+                          "input.groups.0.passengers",
+                          "input.groups.0.passengers.0.isActive",
+                          "input.groups.0.passengers.0.age"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          },
+          {
+            "decisionId": "mcdc-array-predicate-some-41-37",
+            "kind": "array-predicate-some",
+            "line": 41,
+            "column": 37,
+            "expression": "group.passengers.every(passenger => passenger.isActive && passenger.age >= 18)",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "some",
+              "collection": "input.groups",
+              "iterationIndex": 0,
+              "parameters": [
+                "group"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "group.passengers.every(passenger => passenger.isActive && passenger.age >= 18)",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-some-41-37-C1-pair-1",
+                    "fixedConditions": {},
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-some-41-37-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "groups": [
+                              {
+                                "passengers": [
+                                  {
+                                    "isActive": false,
+                                    "age": 1
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.groups",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "group"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.groups",
+                          "input.groups.0.passengers",
+                          "input.groups.0.passengers.0.isActive"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-some-41-37-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "groups": [
+                              {
+                                "passengers": [
+                                  {
+                                    "isActive": true,
+                                    "age": 18
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.groups",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "group"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.groups",
+                          "input.groups.0.passengers",
+                          "input.groups.0.passengers.0.isActive",
+                          "input.groups.0.passengers.0.age"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.groups.some",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        },
+        {
+          "call": "group.passengers.every",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 40,
+        "column": 1
+      }
+    }
+  ]
+}

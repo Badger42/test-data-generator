@@ -1,0 +1,3563 @@
+{
+  "generator": {
+    "name": "branch-scenarios-generator",
+    "version": "0.11.0"
+  },
+  "source": "examples/mcdc-callbacks-advanced.js",
+  "sourceLanguage": "javascript",
+  "generatedAt": "2026-11-03T07:11:30.737Z",
+  "limitations": [
+    "Static MVP: generated scenarios are candidates; run the function and verify actual branch coverage with Jest/Istanbul.",
+    "MC/DC mode uses unique-cause independence: for each atomic condition, a pair must differ only in that condition while the full decision changes. This is static candidate generation; execute and verify the pairs in the target runtime.",
+    "JavaScript is supported via the TypeScript parser with allowJs. Without JSDoc, property types are inferred from comparisons, truthiness checks, switch cases, nested accesses and .length; inferredProperties reports confidence and evidence.",
+    "Supported conditions: direct parameter paths, literals, truthiness, !, &&, ||, equality, numeric comparisons, and simple numeric comparisons between two input paths. Unknown truthy/falsy properties use boolean representatives unless nested access implies an object/array.",
+    "Supported control flow: if/else, switch with literal cases, ternary expressions, for/for...of/for...in/while/do...while loops, plus break/continue path termination inside loops and switch clauses.",
+    "Loop scenarios: for...of and for...in generate zero-, one- and multiple-iteration collection shapes; loop-body aliases are mapped to a representative first item. Classic for loops support literal counter initializers and simple increment/decrement steps; while/do...while support simple property constraints and local numeric counter cases.",
+    "Loop analysis is an approximation: common break/continue transfers stop analysis of the current path; break inside switch exits the switch, while continue propagates to the enclosing loop. Labelled transfers, full iteration-state propagation and switch fallthrough are not modeled. Mutations to iterated collections, custom iterators, async iterator side effects, and complex counter updates are unsupported.",
+    "Array callback support: forEach/map/flatMap/some/every/filter/find/findIndex and reduce with inline callbacks and collections resolved to function input paths. Predicate callbacks support concise expressions and block callbacks with a single return; safe top-level const aliases are expanded before MC/DC analysis. Block callbacks with explicit if decisions also expand safe const aliases in their conditions. For predicates that use the callback index parameter, unique-cause MC/DC searches representative callback indexes 0 and 1 and can emit a cross-index independence pair; pair scenarios carry the actual iterationIndex. Only immutable const declarations with side-effect-free initializers are inlined; let/var, destructuring, reassignment, helper calls, getters and mutation-dependent values are not symbolically expanded. Direct find() checks and find() comparisons with null/undefined are supported, as are findIndex() comparisons against numeric literals. some/every have representative match/no-match scenarios. flatMap chains support a direct array-property projection (for example group => group.passengers). reduce analyzes callback indexes through 2 with an initial value and through 3 without one, replaying up to two prior callback invocations over bounded candidate items. This is concrete interpretation, not general symbolic execution; unsupported reducer statements are not replaced with a fabricated initial accumulator state.",
+    "Undefined values are encoded as {\"$undefined\":true}; omit the corresponding argument/property or hydrate this marker before calling the function.",
+    "Mock templates are type-derived suggestions and are not automatically connected to branch scenarios."
+  ],
+  "functions": [
+    {
+      "name": "indexSensitive",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0.enabled"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method some()",
+            "Inferred from nested property access: input.items.0.enabled"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.enabled"
+          ]
+        },
+        {
+          "path": "input.items.0.enabled",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 6,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 2,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-2-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-2-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 2,
+            "column": 10,
+            "condition": "input.items.some((item, index) => index === 1 && item.enabled)",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-2-10-one-callback-1",
+          "target": {
+            "branchId": "loop-2-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 2,
+            "column": 10,
+            "condition": "input.items.some((item, index) => index === 1 && item.enabled)",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-2-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-2-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 2,
+            "column": 10,
+            "condition": "input.items.some((item, index) => index === 1 && item.enabled)",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": false
+                },
+                {
+                  "enabled": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-2-44-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-2-44",
+            "kind": "array-predicate",
+            "line": 2,
+            "column": 44,
+            "condition": "index === 1 && item.enabled",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "item",
+              "index"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-2-44-true-iteration-1-1",
+          "target": {
+            "branchId": "array-predicate-2-44",
+            "kind": "array-predicate",
+            "line": 2,
+            "column": 44,
+            "condition": "index === 1 && item.enabled",
+            "outcome": true,
+            "callbackMethod": "some",
+            "collection": "input.items",
+            "iterationIndex": 1,
+            "callbackParameters": [
+              "item",
+              "index"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": false
+                },
+                {
+                  "enabled": true
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.1.enabled"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-2-44-false-iteration-1-1",
+          "target": {
+            "branchId": "array-predicate-2-44",
+            "kind": "array-predicate",
+            "line": 2,
+            "column": 44,
+            "condition": "index === 1 && item.enabled",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.items",
+            "iterationIndex": 1,
+            "callbackParameters": [
+              "item",
+              "index"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": false
+                },
+                {
+                  "enabled": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.1.enabled"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 2,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-array-predicate-some-2-44",
+            "kind": "array-predicate-some",
+            "line": 2,
+            "column": 44,
+            "expression": "index === 1 && item.enabled",
+            "sourceExpression": "index === 1 && item.enabled",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "some",
+              "collection": "input.items",
+              "iterationIndex": 0,
+              "candidateIterationIndexes": [
+                0,
+                1
+              ],
+              "parameters": [
+                "item",
+                "index"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "index === 1",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-some-2-44-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true
+                    },
+                    "changedCondition": "C1",
+                    "variedCallbackIndex": {
+                      "conditionFalse": 0,
+                      "conditionTrue": 1
+                    },
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-some-2-44-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "enabled": true
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item",
+                            "index"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.enabled"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-some-2-44-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "enabled": false
+                              },
+                              {
+                                "enabled": true
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.items",
+                          "iterationIndex": 1,
+                          "parameters": [
+                            "item",
+                            "index"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.1.enabled"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "item.enabled",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-some-2-44-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-some-2-44-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "enabled": false
+                              },
+                              {
+                                "enabled": false
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.items",
+                          "iterationIndex": 1,
+                          "parameters": [
+                            "item",
+                            "index"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.1.enabled"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-some-2-44-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "enabled": false
+                              },
+                              {
+                                "enabled": true
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.items",
+                          "iterationIndex": 1,
+                          "parameters": [
+                            "item",
+                            "index"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.1.enabled"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.items.some",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 1,
+        "column": 1
+      }
+    },
+    {
+      "name": "indexAndProperty",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0.score",
+            "Inferred from nested property access: input.minimumScore"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method some()",
+            "Inferred from nested property access: input.items.0.score"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.score"
+          ]
+        },
+        {
+          "path": "input.items.0.score",
+          "inferredType": "number",
+          "confidence": "medium",
+          "evidence": [
+            "Compared numerically with another input property"
+          ]
+        },
+        {
+          "path": "input.minimumScore",
+          "inferredType": "number",
+          "confidence": "medium",
+          "evidence": [
+            "Compared numerically with another input property"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 6,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 2,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-6-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-6-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 6,
+            "column": 10,
+            "condition": "input.items.some((item, index) => index > 0 && item.score >= input.minimumScore)",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": [],
+              "minimumScore": 1
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-6-10-one-callback-1",
+          "target": {
+            "branchId": "loop-6-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 6,
+            "column": 10,
+            "condition": "input.items.some((item, index) => index > 0 && item.score >= input.minimumScore)",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "score": 1
+                }
+              ],
+              "minimumScore": 1
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-6-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-6-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 6,
+            "column": 10,
+            "condition": "input.items.some((item, index) => index > 0 && item.score >= input.minimumScore)",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "score": 1
+                },
+                {
+                  "score": 1
+                }
+              ],
+              "minimumScore": 1
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-6-44-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-6-44",
+            "kind": "array-predicate",
+            "line": 6,
+            "column": 44,
+            "condition": "index > 0 && item.score >= input.minimumScore",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "item",
+              "index"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "score": 1
+                }
+              ],
+              "minimumScore": 1
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-6-44-true-iteration-1-1",
+          "target": {
+            "branchId": "array-predicate-6-44",
+            "kind": "array-predicate",
+            "line": 6,
+            "column": 44,
+            "condition": "index > 0 && item.score >= input.minimumScore",
+            "outcome": true,
+            "callbackMethod": "some",
+            "collection": "input.items",
+            "iterationIndex": 1,
+            "callbackParameters": [
+              "item",
+              "index"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "score": 1
+                },
+                {
+                  "score": 0
+                }
+              ],
+              "minimumScore": 0
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.1.score",
+            "input.minimumScore"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-6-44-false-iteration-1-1",
+          "target": {
+            "branchId": "array-predicate-6-44",
+            "kind": "array-predicate",
+            "line": 6,
+            "column": 44,
+            "condition": "index > 0 && item.score >= input.minimumScore",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.items",
+            "iterationIndex": 1,
+            "callbackParameters": [
+              "item",
+              "index"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "score": 1
+                },
+                {
+                  "score": 0
+                }
+              ],
+              "minimumScore": 1
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.1.score",
+            "input.minimumScore"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 2,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-array-predicate-some-6-44",
+            "kind": "array-predicate-some",
+            "line": 6,
+            "column": 44,
+            "expression": "index > 0 && item.score >= input.minimumScore",
+            "sourceExpression": "index > 0 && item.score >= input.minimumScore",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "some",
+              "collection": "input.items",
+              "iterationIndex": 0,
+              "candidateIterationIndexes": [
+                0,
+                1
+              ],
+              "parameters": [
+                "item",
+                "index"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "index > 0",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-some-6-44-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true
+                    },
+                    "changedCondition": "C1",
+                    "variedCallbackIndex": {
+                      "conditionFalse": 0,
+                      "conditionTrue": 1
+                    },
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-some-6-44-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "score": 0
+                              }
+                            ],
+                            "minimumScore": 0
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item",
+                            "index"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.score",
+                          "input.minimumScore"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-some-6-44-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "score": 1
+                              },
+                              {
+                                "score": 0
+                              }
+                            ],
+                            "minimumScore": 0
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.items",
+                          "iterationIndex": 1,
+                          "parameters": [
+                            "item",
+                            "index"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.1.score",
+                          "input.minimumScore"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "item.score >= input.minimumScore",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-some-6-44-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-some-6-44-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "score": 1
+                              },
+                              {
+                                "score": 0
+                              }
+                            ],
+                            "minimumScore": 1
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.items",
+                          "iterationIndex": 1,
+                          "parameters": [
+                            "item",
+                            "index"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.1.score",
+                          "input.minimumScore"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-some-6-44-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "score": 1
+                              },
+                              {
+                                "score": 0
+                              }
+                            ],
+                            "minimumScore": 0
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.items",
+                          "iterationIndex": 1,
+                          "parameters": [
+                            "item",
+                            "index"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.1.score",
+                          "input.minimumScore"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.items.some",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 5,
+        "column": 1
+      }
+    },
+    {
+      "name": "callbackLocalAliases",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.passengers",
+            "Inferred from nested property access: input.passengers.0.age",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.country",
+            "Inferred from nested property access: input.country"
+          ]
+        },
+        {
+          "path": "input.country",
+          "inferredType": "unknown",
+          "confidence": "low",
+          "evidence": [
+            "Property is accessed but no primitive type constraint was found"
+          ]
+        },
+        {
+          "path": "input.passengers",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method some()",
+            "Inferred from nested property access: input.passengers.0.age",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.country"
+          ]
+        },
+        {
+          "path": "input.passengers.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.passengers.0.age",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.country"
+          ]
+        },
+        {
+          "path": "input.passengers.0.age",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 18"
+          ]
+        },
+        {
+          "path": "input.passengers.0.country",
+          "inferredType": "unknown",
+          "confidence": "low",
+          "evidence": [
+            "Property is accessed but no primitive type constraint was found"
+          ]
+        },
+        {
+          "path": "input.passengers.0.isActive",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 7,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 3,
+        "mcdcIndependencePairsFound": 3,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-10-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-10-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 10,
+            "column": 10,
+            "condition": "input.passengers.some(passenger => {\n    const isAdult = passenger.age >= 18;\n    const isActive = passenger.isActive;\n    const isEligible = isAdult && isActive;\n    return isEligible && passenger.country === input.country;\n  })",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.passengers",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "passengers": []
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-10-10-one-callback-1",
+          "target": {
+            "branchId": "loop-10-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 10,
+            "column": 10,
+            "condition": "input.passengers.some(passenger => {\n    const isAdult = passenger.age >= 18;\n    const isActive = passenger.isActive;\n    const isEligible = isAdult && isActive;\n    return isEligible && passenger.country === input.country;\n  })",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.passengers",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "age": 1,
+                  "isActive": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-10-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-10-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 10,
+            "column": 10,
+            "condition": "input.passengers.some(passenger => {\n    const isAdult = passenger.age >= 18;\n    const isActive = passenger.isActive;\n    const isEligible = isAdult && isActive;\n    return isEligible && passenger.country === input.country;\n  })",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.passengers",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "age": 1,
+                  "isActive": false
+                },
+                {
+                  "age": 1,
+                  "isActive": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-14-12-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-14-12",
+            "kind": "array-predicate",
+            "line": 14,
+            "column": 12,
+            "condition": "passenger.age >= 18\n    &&\n        passenger.isActive\n    && passenger.country === input.country",
+            "outcome": true,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "age": 18,
+                  "isActive": true,
+                  "country": 0
+                }
+              ],
+              "country": 0
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.age",
+            "input.passengers.0.isActive",
+            "input.passengers.0.country",
+            "input.country"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-14-12-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-14-12",
+            "kind": "array-predicate",
+            "line": 14,
+            "column": 12,
+            "condition": "passenger.age >= 18\n    &&\n        passenger.isActive\n    && passenger.country === input.country",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "age": 17,
+                  "isActive": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-14-12-false-iteration-0-2",
+          "target": {
+            "branchId": "array-predicate-14-12",
+            "kind": "array-predicate",
+            "line": 14,
+            "column": 12,
+            "condition": "passenger.age >= 18\n    &&\n        passenger.isActive\n    && passenger.country === input.country",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "age": 18,
+                  "isActive": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.age",
+            "input.passengers.0.isActive"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-14-12-false-iteration-0-3",
+          "target": {
+            "branchId": "array-predicate-14-12",
+            "kind": "array-predicate",
+            "line": 14,
+            "column": 12,
+            "condition": "passenger.age >= 18\n    &&\n        passenger.isActive\n    && passenger.country === input.country",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "age": 18,
+                  "isActive": true,
+                  "country": 0
+                }
+              ],
+              "country": 1
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.age",
+            "input.passengers.0.isActive",
+            "input.passengers.0.country",
+            "input.country"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 3,
+        "independencePairsFound": 3,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-array-predicate-some-14-12",
+            "kind": "array-predicate-some",
+            "line": 14,
+            "column": 12,
+            "expression": "passenger.age >= 18\n    &&\n        passenger.isActive\n    && passenger.country === input.country",
+            "sourceExpression": "isEligible && passenger.country === input.country",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "some",
+              "collection": "input.passengers",
+              "iterationIndex": 0,
+              "parameters": [
+                "passenger"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "passenger.age >= 18",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-some-14-12-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true,
+                      "C3": true
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-some-14-12-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "age": 17,
+                                "isActive": true,
+                                "country": 0
+                              }
+                            ],
+                            "country": 0
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true,
+                          "C3": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.age",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.country",
+                          "input.country"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-some-14-12-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "age": 18,
+                                "isActive": true,
+                                "country": 0
+                              }
+                            ],
+                            "country": 0
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true,
+                          "C3": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.age",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.country",
+                          "input.country"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "passenger.isActive",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-some-14-12-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true,
+                      "C3": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-some-14-12-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "age": 18,
+                                "isActive": false,
+                                "country": 0
+                              }
+                            ],
+                            "country": 0
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false,
+                          "C3": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.age",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.country",
+                          "input.country"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-some-14-12-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "age": 18,
+                                "isActive": true,
+                                "country": 0
+                              }
+                            ],
+                            "country": 0
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true,
+                          "C3": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.age",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.country",
+                          "input.country"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C3",
+                "expression": "passenger.country === input.country",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-some-14-12-C3-pair-1",
+                    "fixedConditions": {
+                      "C1": true,
+                      "C2": true
+                    },
+                    "changedCondition": "C3",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-some-14-12-C3-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "age": 18,
+                                "isActive": true,
+                                "country": 0
+                              }
+                            ],
+                            "country": 1
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true,
+                          "C3": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.age",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.country",
+                          "input.country"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-some-14-12-C3-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "age": 18,
+                                "isActive": true,
+                                "country": 0
+                              }
+                            ],
+                            "country": 0
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true,
+                          "C3": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.age",
+                          "input.passengers.0.isActive",
+                          "input.passengers.0.country",
+                          "input.country"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.passengers.some",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 9,
+        "column": 1
+      }
+    },
+    {
+      "name": "callbackLocalAliasChain",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.passengers",
+            "Inferred from nested property access: input.passengers.0.points",
+            "Inferred from nested property access: input.minimumPoints",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.country",
+            "Inferred from nested property access: input.country"
+          ]
+        },
+        {
+          "path": "input.country",
+          "inferredType": "unknown",
+          "confidence": "low",
+          "evidence": [
+            "Property is accessed but no primitive type constraint was found"
+          ]
+        },
+        {
+          "path": "input.minimumPoints",
+          "inferredType": "number",
+          "confidence": "medium",
+          "evidence": [
+            "Compared numerically with another input property"
+          ]
+        },
+        {
+          "path": "input.passengers",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method some()",
+            "Inferred from nested property access: input.passengers.0.points",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.country"
+          ]
+        },
+        {
+          "path": "input.passengers.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.passengers.0.points",
+            "Inferred from nested property access: input.passengers.0.isActive",
+            "Inferred from nested property access: input.passengers.0.country"
+          ]
+        },
+        {
+          "path": "input.passengers.0.country",
+          "inferredType": "unknown",
+          "confidence": "low",
+          "evidence": [
+            "Property is accessed but no primitive type constraint was found"
+          ]
+        },
+        {
+          "path": "input.passengers.0.isActive",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.passengers.0.points",
+          "inferredType": "number",
+          "confidence": "medium",
+          "evidence": [
+            "Compared numerically with another input property"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 8,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 3,
+        "mcdcIndependencePairsFound": 3,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-19-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-19-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 19,
+            "column": 10,
+            "condition": "input.passengers.some(passenger => {\n    const isAllowedCountry = passenger.country === input.country;\n    const hasEnoughPoints = passenger.points >= input.minimumPoints;\n    const isEligible = isAllowedCountry || hasEnoughPoints;\n    return isEligible && passenger.isActive;\n  })",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.passengers",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "passengers": [],
+              "minimumPoints": 1
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-19-10-one-callback-1",
+          "target": {
+            "branchId": "loop-19-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 19,
+            "column": 10,
+            "condition": "input.passengers.some(passenger => {\n    const isAllowedCountry = passenger.country === input.country;\n    const hasEnoughPoints = passenger.points >= input.minimumPoints;\n    const isEligible = isAllowedCountry || hasEnoughPoints;\n    return isEligible && passenger.isActive;\n  })",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.passengers",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "points": 1,
+                  "isActive": false
+                }
+              ],
+              "minimumPoints": 1
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-19-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-19-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 19,
+            "column": 10,
+            "condition": "input.passengers.some(passenger => {\n    const isAllowedCountry = passenger.country === input.country;\n    const hasEnoughPoints = passenger.points >= input.minimumPoints;\n    const isEligible = isAllowedCountry || hasEnoughPoints;\n    return isEligible && passenger.isActive;\n  })",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.passengers",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "points": 1,
+                  "isActive": false
+                },
+                {
+                  "points": 1,
+                  "isActive": false
+                }
+              ],
+              "minimumPoints": 1
+            }
+          ],
+          "assumptions": [
+            "input.passengers"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-23-12-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-23-12",
+            "kind": "array-predicate",
+            "line": 23,
+            "column": 12,
+            "condition": "(passenger.country === input.country\n    ||\n        passenger.points >= input.minimumPoints)\n    && passenger.isActive",
+            "outcome": true,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "points": 1,
+                  "isActive": true,
+                  "country": 0
+                }
+              ],
+              "minimumPoints": 1,
+              "country": 0
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.country",
+            "input.country",
+            "input.passengers.0.isActive"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-23-12-true-iteration-0-2",
+          "target": {
+            "branchId": "array-predicate-23-12",
+            "kind": "array-predicate",
+            "line": 23,
+            "column": 12,
+            "condition": "(passenger.country === input.country\n    ||\n        passenger.points >= input.minimumPoints)\n    && passenger.isActive",
+            "outcome": true,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "points": 0,
+                  "isActive": true,
+                  "country": 0
+                }
+              ],
+              "minimumPoints": 0,
+              "country": 1
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.country",
+            "input.country",
+            "input.passengers.0.points",
+            "input.minimumPoints",
+            "input.passengers.0.isActive"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-23-12-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-23-12",
+            "kind": "array-predicate",
+            "line": 23,
+            "column": 12,
+            "condition": "(passenger.country === input.country\n    ||\n        passenger.points >= input.minimumPoints)\n    && passenger.isActive",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "points": 0,
+                  "isActive": false,
+                  "country": 0
+                }
+              ],
+              "minimumPoints": 1,
+              "country": 1
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.country",
+            "input.country",
+            "input.passengers.0.points",
+            "input.minimumPoints"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-23-12-false-iteration-0-2",
+          "target": {
+            "branchId": "array-predicate-23-12",
+            "kind": "array-predicate",
+            "line": 23,
+            "column": 12,
+            "condition": "(passenger.country === input.country\n    ||\n        passenger.points >= input.minimumPoints)\n    && passenger.isActive",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "points": 1,
+                  "isActive": false,
+                  "country": 0
+                }
+              ],
+              "minimumPoints": 1,
+              "country": 0
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.country",
+            "input.country",
+            "input.passengers.0.isActive"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-23-12-false-iteration-0-3",
+          "target": {
+            "branchId": "array-predicate-23-12",
+            "kind": "array-predicate",
+            "line": 23,
+            "column": 12,
+            "condition": "(passenger.country === input.country\n    ||\n        passenger.points >= input.minimumPoints)\n    && passenger.isActive",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.passengers",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "passenger"
+            ]
+          },
+          "arguments": [
+            {
+              "passengers": [
+                {
+                  "points": 0,
+                  "isActive": false,
+                  "country": 0
+                }
+              ],
+              "minimumPoints": 0,
+              "country": 1
+            }
+          ],
+          "assumptions": [
+            "input.passengers",
+            "input.passengers.0.country",
+            "input.country",
+            "input.passengers.0.points",
+            "input.minimumPoints",
+            "input.passengers.0.isActive"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 3,
+        "independencePairsFound": 3,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-array-predicate-some-23-12",
+            "kind": "array-predicate-some",
+            "line": 23,
+            "column": 12,
+            "expression": "(passenger.country === input.country\n    ||\n        passenger.points >= input.minimumPoints)\n    && passenger.isActive",
+            "sourceExpression": "isEligible && passenger.isActive",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "some",
+              "collection": "input.passengers",
+              "iterationIndex": 0,
+              "parameters": [
+                "passenger"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "passenger.country === input.country",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-some-23-12-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": false,
+                      "C3": true
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-some-23-12-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "points": 0,
+                                "isActive": true,
+                                "country": 0
+                              }
+                            ],
+                            "minimumPoints": 1,
+                            "country": 1
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": false,
+                          "C3": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.country",
+                          "input.country",
+                          "input.passengers.0.points",
+                          "input.minimumPoints",
+                          "input.passengers.0.isActive"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-some-23-12-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "points": 0,
+                                "isActive": true,
+                                "country": 0
+                              }
+                            ],
+                            "minimumPoints": 1,
+                            "country": 0
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false,
+                          "C3": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.country",
+                          "input.country",
+                          "input.passengers.0.points",
+                          "input.minimumPoints",
+                          "input.passengers.0.isActive"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "passenger.points >= input.minimumPoints",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-some-23-12-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": false,
+                      "C3": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-some-23-12-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "points": 0,
+                                "isActive": true,
+                                "country": 0
+                              }
+                            ],
+                            "minimumPoints": 1,
+                            "country": 1
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": false,
+                          "C3": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.country",
+                          "input.country",
+                          "input.passengers.0.points",
+                          "input.minimumPoints",
+                          "input.passengers.0.isActive"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-some-23-12-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "points": 0,
+                                "isActive": true,
+                                "country": 0
+                              }
+                            ],
+                            "minimumPoints": 0,
+                            "country": 1
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true,
+                          "C3": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.country",
+                          "input.country",
+                          "input.passengers.0.points",
+                          "input.minimumPoints",
+                          "input.passengers.0.isActive"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C3",
+                "expression": "passenger.isActive",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-some-23-12-C3-pair-1",
+                    "fixedConditions": {
+                      "C1": true,
+                      "C2": false
+                    },
+                    "changedCondition": "C3",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-some-23-12-C3-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "points": 0,
+                                "isActive": false,
+                                "country": 0
+                              }
+                            ],
+                            "minimumPoints": 1,
+                            "country": 0
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false,
+                          "C3": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.country",
+                          "input.country",
+                          "input.passengers.0.points",
+                          "input.minimumPoints",
+                          "input.passengers.0.isActive"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-some-23-12-C3-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "passengers": [
+                              {
+                                "points": 0,
+                                "isActive": true,
+                                "country": 0
+                              }
+                            ],
+                            "minimumPoints": 1,
+                            "country": 0
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.passengers",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "passenger"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false,
+                          "C3": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.passengers",
+                          "input.passengers.0.country",
+                          "input.country",
+                          "input.passengers.0.points",
+                          "input.minimumPoints",
+                          "input.passengers.0.isActive"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.passengers.some",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 18,
+        "column": 1
+      }
+    },
+    {
+      "name": "callbackLocalAliasesInIf",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0.score",
+            "Inferred from nested property access: input.items.0.enabled"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method some()",
+            "Inferred from nested property access: input.items.0.score",
+            "Inferred from nested property access: input.items.0.enabled"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.score",
+            "Inferred from nested property access: input.items.0.enabled"
+          ]
+        },
+        {
+          "path": "input.items.0.enabled",
+          "inferredType": "unknown",
+          "confidence": "low",
+          "evidence": [
+            "Property is accessed but no primitive type constraint was found"
+          ]
+        },
+        {
+          "path": "input.items.0.score",
+          "inferredType": "unknown",
+          "confidence": "low",
+          "evidence": [
+            "Property is accessed but no primitive type constraint was found"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 6,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 2,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-28-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-28-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 28,
+            "column": 10,
+            "condition": "input.items.some(item => {\n    const hasScore = item.score > 0;\n    const isEnabled = item.enabled;\n    if (hasScore && isEnabled) return true;\n    return false;\n  })",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-28-10-one-callback-1",
+          "target": {
+            "branchId": "loop-28-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 28,
+            "column": 10,
+            "condition": "input.items.some(item => {\n    const hasScore = item.score > 0;\n    const isEnabled = item.enabled;\n    if (hasScore && isEnabled) return true;\n    return false;\n  })",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": [
+                {}
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-28-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-28-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 28,
+            "column": 10,
+            "condition": "input.items.some(item => {\n    const hasScore = item.score > 0;\n    const isEnabled = item.enabled;\n    if (hasScore && isEnabled) return true;\n    return false;\n  })",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": [
+                {},
+                {}
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-31-9-true-iteration-0-1",
+          "target": {
+            "branchId": "if-31-9",
+            "kind": "if",
+            "line": 31,
+            "column": 9,
+            "condition": "hasScore && isEnabled",
+            "outcome": true,
+            "callbackMethod": "some",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "item"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "score": 1,
+                  "enabled": {}
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.score",
+            "input.items.0.enabled"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-31-9-false-iteration-0-1",
+          "target": {
+            "branchId": "if-31-9",
+            "kind": "if",
+            "line": 31,
+            "column": 9,
+            "condition": "hasScore && isEnabled",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "item"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "score": 0
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.score"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-31-9-false-iteration-0-2",
+          "target": {
+            "branchId": "if-31-9",
+            "kind": "if",
+            "line": 31,
+            "column": 9,
+            "condition": "hasScore && isEnabled",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "item"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "score": 1,
+                  "enabled": null
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.score",
+            "input.items.0.enabled"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 2,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-if-31-9",
+            "kind": "if",
+            "line": 31,
+            "column": 9,
+            "expression": "item.score > 0\n    &&\n        item.enabled",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "some",
+              "collection": "input.items",
+              "iterationIndex": 0,
+              "parameters": [
+                "item"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "item.score > 0",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-31-9-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-31-9-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "score": 0,
+                                "enabled": {}
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.score",
+                          "input.items.0.enabled"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-31-9-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "score": 1,
+                                "enabled": {}
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.score",
+                          "input.items.0.enabled"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "item.enabled",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-31-9-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-31-9-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "score": 1,
+                                "enabled": null
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.score",
+                          "input.items.0.enabled"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-31-9-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "score": 1,
+                                "enabled": {}
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.score",
+                          "input.items.0.enabled"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.items.some",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 27,
+        "column": 1
+      }
+    },
+    {
+      "name": "callbackLocalAliasesWithNestedIf",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0.role",
+            "Inferred from nested property access: input.items.0.active"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method every()",
+            "Inferred from nested property access: input.items.0.role",
+            "Inferred from nested property access: input.items.0.active"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.role",
+            "Inferred from nested property access: input.items.0.active"
+          ]
+        },
+        {
+          "path": "input.items.0.active",
+          "inferredType": "unknown",
+          "confidence": "low",
+          "evidence": [
+            "Property is accessed but no primitive type constraint was found"
+          ]
+        },
+        {
+          "path": "input.items.0.role",
+          "inferredType": "unknown",
+          "confidence": "low",
+          "evidence": [
+            "Property is accessed but no primitive type constraint was found"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 6,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 2,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-37-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-37-10",
+            "kind": "loop",
+            "loopType": "array-every",
+            "line": 37,
+            "column": 10,
+            "condition": "input.items.every(item => {\n    const hasRole = item.role === 'admin';\n    const isActive = item.active;\n    if (hasRole || isActive) return true;\n    return false;\n  })",
+            "outcome": "zero-callbacks",
+            "phase": "before-first-callback",
+            "collection": "input.items",
+            "callbackMethod": "every"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-37-10-one-callback-1",
+          "target": {
+            "branchId": "loop-37-10",
+            "kind": "loop",
+            "loopType": "array-every",
+            "line": 37,
+            "column": 10,
+            "condition": "input.items.every(item => {\n    const hasRole = item.role === 'admin';\n    const isActive = item.active;\n    if (hasRole || isActive) return true;\n    return false;\n  })",
+            "outcome": "one-callback",
+            "phase": "first-callback",
+            "collection": "input.items",
+            "callbackMethod": "every"
+          },
+          "arguments": [
+            {
+              "items": [
+                {}
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-37-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-37-10",
+            "kind": "loop",
+            "loopType": "array-every",
+            "line": 37,
+            "column": 10,
+            "condition": "input.items.every(item => {\n    const hasRole = item.role === 'admin';\n    const isActive = item.active;\n    if (hasRole || isActive) return true;\n    return false;\n  })",
+            "outcome": "multiple-callbacks",
+            "phase": "repeated-callback",
+            "collection": "input.items",
+            "callbackMethod": "every"
+          },
+          "arguments": [
+            {
+              "items": [
+                {},
+                {}
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-40-9-true-iteration-0-1",
+          "target": {
+            "branchId": "if-40-9",
+            "kind": "if",
+            "line": 40,
+            "column": 9,
+            "condition": "hasRole || isActive",
+            "outcome": true,
+            "callbackMethod": "every",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "item"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "role": "admin"
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.role"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-40-9-true-iteration-0-2",
+          "target": {
+            "branchId": "if-40-9",
+            "kind": "if",
+            "line": 40,
+            "column": 9,
+            "condition": "hasRole || isActive",
+            "outcome": true,
+            "callbackMethod": "every",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "item"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "role": "admin_other",
+                  "active": {}
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.role",
+            "input.items.0.active"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-40-9-false-iteration-0-1",
+          "target": {
+            "branchId": "if-40-9",
+            "kind": "if",
+            "line": 40,
+            "column": 9,
+            "condition": "hasRole || isActive",
+            "outcome": false,
+            "callbackMethod": "every",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "item"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "role": "admin_other",
+                  "active": null
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.role",
+            "input.items.0.active"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 2,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-if-40-9",
+            "kind": "if",
+            "line": 40,
+            "column": 9,
+            "expression": "item.role === 'admin'\n    ||\n        item.active",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "every",
+              "collection": "input.items",
+              "iterationIndex": 0,
+              "parameters": [
+                "item"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "item.role === 'admin'",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-40-9-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": false
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-40-9-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "role": "admin_other",
+                                "active": null
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "every",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.role",
+                          "input.items.0.active"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-40-9-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "role": "admin",
+                                "active": null
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "every",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.role",
+                          "input.items.0.active"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "item.active",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-40-9-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": false
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-40-9-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "role": "admin_other",
+                                "active": null
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "every",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.role",
+                          "input.items.0.active"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-40-9-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "role": "admin_other",
+                                "active": {}
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "every",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.role",
+                          "input.items.0.active"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.items.every",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 36,
+        "column": 1
+      }
+    },
+    {
+      "name": "conditionalReturnMustRemainControlFlow",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0.enabled",
+            "Inferred from nested property access: input.items.0.ready"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method some()",
+            "Inferred from nested property access: input.items.0.enabled",
+            "Inferred from nested property access: input.items.0.ready"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.enabled",
+            "Inferred from nested property access: input.items.0.ready"
+          ]
+        },
+        {
+          "path": "input.items.0.enabled",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.items.0.ready",
+          "inferredType": "unknown",
+          "confidence": "low",
+          "evidence": [
+            "Property is accessed but no primitive type constraint was found"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 5,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 1,
+        "mcdcIndependencePairsFound": 1,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-46-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-46-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 46,
+            "column": 10,
+            "condition": "input.items.some(item => {\n    if (item.enabled) return item.ready;\n    return false;\n  })",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-46-10-one-callback-1",
+          "target": {
+            "branchId": "loop-46-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 46,
+            "column": 10,
+            "condition": "input.items.some(item => {\n    if (item.enabled) return item.ready;\n    return false;\n  })",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-46-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-46-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 46,
+            "column": 10,
+            "condition": "input.items.some(item => {\n    if (item.enabled) return item.ready;\n    return false;\n  })",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": false
+                },
+                {
+                  "enabled": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-47-9-true-iteration-0-1",
+          "target": {
+            "branchId": "if-47-9",
+            "kind": "if",
+            "line": 47,
+            "column": 9,
+            "condition": "item.enabled",
+            "outcome": true,
+            "callbackMethod": "some",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "item"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": true
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.enabled"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-47-9-false-iteration-0-1",
+          "target": {
+            "branchId": "if-47-9",
+            "kind": "if",
+            "line": 47,
+            "column": 9,
+            "condition": "item.enabled",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "item"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.enabled"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 1,
+        "independencePairsFound": 1,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-if-47-9",
+            "kind": "if",
+            "line": 47,
+            "column": 9,
+            "expression": "item.enabled",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "some",
+              "collection": "input.items",
+              "iterationIndex": 0,
+              "parameters": [
+                "item"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "item.enabled",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-47-9-C1-pair-1",
+                    "fixedConditions": {},
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-47-9-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "enabled": false
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.enabled"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-47-9-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "enabled": true
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.enabled"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.items.some",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 45,
+        "column": 1
+      }
+    }
+  ]
+}

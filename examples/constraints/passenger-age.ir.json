@@ -1,0 +1,50 @@
+{
+  "irVersion": 1,
+  "expression": {
+    "kind": "logical",
+    "operator": "and",
+    "operands": [
+      {
+        "kind": "atom",
+        "id": "C1",
+        "path": ["passenger", "age"],
+        "accessor": "value",
+        "operator": ">=",
+        "value": 18,
+        "source": null,
+        "valueType": "number"
+      },
+      {
+        "kind": "atom",
+        "id": "C2",
+        "path": ["passenger", "active"],
+        "accessor": "value",
+        "operator": "truthy",
+        "source": null,
+        "valueType": "unknown"
+      }
+    ]
+  },
+  "atoms": [
+    {
+      "kind": "atom",
+      "id": "C1",
+      "path": ["passenger", "age"],
+      "accessor": "value",
+      "operator": ">=",
+      "value": 18,
+      "source": null,
+      "valueType": "number"
+    },
+    {
+      "kind": "atom",
+      "id": "C2",
+      "path": ["passenger", "active"],
+      "accessor": "value",
+      "operator": "truthy",
+      "source": null,
+      "valueType": "unknown"
+    }
+  ],
+  "diagnostics": []
+}

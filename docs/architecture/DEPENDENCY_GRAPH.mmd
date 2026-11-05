@@ -1,0 +1,115 @@
+flowchart TD
+  Entry[branch-scenarios.mjs] --> CLI[src/cli]
+  CLI --> App[src/application]
+  CLI --> Runtime[src/runtime/typescript-analysis-runtime.mjs]
+
+  subgraph Frontend[TypeScript Front-end]
+    Project[src/project]
+    AST[src/ast]
+    Inference[src/inference]
+    Domain[src/domain]
+    Inference --> Domain
+  end
+
+  subgraph Analysis[Analysis and Data Flow]
+    Session[src/analysis/function-analysis-session.mjs]
+    Orchestrator[src/analysis/function-analysis-orchestrator.mjs]
+    ControlFlow[src/analysis/control-flow]
+    Loops[src/analysis/loops]
+    Arrays[src/analysis/arrays]
+    DataFlow[src/data-flow]
+    Mcdc[src/mcdc]
+    Session --> Orchestrator
+    Orchestrator --> ControlFlow
+    ControlFlow --> Loops
+    ControlFlow --> Arrays
+    DataFlow --> Orchestrator
+    Mcdc --> Orchestrator
+  end
+
+  subgraph Compiler[Constraint compilation and solving]
+    CompilerAdapter[src/constraints/typescript-adapter.mjs]
+    ConstraintIR[src/constraints/constraint-ir.mjs]
+    Solver[src/solver/constraint-solver.mjs]
+    ConstraintService[src/solver/constraint-analysis-service.mjs]
+    AstFallback[src/solver/recursive-ast-fallback.mjs]
+    CompilerAdapter --> ConstraintIR
+    ConstraintIR --> Solver
+    ConstraintService --> Solver
+    ConstraintService --> AstFallback
+  end
+
+  subgraph Generation[Domain generation]
+    ScenarioService[src/scenarios/scenario-generation-service.mjs]
+    ScenarioBuilder[src/scenarios/scenario-builder.mjs]
+    MockPlanner[src/mocks/mock-planner.mjs]
+    MockEnricher[src/mocks/data-flow-mock-enricher.mjs]
+    ScenarioService --> ScenarioBuilder
+    ScenarioService --> MockPlanner
+    MockPlanner --> MockEnricher
+  end
+
+  subgraph Output[Output and test execution]
+    ReportBuilder[src/reporting/report-builder.mjs]
+    AnalysisReportBuilder[src/reporting/analysis-report-builder.mjs]
+    AnalysisReportSchema[src/reporting/analysis-report-schema.mjs]
+    AnalysisRunForm[src/reporting/analysis-run-form.mjs]
+    AnalysisRunFormSchema[src/reporting/analysis-run-form-schema.mjs]
+    AnalysisReportFinalizer[src/reporting/analysis-report-finalizer.mjs]
+    ScenarioReport[src/reporting/scenario-report-adapter.mjs]
+    MockReport[src/reporting/mock-report-adapter.mjs]
+    TestBatch[src/testing/batching/test-batch-builder.mjs]
+    JestEach[src/testing/batching/jest-each-generator.mjs]
+    Harness[src/execution/jest-test-harness.mjs]
+    Runner[src/execution/jest-runner.mjs]
+    Coverage[src/coverage]
+    Minimize[src/minimization]
+    ReportSchema[src/reporting/report-schema.mjs]
+    JsonWriter[src/reporting/json-writer.mjs]
+    TestBatch --> JestEach
+    JestEach --> Harness
+    Harness --> Runner
+    Runner --> Coverage
+    Coverage --> Minimize
+  end
+
+  Runtime --> Project
+  Runtime --> CoverageFeedback[src/application/run-coverage-feedback.mjs]
+  Runtime --> AST
+  Runtime --> Inference
+  Runtime --> DataFlow
+  Runtime --> CompilerAdapter
+  Runtime --> ConstraintService
+  Runtime --> Session
+  Runtime --> ScenarioService
+  Runtime --> MockPlanner
+  Runtime --> ScenarioReport
+  Runtime --> MockReport
+  App --> DataFlow
+  App --> Coverage
+  App --> Minimize
+  App --> TestBatch
+  App --> ReportBuilder
+  App --> AnalysisReportBuilder
+  App --> AnalysisReportSchema
+  App --> AnalysisRunForm
+  App --> AnalysisRunFormSchema
+  AnalysisReportFinalizer --> AnalysisReportSchema
+  AnalysisReportFinalizer --> AnalysisRunFormSchema
+  App --> ReportSchema
+  App --> JsonWriter
+  App --> Runner
+
+  Inference -. uses shared array policy .-> Domain
+  Arrays -. uses shared callback method policy .-> Domain
+  DataFlow -. JSON-safe FunctionDataModel .-> CompilerAdapter
+  DataFlow -. facts / provenance .-> ScenarioService
+  DataFlow -. call dependencies / effects .-> MockEnricher
+  ScenarioBuilder -. ScenarioCase .-> ScenarioReport
+  MockPlanner -. MockPlan .-> MockReport
+
+  classDef core fill:#dff4e4,stroke:#27834a,color:#173d25;
+  classDef boundary fill:#e7e9ff,stroke:#686bb5,color:#27285c;
+  classDef runtime fill:#fff0d4,stroke:#bd8423,color:#593c08;
+  class Entry,CLI,App,Project,AST,Inference,Domain,Session,Orchestrator,ControlFlow,Loops,Arrays,DataFlow,Mcdc,CompilerAdapter,ConstraintIR,Solver,ConstraintService,AstFallback,ScenarioService,ScenarioBuilder,MockPlanner,MockEnricher,ReportBuilder,AnalysisReportBuilder,AnalysisReportSchema,AnalysisRunForm,AnalysisRunFormSchema,AnalysisReportFinalizer,ReportSchema,JsonWriter,ScenarioReport,MockReport,CoverageFeedback,TestBatch,JestEach,Harness,Runner,Coverage,Minimize core;
+  class Runtime runtime;

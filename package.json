@@ -1,0 +1,50 @@
+{
+  "name": "branch-scenarios-generator",
+  "version": "1.0.0-rc.5",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "branch-scenarios": "./branch-scenarios.mjs"
+  },
+  "scripts": {
+    "test:v1-integrations": "node ./tests/v1-integrations.mjs",
+    "test:reporting": "node ./tests/reporting.mjs && node ./tests/analysis-report.mjs && node ./tests/analysis-run-form.mjs",
+    "test:analysis-run-form": "node ./tests/analysis-run-form.mjs",
+    "finalize:analysis-report": "node ./tools/finalize-analysis-report.mjs",
+    "test:v1-cli-integration": "node ./tests/v1-cli-integration.mjs",
+    "generate": "node ./branch-scenarios.mjs",
+    "test": "node ./tests/analysis-report.mjs && node ./tests/analysis-run-form.mjs && node ./tests/docs-structure.mjs && node ./tests/node-compatibility.mjs && node ./tests/interfile-regressions.mjs && node ./tests/test-batching.mjs && node ./tests/type-path-inference.mjs && node ./tests/unit/constraint-ir-solver.mjs && node ./tests/unit/constraint-compiler.mjs && node ./tests/mcdc-modules.mjs && node ./tests/execution-coverage-modules.mjs && node ./tests/iterative-coverage-modules.mjs && node ./tests/minimization-modules.mjs && node ./tests/analysis-state-reducer.mjs && node ./tests/function-analysis-session.mjs && node ./tests/expression-traversal.mjs && node ./tests/function-analysis-orchestrator.mjs && node ./tests/session-owned-analysis-integration.mjs && node ./tests/control-flow-modules.mjs && node ./tests/array-callback-modules.mjs && node ./tests/scenario-modules.mjs && node ./tests/mocks-engine.mjs && node ./tests/mock-planner-production.mjs && node ./tests/ast-facade.mjs && node ./tests/constraint-engine-migration.mjs && node ./tests/multi-witness-branch.mjs && node ./tests/constraint-extended-operands.mjs && node ./tests/expression-ir-dataflow.mjs && node ./tests/data-flow-engine.mjs && node ./tests/ssa-memory.mjs && node ./tests/cli-modules.mjs && node ./tests/analysis-operation-context.mjs && node ./tests/constraint-orchestration-boundaries.mjs && node ./tests/module-boundaries.mjs && node ./tests/golden-baseline.mjs && node ./tests/golden-compatibility.mjs && node ./tests/smoke.mjs && node ./tests/loops.mjs && node ./tests/control-flow-and-array-methods.mjs && node ./tests/array-methods-extended.mjs && node ./tests/array-method-chains.mjs && node ./tests/mcdc.mjs && node ./tests/mcdc-callbacks.mjs && node ./tests/mcdc-callbacks-advanced.mjs && node ./tests/coverage-feedback.mjs && node ./tests/coverage-feedback-iterative.mjs && node ./tests/array-methods-sorting-flat-last.mjs && node ./tests/array-dataflow.mjs && node ./tests/coverage-branch-mapping.mjs && node ./tests/real-jest.integration.mjs && node ./tests/minimal-suite.mjs && node ./tests/v1-integrations.mjs && node ./tests/reporting.mjs && node ./tests/v1-cli-integration.mjs",
+    "test:type-path-inference": "node ./tests/type-path-inference.mjs",
+    "test:data-flow": "node ./tests/data-flow-engine.mjs",
+    "test:analysis-state": "node ./tests/analysis-state-reducer.mjs && node ./tests/function-analysis-session.mjs && node ./tests/expression-traversal.mjs && node ./tests/function-analysis-orchestrator.mjs && node ./tests/session-owned-analysis-integration.mjs",
+    "test:real-jest": "node ./tests/real-jest.integration.mjs",
+    "check:contracts": "tsc -p ./tsconfig.contracts.json --noEmit",
+    "test:constraints": "node ./tests/unit/constraint-ir-solver.mjs && node ./tests/unit/constraint-compiler.mjs",
+    "test:expression-ir": "node ./tests/expression-ir-dataflow.mjs",
+    "test:scenarios": "node ./tests/scenario-modules.mjs",
+    "test:mocks": "node ./tests/mocks-engine.mjs && node ./tests/mock-planner-production.mjs",
+    "test:arrays": "node ./tests/array-callback-modules.mjs && node ./tests/array-method-chains.mjs && node ./tests/array-methods-extended.mjs && node ./tests/array-methods-sorting-flat-last.mjs && node ./tests/array-dataflow.mjs",
+    "test:mcdc": "node ./tests/mcdc-modules.mjs && node ./tests/mcdc.mjs && node ./tests/mcdc-callbacks.mjs && node ./tests/mcdc-callbacks-advanced.mjs",
+    "test:execution-coverage": "node ./tests/execution-coverage-modules.mjs && node ./tests/iterative-coverage-modules.mjs && node ./tests/minimization-modules.mjs && node ./tests/coverage-feedback.mjs && node ./tests/coverage-feedback-iterative.mjs && node ./tests/coverage-branch-mapping.mjs && node ./tests/minimal-suite.mjs",
+    "test:minimization": "node ./tests/minimization-modules.mjs && node ./tests/minimal-suite.mjs",
+    "test:coverage-iteration": "node ./tests/iterative-coverage-modules.mjs && node ./tests/coverage-feedback-iterative.mjs",
+    "test:analysis-orchestration": "node ./tests/expression-traversal.mjs && node ./tests/function-analysis-orchestrator.mjs && node ./tests/session-owned-analysis-integration.mjs",
+    "test:constraint-orchestration": "node ./tests/analysis-operation-context.mjs && node ./tests/constraint-orchestration-boundaries.mjs && node ./tests/constraint-engine-migration.mjs && node ./tests/mcdc.mjs && node ./tests/mcdc-callbacks.mjs && node ./tests/mcdc-callbacks-advanced.mjs",
+    "test:ssa": "node ./tests/ssa-memory.mjs",
+    "test:points-to": "node ./tests/data-flow-engine.mjs",
+    "test:advanced-data-flow": "node ./tests/data-flow-engine.mjs && node ./tests/ssa-memory.mjs && node ./tests/array-dataflow.mjs",
+    "test:test-batching": "node ./tests/test-batching.mjs",
+    "test:module-boundaries": "node ./tests/module-boundaries.mjs",
+    "test:analysis-report": "node ./tests/analysis-report.mjs",
+    "test:docs": "node ./tests/docs-structure.mjs",
+    "test:architecture": "npm run check:contracts && npm run test:docs && npm run test:module-boundaries && node ./tests/constraint-orchestration-boundaries.mjs",
+    "test:interfile": "node ./tests/interfile-regressions.mjs",
+    "test:node-compatibility": "node ./tests/node-compatibility.mjs"
+  },
+  "engines": {
+    "node": ">=14.17"
+  },
+  "dependencies": {
+    "typescript": "^5.8.3"
+  }
+}

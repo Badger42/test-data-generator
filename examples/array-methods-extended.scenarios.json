@@ -1,0 +1,2414 @@
+{
+  "generator": {
+    "name": "branch-scenarios-generator",
+    "version": "0.6.0"
+  },
+  "source": "examples/array-methods-extended.js",
+  "sourceLanguage": "javascript",
+  "generatedAt": "2026-11-02T06:27:38.434Z",
+  "limitations": [
+    "Static MVP: generated scenarios are candidates; run the function and verify actual branch coverage with Jest/Istanbul.",
+    "JavaScript is supported via the TypeScript parser with allowJs. Without JSDoc, property types are inferred from comparisons, truthiness checks, switch cases, nested accesses and .length; inferredProperties reports confidence and evidence.",
+    "Supported conditions: direct parameter paths, literals, truthiness, !, &&, ||, equality, numeric comparisons, and simple numeric comparisons between two input paths. Unknown truthy/falsy properties use boolean representatives unless nested access implies an object/array.",
+    "Supported control flow: if/else, switch with literal cases, ternary expressions, for/for...of/for...in/while/do...while loops, plus break/continue path termination inside loops and switch clauses.",
+    "Loop scenarios: for...of and for...in generate zero-, one- and multiple-iteration collection shapes; loop-body aliases are mapped to a representative first item. Classic for loops support literal counter initializers and simple increment/decrement steps; while/do...while support simple property constraints and local numeric counter cases.",
+    "Loop analysis is an approximation: common break/continue transfers stop analysis of the current path; break inside switch exits the switch, while continue propagates to the enclosing loop. Labelled transfers, full iteration-state propagation and switch fallthrough are not modeled. Mutations to iterated collections, custom iterators, async iterator side effects, and complex counter updates are unsupported.",
+    "Array callback support: forEach/map/some/every/filter/find/findIndex and reduce with inline callbacks and collections resolved to function input paths. Predicate callbacks support simple return expressions; findIndex comparisons against literals and direct find/some/every result checks have representative match/no-match scenarios. reduce analyzes its first callback invocation and maps the accumulator from a literal/input-path initial value or the seed element when no initial value is supplied; accumulator state propagated across repeated reducer iterations is not symbolically executed.",
+    "Undefined values are encoded as {\"$undefined\":true}; omit the corresponding argument/property or hydrate this marker before calling the function.",
+    "Mock templates are type-derived suggestions and are not automatically connected to branch scenarios."
+  ],
+  "functions": [
+    {
+      "name": "filterEnabledItems",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0.enabled",
+            "Inferred from nested property access: input.items.0.score"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method filter()",
+            "Inferred from nested property access: input.items.0.enabled",
+            "Inferred from nested property access: input.items.0.score"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.enabled",
+            "Inferred from nested property access: input.items.0.score"
+          ]
+        },
+        {
+          "path": "input.items.0.enabled",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.items.0.score",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 10"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 7,
+        "scenariosGenerated": 7,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3
+      },
+      "scenarios": [
+        {
+          "id": "loop-2-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-2-10",
+            "kind": "loop",
+            "loopType": "array-filter",
+            "line": 2,
+            "column": 10,
+            "condition": "input.items.filter(item => {\n    if (item.enabled) return true;\n    if (item.score > 10) return true;\n    return false;\n  })",
+            "outcome": "zero-callbacks",
+            "phase": "before-first-callback",
+            "collection": "input.items",
+            "callbackMethod": "filter"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-2-10-one-callback-1",
+          "target": {
+            "branchId": "loop-2-10",
+            "kind": "loop",
+            "loopType": "array-filter",
+            "line": 2,
+            "column": 10,
+            "condition": "input.items.filter(item => {\n    if (item.enabled) return true;\n    if (item.score > 10) return true;\n    return false;\n  })",
+            "outcome": "one-callback",
+            "phase": "first-callback",
+            "collection": "input.items",
+            "callbackMethod": "filter"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": false,
+                  "score": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-2-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-2-10",
+            "kind": "loop",
+            "loopType": "array-filter",
+            "line": 2,
+            "column": 10,
+            "condition": "input.items.filter(item => {\n    if (item.enabled) return true;\n    if (item.score > 10) return true;\n    return false;\n  })",
+            "outcome": "multiple-callbacks",
+            "phase": "repeated-callback",
+            "collection": "input.items",
+            "callbackMethod": "filter"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": false,
+                  "score": 1
+                },
+                {
+                  "enabled": false,
+                  "score": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-3-9-true-iteration-0-1",
+          "target": {
+            "branchId": "if-3-9",
+            "kind": "if",
+            "line": 3,
+            "column": 9,
+            "condition": "item.enabled",
+            "outcome": true,
+            "callbackMethod": "filter",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": true,
+                  "score": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.enabled"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-3-9-false-iteration-0-1",
+          "target": {
+            "branchId": "if-3-9",
+            "kind": "if",
+            "line": 3,
+            "column": 9,
+            "condition": "item.enabled",
+            "outcome": false,
+            "callbackMethod": "filter",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": false,
+                  "score": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.enabled"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-4-9-true-iteration-0-1",
+          "target": {
+            "branchId": "if-4-9",
+            "kind": "if",
+            "line": 4,
+            "column": 9,
+            "condition": "item.score > 10",
+            "outcome": true,
+            "callbackMethod": "filter",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": false,
+                  "score": 11
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.enabled",
+            "input.items.0.score"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-4-9-false-iteration-0-1",
+          "target": {
+            "branchId": "if-4-9",
+            "kind": "if",
+            "line": 4,
+            "column": 9,
+            "condition": "item.score > 10",
+            "outcome": false,
+            "callbackMethod": "filter",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": false,
+                  "score": 10
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.enabled",
+            "input.items.0.score"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mockTemplates": [
+        {
+          "call": "input.items.filter",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 1,
+        "column": 1
+      }
+    },
+    {
+      "name": "filterByPredicate",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0.active"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method filter()",
+            "Inferred from nested property access: input.items.0.active"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.active"
+          ]
+        },
+        {
+          "path": "input.items.0.active",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 5,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3
+      },
+      "scenarios": [
+        {
+          "id": "loop-10-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-10-10",
+            "kind": "loop",
+            "loopType": "array-filter",
+            "line": 10,
+            "column": 10,
+            "condition": "input.items.filter(item => item.active)",
+            "outcome": "zero-callbacks",
+            "phase": "before-first-callback",
+            "collection": "input.items",
+            "callbackMethod": "filter"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-10-10-one-callback-1",
+          "target": {
+            "branchId": "loop-10-10",
+            "kind": "loop",
+            "loopType": "array-filter",
+            "line": 10,
+            "column": 10,
+            "condition": "input.items.filter(item => item.active)",
+            "outcome": "one-callback",
+            "phase": "first-callback",
+            "collection": "input.items",
+            "callbackMethod": "filter"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-10-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-10-10",
+            "kind": "loop",
+            "loopType": "array-filter",
+            "line": 10,
+            "column": 10,
+            "condition": "input.items.filter(item => item.active)",
+            "outcome": "multiple-callbacks",
+            "phase": "repeated-callback",
+            "collection": "input.items",
+            "callbackMethod": "filter"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false
+                },
+                {
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-10-37-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-10-37",
+            "kind": "array-predicate",
+            "line": 10,
+            "column": 37,
+            "condition": "item.active",
+            "outcome": true,
+            "callbackMethod": "filter",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": true
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.active"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-10-37-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-10-37",
+            "kind": "array-predicate",
+            "line": 10,
+            "column": 37,
+            "condition": "item.active",
+            "outcome": false,
+            "callbackMethod": "filter",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.active"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mockTemplates": [
+        {
+          "call": "input.items.filter",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 9,
+        "column": 1
+      }
+    },
+    {
+      "name": "findFirstAdult",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.people",
+            "Inferred from nested property access: input.people.0.age"
+          ]
+        },
+        {
+          "path": "input.people",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method find()",
+            "Inferred from nested property access: input.people.0.age"
+          ]
+        },
+        {
+          "path": "input.people.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.people.0.age"
+          ]
+        },
+        {
+          "path": "input.people.0.age",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 18"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 7,
+        "scenariosGenerated": 8,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3
+      },
+      "scenarios": [
+        {
+          "id": "loop-14-7-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-14-7",
+            "kind": "loop",
+            "loopType": "array-find",
+            "line": 14,
+            "column": 7,
+            "condition": "input.people.find(person => person.age >= 18)",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.people",
+            "callbackMethod": "find"
+          },
+          "arguments": [
+            {
+              "people": []
+            }
+          ],
+          "assumptions": [
+            "input.people"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-14-7-one-callback-1",
+          "target": {
+            "branchId": "loop-14-7",
+            "kind": "loop",
+            "loopType": "array-find",
+            "line": 14,
+            "column": 7,
+            "condition": "input.people.find(person => person.age >= 18)",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.people",
+            "callbackMethod": "find"
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-14-7-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-14-7",
+            "kind": "loop",
+            "loopType": "array-find",
+            "line": 14,
+            "column": 7,
+            "condition": "input.people.find(person => person.age >= 18)",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.people",
+            "callbackMethod": "find"
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 1
+                },
+                {
+                  "age": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-14-35-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-14-35",
+            "kind": "array-predicate",
+            "line": 14,
+            "column": 35,
+            "condition": "person.age >= 18",
+            "outcome": true,
+            "callbackMethod": "find",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 18
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people",
+            "input.people.0.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-14-35-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-14-35",
+            "kind": "array-predicate",
+            "line": 14,
+            "column": 35,
+            "condition": "person.age >= 18",
+            "outcome": false,
+            "callbackMethod": "find",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 17
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people",
+            "input.people.0.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-14-7-true-1",
+          "target": {
+            "branchId": "if-14-7",
+            "kind": "if",
+            "line": 14,
+            "column": 7,
+            "condition": "input.people.find(person => person.age >= 18)",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 18
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people",
+            "input.people.0.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-14-7-false-1",
+          "target": {
+            "branchId": "if-14-7",
+            "kind": "if",
+            "line": 14,
+            "column": 7,
+            "condition": "input.people.find(person => person.age >= 18)",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 17
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people",
+            "input.people.0.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-14-7-false-2",
+          "target": {
+            "branchId": "if-14-7",
+            "kind": "if",
+            "line": 14,
+            "column": 7,
+            "condition": "input.people.find(person => person.age >= 18)",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "people": []
+            }
+          ],
+          "assumptions": [
+            "input.people"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mockTemplates": [
+        {
+          "call": "input.people.find",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 13,
+        "column": 1
+      }
+    },
+    {
+      "name": "findIndexOfSecondActive",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0.active"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method findIndex()",
+            "Inferred from nested property access: input.items.0.active"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.active"
+          ]
+        },
+        {
+          "path": "input.items.0.active",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 7,
+        "scenariosGenerated": 8,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3
+      },
+      "scenarios": [
+        {
+          "id": "loop-19-7-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-19-7",
+            "kind": "loop",
+            "loopType": "array-findIndex",
+            "line": 19,
+            "column": 7,
+            "condition": "input.items.findIndex((item, index) => index === 1 && item.active)",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.items",
+            "callbackMethod": "findIndex"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-19-7-one-callback-1",
+          "target": {
+            "branchId": "loop-19-7",
+            "kind": "loop",
+            "loopType": "array-findIndex",
+            "line": 19,
+            "column": 7,
+            "condition": "input.items.findIndex((item, index) => index === 1 && item.active)",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.items",
+            "callbackMethod": "findIndex"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-19-7-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-19-7",
+            "kind": "loop",
+            "loopType": "array-findIndex",
+            "line": 19,
+            "column": 7,
+            "condition": "input.items.findIndex((item, index) => index === 1 && item.active)",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.items",
+            "callbackMethod": "findIndex"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false
+                },
+                {
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-19-46-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-19-46",
+            "kind": "array-predicate",
+            "line": 19,
+            "column": 46,
+            "condition": "index === 1 && item.active",
+            "outcome": false,
+            "callbackMethod": "findIndex",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-19-46-true-iteration-1-1",
+          "target": {
+            "branchId": "array-predicate-19-46",
+            "kind": "array-predicate",
+            "line": 19,
+            "column": 46,
+            "condition": "index === 1 && item.active",
+            "outcome": true,
+            "callbackMethod": "findIndex",
+            "iterationIndex": 1
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false
+                },
+                {
+                  "active": true
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.1.active"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-19-46-false-iteration-1-1",
+          "target": {
+            "branchId": "array-predicate-19-46",
+            "kind": "array-predicate",
+            "line": 19,
+            "column": 46,
+            "condition": "index === 1 && item.active",
+            "outcome": false,
+            "callbackMethod": "findIndex",
+            "iterationIndex": 1
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false
+                },
+                {
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.1.active"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-19-7-true-1",
+          "target": {
+            "branchId": "if-19-7",
+            "kind": "if",
+            "line": 19,
+            "column": 7,
+            "condition": "input.items.findIndex((item, index) => index === 1 && item.active) >= 0",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false
+                },
+                {
+                  "active": true
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.1.active"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-19-7-false-1",
+          "target": {
+            "branchId": "if-19-7",
+            "kind": "if",
+            "line": 19,
+            "column": 7,
+            "condition": "input.items.findIndex((item, index) => index === 1 && item.active) >= 0",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mockTemplates": [
+        {
+          "call": "input.items.findIndex",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 18,
+        "column": 1
+      }
+    },
+    {
+      "name": "findIndexNotFound",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0.id",
+            "Inferred from nested property access: input.targetId"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method findIndex()",
+            "Inferred from nested property access: input.items.0.id"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.id"
+          ]
+        },
+        {
+          "path": "input.items.0.id",
+          "inferredType": "unknown",
+          "confidence": "low",
+          "evidence": [
+            "Property is accessed but no primitive type constraint was found"
+          ]
+        },
+        {
+          "path": "input.targetId",
+          "inferredType": "unknown",
+          "confidence": "low",
+          "evidence": [
+            "Property is accessed but no primitive type constraint was found"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 7,
+        "scenariosGenerated": 7,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3
+      },
+      "scenarios": [
+        {
+          "id": "loop-24-7-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-24-7",
+            "kind": "loop",
+            "loopType": "array-findIndex",
+            "line": 24,
+            "column": 7,
+            "condition": "input.items.findIndex(item => item.id === input.targetId)",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.items",
+            "callbackMethod": "findIndex"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-24-7-one-callback-1",
+          "target": {
+            "branchId": "loop-24-7",
+            "kind": "loop",
+            "loopType": "array-findIndex",
+            "line": 24,
+            "column": 7,
+            "condition": "input.items.findIndex(item => item.id === input.targetId)",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.items",
+            "callbackMethod": "findIndex"
+          },
+          "arguments": [
+            {
+              "items": [
+                {}
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-24-7-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-24-7",
+            "kind": "loop",
+            "loopType": "array-findIndex",
+            "line": 24,
+            "column": 7,
+            "condition": "input.items.findIndex(item => item.id === input.targetId)",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.items",
+            "callbackMethod": "findIndex"
+          },
+          "arguments": [
+            {
+              "items": [
+                {},
+                {}
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-24-37-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-24-37",
+            "kind": "array-predicate",
+            "line": 24,
+            "column": 37,
+            "condition": "item.id === input.targetId",
+            "outcome": true,
+            "callbackMethod": "findIndex",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "id": 0
+                }
+              ],
+              "targetId": 0
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.id",
+            "input.targetId"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-24-37-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-24-37",
+            "kind": "array-predicate",
+            "line": 24,
+            "column": 37,
+            "condition": "item.id === input.targetId",
+            "outcome": false,
+            "callbackMethod": "findIndex",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "id": 0
+                }
+              ],
+              "targetId": 1
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.id",
+            "input.targetId"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-24-7-true-1",
+          "target": {
+            "branchId": "if-24-7",
+            "kind": "if",
+            "line": 24,
+            "column": 7,
+            "condition": "input.items.findIndex(item => item.id === input.targetId) === -1",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-24-7-false-1",
+          "target": {
+            "branchId": "if-24-7",
+            "kind": "if",
+            "line": 24,
+            "column": 7,
+            "condition": "input.items.findIndex(item => item.id === input.targetId) === -1",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "id": 0
+                }
+              ],
+              "targetId": 0
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.id",
+            "input.targetId"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mockTemplates": [
+        {
+          "call": "input.items.findIndex",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 23,
+        "column": 1
+      }
+    },
+    {
+      "name": "reduceActiveCount",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0.active",
+            "Inferred from nested property access: input.items.0.score"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method reduce()",
+            "Inferred from nested property access: input.items.0.active",
+            "Inferred from nested property access: input.items.0.score"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.active",
+            "Inferred from nested property access: input.items.0.score"
+          ]
+        },
+        {
+          "path": "input.items.0.active",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.items.0.score",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 10"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 7,
+        "scenariosGenerated": 7,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3
+      },
+      "scenarios": [
+        {
+          "id": "loop-29-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-29-10",
+            "kind": "loop",
+            "loopType": "array-reduce",
+            "line": 29,
+            "column": 10,
+            "condition": "input.items.reduce((total, item, index) => {\n    if (item.active) return total + 1;\n    if (item.score > 10) return total + 2;\n    return total;\n  }, 0)",
+            "outcome": "zero-callbacks",
+            "phase": "initial-value-only",
+            "collection": "input.items",
+            "callbackMethod": "reduce"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-29-10-one-callback-1",
+          "target": {
+            "branchId": "loop-29-10",
+            "kind": "loop",
+            "loopType": "array-reduce",
+            "line": 29,
+            "column": 10,
+            "condition": "input.items.reduce((total, item, index) => {\n    if (item.active) return total + 1;\n    if (item.score > 10) return total + 2;\n    return total;\n  }, 0)",
+            "outcome": "one-callback",
+            "phase": "first-reduction",
+            "collection": "input.items",
+            "callbackMethod": "reduce"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false,
+                  "score": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-29-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-29-10",
+            "kind": "loop",
+            "loopType": "array-reduce",
+            "line": 29,
+            "column": 10,
+            "condition": "input.items.reduce((total, item, index) => {\n    if (item.active) return total + 1;\n    if (item.score > 10) return total + 2;\n    return total;\n  }, 0)",
+            "outcome": "multiple-callbacks",
+            "phase": "repeated-reduction",
+            "collection": "input.items",
+            "callbackMethod": "reduce"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false,
+                  "score": 1
+                },
+                {
+                  "active": false,
+                  "score": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-30-9-true-iteration-0-1",
+          "target": {
+            "branchId": "if-30-9",
+            "kind": "if",
+            "line": 30,
+            "column": 9,
+            "condition": "item.active",
+            "outcome": true,
+            "callbackMethod": "reduce",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": true,
+                  "score": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.active"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-30-9-false-iteration-0-1",
+          "target": {
+            "branchId": "if-30-9",
+            "kind": "if",
+            "line": 30,
+            "column": 9,
+            "condition": "item.active",
+            "outcome": false,
+            "callbackMethod": "reduce",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false,
+                  "score": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.active"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-31-9-true-iteration-0-1",
+          "target": {
+            "branchId": "if-31-9",
+            "kind": "if",
+            "line": 31,
+            "column": 9,
+            "condition": "item.score > 10",
+            "outcome": true,
+            "callbackMethod": "reduce",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false,
+                  "score": 11
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.active",
+            "input.items.0.score"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-31-9-false-iteration-0-1",
+          "target": {
+            "branchId": "if-31-9",
+            "kind": "if",
+            "line": 31,
+            "column": 9,
+            "condition": "item.score > 10",
+            "outcome": false,
+            "callbackMethod": "reduce",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false,
+                  "score": 10
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.active",
+            "input.items.0.score"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mockTemplates": [
+        {
+          "call": "input.items.reduce",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 28,
+        "column": 1
+      }
+    },
+    {
+      "name": "reduceWithoutInitial",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.values",
+            "Inferred from nested property access: input.values.0",
+            "Inferred from nested property access: input.values.1"
+          ]
+        },
+        {
+          "path": "input.values",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method reduce()",
+            "Inferred from nested property access: input.values.0",
+            "Inferred from nested property access: input.values.1"
+          ]
+        },
+        {
+          "path": "input.values.0",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 10"
+          ]
+        },
+        {
+          "path": "input.values.1",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 5"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 6,
+        "scenariosGenerated": 6,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 2
+      },
+      "scenarios": [
+        {
+          "id": "loop-37-10-one-callback-1",
+          "target": {
+            "branchId": "loop-37-10",
+            "kind": "loop",
+            "loopType": "array-reduce",
+            "line": 37,
+            "column": 10,
+            "condition": "input.values.reduce((total, value) => {\n    if (total > 10) return total - value;\n    if (value > 5) return total + value;\n    return total;\n  })",
+            "outcome": "one-callback",
+            "phase": "first-reduction-after-seed",
+            "collection": "input.values",
+            "callbackMethod": "reduce"
+          },
+          "arguments": [
+            {
+              "values": [
+                {},
+                {}
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.values"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-37-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-37-10",
+            "kind": "loop",
+            "loopType": "array-reduce",
+            "line": 37,
+            "column": 10,
+            "condition": "input.values.reduce((total, value) => {\n    if (total > 10) return total - value;\n    if (value > 5) return total + value;\n    return total;\n  })",
+            "outcome": "multiple-callbacks",
+            "phase": "repeated-reduction",
+            "collection": "input.values",
+            "callbackMethod": "reduce"
+          },
+          "arguments": [
+            {
+              "values": [
+                {},
+                {},
+                {}
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.values"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-38-9-true-iteration-1-1",
+          "target": {
+            "branchId": "if-38-9",
+            "kind": "if",
+            "line": 38,
+            "column": 9,
+            "condition": "total > 10",
+            "outcome": true,
+            "callbackMethod": "reduce",
+            "iterationIndex": 1
+          },
+          "arguments": [
+            {
+              "values": [
+                11,
+                {}
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.values",
+            "input.values.0"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-38-9-false-iteration-1-1",
+          "target": {
+            "branchId": "if-38-9",
+            "kind": "if",
+            "line": 38,
+            "column": 9,
+            "condition": "total > 10",
+            "outcome": false,
+            "callbackMethod": "reduce",
+            "iterationIndex": 1
+          },
+          "arguments": [
+            {
+              "values": [
+                10,
+                {}
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.values",
+            "input.values.0"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-39-9-true-iteration-1-1",
+          "target": {
+            "branchId": "if-39-9",
+            "kind": "if",
+            "line": 39,
+            "column": 9,
+            "condition": "value > 5",
+            "outcome": true,
+            "callbackMethod": "reduce",
+            "iterationIndex": 1
+          },
+          "arguments": [
+            {
+              "values": [
+                10,
+                6
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.values",
+            "input.values.0",
+            "input.values.1"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-39-9-false-iteration-1-1",
+          "target": {
+            "branchId": "if-39-9",
+            "kind": "if",
+            "line": 39,
+            "column": 9,
+            "condition": "value > 5",
+            "outcome": false,
+            "callbackMethod": "reduce",
+            "iterationIndex": 1
+          },
+          "arguments": [
+            {
+              "values": [
+                10,
+                5
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.values",
+            "input.values.0",
+            "input.values.1"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mockTemplates": [
+        {
+          "call": "input.values.reduce",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 36,
+        "column": 1
+      }
+    },
+    {
+      "name": "findOptionalValue",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.people",
+            "Inferred from nested property access: input.people.0.active"
+          ]
+        },
+        {
+          "path": "input.people",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method find()",
+            "Inferred from nested property access: input.people.0.active"
+          ]
+        },
+        {
+          "path": "input.people.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.people.0.active"
+          ]
+        },
+        {
+          "path": "input.people.0.active",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 7,
+        "scenariosGenerated": 7,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3
+      },
+      "scenarios": [
+        {
+          "id": "loop-46-7-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-46-7",
+            "kind": "loop",
+            "loopType": "array-find",
+            "line": 46,
+            "column": 7,
+            "condition": "input.people.find(person => person.active)",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.people",
+            "callbackMethod": "find"
+          },
+          "arguments": [
+            {
+              "people": []
+            }
+          ],
+          "assumptions": [
+            "input.people"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-46-7-one-callback-1",
+          "target": {
+            "branchId": "loop-46-7",
+            "kind": "loop",
+            "loopType": "array-find",
+            "line": 46,
+            "column": 7,
+            "condition": "input.people.find(person => person.active)",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.people",
+            "callbackMethod": "find"
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-46-7-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-46-7",
+            "kind": "loop",
+            "loopType": "array-find",
+            "line": 46,
+            "column": 7,
+            "condition": "input.people.find(person => person.active)",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.people",
+            "callbackMethod": "find"
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "active": false
+                },
+                {
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-46-35-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-46-35",
+            "kind": "array-predicate",
+            "line": 46,
+            "column": 35,
+            "condition": "person.active",
+            "outcome": true,
+            "callbackMethod": "find",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "active": true
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people",
+            "input.people.0.active"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-46-35-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-46-35",
+            "kind": "array-predicate",
+            "line": 46,
+            "column": 35,
+            "condition": "person.active",
+            "outcome": false,
+            "callbackMethod": "find",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people",
+            "input.people.0.active"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-46-7-true-1",
+          "target": {
+            "branchId": "if-46-7",
+            "kind": "if",
+            "line": 46,
+            "column": 7,
+            "condition": "input.people.find(person => person.active) !== undefined",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "active": true
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people",
+            "input.people.0.active"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-46-7-false-1",
+          "target": {
+            "branchId": "if-46-7",
+            "kind": "if",
+            "line": 46,
+            "column": 7,
+            "condition": "input.people.find(person => person.active) !== undefined",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "people": []
+            }
+          ],
+          "assumptions": [
+            "input.people"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mockTemplates": [
+        {
+          "call": "input.people.find",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 45,
+        "column": 1
+      }
+    },
+    {
+      "name": "reduceWithObjectSeed",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.seed.threshold",
+            "Inferred from nested property access: input.seed.total",
+            "Inferred from nested property access: input.items.0.amount",
+            "Inferred from nested property access: input.seed"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method reduce()",
+            "Inferred from nested property access: input.items.0.amount"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.amount"
+          ]
+        },
+        {
+          "path": "input.items.0.amount",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Property is accessed but no primitive type constraint was found",
+            "Compared with numeric literal 5"
+          ]
+        },
+        {
+          "path": "input.seed",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.seed.threshold",
+            "Inferred from nested property access: input.seed.total"
+          ]
+        },
+        {
+          "path": "input.seed.threshold",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 2"
+          ]
+        },
+        {
+          "path": "input.seed.total",
+          "inferredType": "unknown",
+          "confidence": "low",
+          "evidence": [
+            "Property is accessed but no primitive type constraint was found"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 7,
+        "scenariosGenerated": 7,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3
+      },
+      "scenarios": [
+        {
+          "id": "loop-51-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-51-10",
+            "kind": "loop",
+            "loopType": "array-reduce",
+            "line": 51,
+            "column": 10,
+            "condition": "input.items.reduce((accumulator, item) => {\n    if (accumulator.threshold > 2) return { ...accumulator, total: accumulator.total + item.amount };\n    if (item.amount > 5) return { ...accumulator, total: accumulator.total + 1 };\n    return accumulator;\n  }, input.seed)",
+            "outcome": "zero-callbacks",
+            "phase": "initial-value-only",
+            "collection": "input.items",
+            "callbackMethod": "reduce"
+          },
+          "arguments": [
+            {
+              "items": [],
+              "seed": {
+                "threshold": 1
+              }
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-51-10-one-callback-1",
+          "target": {
+            "branchId": "loop-51-10",
+            "kind": "loop",
+            "loopType": "array-reduce",
+            "line": 51,
+            "column": 10,
+            "condition": "input.items.reduce((accumulator, item) => {\n    if (accumulator.threshold > 2) return { ...accumulator, total: accumulator.total + item.amount };\n    if (item.amount > 5) return { ...accumulator, total: accumulator.total + 1 };\n    return accumulator;\n  }, input.seed)",
+            "outcome": "one-callback",
+            "phase": "first-reduction",
+            "collection": "input.items",
+            "callbackMethod": "reduce"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "amount": 1
+                }
+              ],
+              "seed": {
+                "threshold": 1
+              }
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-51-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-51-10",
+            "kind": "loop",
+            "loopType": "array-reduce",
+            "line": 51,
+            "column": 10,
+            "condition": "input.items.reduce((accumulator, item) => {\n    if (accumulator.threshold > 2) return { ...accumulator, total: accumulator.total + item.amount };\n    if (item.amount > 5) return { ...accumulator, total: accumulator.total + 1 };\n    return accumulator;\n  }, input.seed)",
+            "outcome": "multiple-callbacks",
+            "phase": "repeated-reduction",
+            "collection": "input.items",
+            "callbackMethod": "reduce"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "amount": 1
+                },
+                {
+                  "amount": 1
+                }
+              ],
+              "seed": {
+                "threshold": 1
+              }
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-52-9-true-iteration-0-1",
+          "target": {
+            "branchId": "if-52-9",
+            "kind": "if",
+            "line": 52,
+            "column": 9,
+            "condition": "accumulator.threshold > 2",
+            "outcome": true,
+            "callbackMethod": "reduce",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "amount": 1
+                }
+              ],
+              "seed": {
+                "threshold": 3
+              }
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.seed.threshold"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-52-9-false-iteration-0-1",
+          "target": {
+            "branchId": "if-52-9",
+            "kind": "if",
+            "line": 52,
+            "column": 9,
+            "condition": "accumulator.threshold > 2",
+            "outcome": false,
+            "callbackMethod": "reduce",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "amount": 1
+                }
+              ],
+              "seed": {
+                "threshold": 2
+              }
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.seed.threshold"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-53-9-true-iteration-0-1",
+          "target": {
+            "branchId": "if-53-9",
+            "kind": "if",
+            "line": 53,
+            "column": 9,
+            "condition": "item.amount > 5",
+            "outcome": true,
+            "callbackMethod": "reduce",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "amount": 6
+                }
+              ],
+              "seed": {
+                "threshold": 2
+              }
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.seed.threshold",
+            "input.items.0.amount"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-53-9-false-iteration-0-1",
+          "target": {
+            "branchId": "if-53-9",
+            "kind": "if",
+            "line": 53,
+            "column": 9,
+            "condition": "item.amount > 5",
+            "outcome": false,
+            "callbackMethod": "reduce",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "amount": 5
+                }
+              ],
+              "seed": {
+                "threshold": 2
+              }
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.seed.threshold",
+            "input.items.0.amount"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mockTemplates": [
+        {
+          "call": "input.items.reduce",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 50,
+        "column": 1
+      }
+    }
+  ]
+}

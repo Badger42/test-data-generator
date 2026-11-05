@@ -1,0 +1,290 @@
+{
+  "generator": {
+    "name": "branch-scenarios-generator",
+    "version": "0.3.0"
+  },
+  "source": "examples/passenger-no-jsdoc.js",
+  "sourceLanguage": "javascript",
+  "generatedAt": "2026-10-31T17:58:11.480Z",
+  "limitations": [
+    "Static MVP: generated scenarios are candidates; run the function and verify actual branch coverage with Jest/Istanbul.",
+    "JavaScript is supported via the TypeScript parser with allowJs. Without JSDoc, property types are inferred from comparisons, truthiness checks, switch cases, nested accesses and .length; inferredProperties reports confidence and evidence.",
+    "Supported conditions: direct parameter paths, literals, truthiness, !, &&, ||, equality and numeric comparisons. Unknown truthy/falsy properties use boolean representatives unless nested access implies an object/array.",
+    "Supported control flow: if/else, switch with literal cases, ternary expressions, and basic loop conditions.",
+    "Not solved automatically: method-call predicates, arbitrary function calls, path-to-path comparisons, mutations, aliases/local variables, complex array callbacks, and many JavaScript coercion cases.",
+    "Undefined values are encoded as {\"$undefined\":true}; omit the corresponding argument/property or hydrate this marker before calling the function.",
+    "Mock templates are type-derived suggestions and are not automatically connected to branch scenarios."
+  ],
+  "functions": [
+    {
+      "name": "getPassengerCategory",
+      "parameters": [
+        {
+          "name": "passenger",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "passenger",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value",
+            "Inferred from nested property access: passenger.age",
+            "Inferred from nested property access: passenger.isPremium",
+            "Inferred from nested property access: passenger.country"
+          ]
+        },
+        {
+          "path": "passenger.age",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 18"
+          ]
+        },
+        {
+          "path": "passenger.country",
+          "inferredType": "string",
+          "confidence": "high",
+          "evidence": [
+            "Compared with string literal \"NL\""
+          ]
+        },
+        {
+          "path": "passenger.isPremium",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 8,
+        "scenariosGenerated": 9,
+        "branchesWithUnsupportedExpressions": 0
+      },
+      "scenarios": [
+        {
+          "id": "if-2-7-true-1",
+          "target": {
+            "branchId": "if-2-7",
+            "kind": "if",
+            "line": 2,
+            "column": 7,
+            "condition": "!passenger",
+            "outcome": true
+          },
+          "arguments": [
+            null
+          ],
+          "assumptions": [
+            "passenger"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-2-7-false-1",
+          "target": {
+            "branchId": "if-2-7",
+            "kind": "if",
+            "line": 2,
+            "column": 7,
+            "condition": "!passenger",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "age": 1,
+              "isPremium": false,
+              "country": "test"
+            }
+          ],
+          "assumptions": [
+            "passenger"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-6-7-true-1",
+          "target": {
+            "branchId": "if-6-7",
+            "kind": "if",
+            "line": 6,
+            "column": 7,
+            "condition": "passenger.age < 18",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "age": 17,
+              "isPremium": false,
+              "country": "test"
+            }
+          ],
+          "assumptions": [
+            "passenger",
+            "passenger.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-6-7-false-1",
+          "target": {
+            "branchId": "if-6-7",
+            "kind": "if",
+            "line": 6,
+            "column": 7,
+            "condition": "passenger.age < 18",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "age": 18,
+              "isPremium": false,
+              "country": "test"
+            }
+          ],
+          "assumptions": [
+            "passenger",
+            "passenger.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-10-7-true-1",
+          "target": {
+            "branchId": "if-10-7",
+            "kind": "if",
+            "line": 10,
+            "column": 7,
+            "condition": "passenger.isPremium && passenger.country === 'NL'",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "age": 18,
+              "isPremium": true,
+              "country": "NL"
+            }
+          ],
+          "assumptions": [
+            "passenger",
+            "passenger.age",
+            "passenger.isPremium",
+            "passenger.country"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-10-7-false-1",
+          "target": {
+            "branchId": "if-10-7",
+            "kind": "if",
+            "line": 10,
+            "column": 7,
+            "condition": "passenger.isPremium && passenger.country === 'NL'",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "age": 18,
+              "isPremium": false,
+              "country": "test"
+            }
+          ],
+          "assumptions": [
+            "passenger",
+            "passenger.age",
+            "passenger.isPremium"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-10-7-false-2",
+          "target": {
+            "branchId": "if-10-7",
+            "kind": "if",
+            "line": 10,
+            "column": 7,
+            "condition": "passenger.isPremium && passenger.country === 'NL'",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "age": 18,
+              "isPremium": true,
+              "country": "NL_other"
+            }
+          ],
+          "assumptions": [
+            "passenger",
+            "passenger.age",
+            "passenger.isPremium",
+            "passenger.country"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-14-7-true-1",
+          "target": {
+            "branchId": "if-14-7",
+            "kind": "if",
+            "line": 14,
+            "column": 7,
+            "condition": "passenger.isPremium",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "age": 18,
+              "isPremium": true,
+              "country": "NL_other"
+            }
+          ],
+          "assumptions": [
+            "passenger",
+            "passenger.age",
+            "passenger.isPremium",
+            "passenger.country"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-14-7-false-1",
+          "target": {
+            "branchId": "if-14-7",
+            "kind": "if",
+            "line": 14,
+            "column": 7,
+            "condition": "passenger.isPremium",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "age": 18,
+              "isPremium": false,
+              "country": "test"
+            }
+          ],
+          "assumptions": [
+            "passenger",
+            "passenger.age",
+            "passenger.isPremium",
+            "passenger.country"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mockTemplates": [],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 1,
+        "column": 1
+      }
+    }
+  ]
+}

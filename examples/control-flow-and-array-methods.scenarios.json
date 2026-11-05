@@ -1,0 +1,2763 @@
+{
+  "generator": {
+    "name": "branch-scenarios-generator",
+    "version": "0.5.0"
+  },
+  "source": "examples/control-flow-and-array-methods.js",
+  "sourceLanguage": "javascript",
+  "generatedAt": "2026-11-01T19:01:55.508Z",
+  "limitations": [
+    "Static MVP: generated scenarios are candidates; run the function and verify actual branch coverage with Jest/Istanbul.",
+    "JavaScript is supported via the TypeScript parser with allowJs. Without JSDoc, property types are inferred from comparisons, truthiness checks, switch cases, nested accesses and .length; inferredProperties reports confidence and evidence.",
+    "Supported conditions: direct parameter paths, literals, truthiness, !, &&, ||, equality, numeric comparisons, and simple numeric comparisons between two input paths. Unknown truthy/falsy properties use boolean representatives unless nested access implies an object/array.",
+    "Supported control flow: if/else, switch with literal cases, ternary expressions, for/for...of/for...in/while/do...while loops, plus break/continue path termination inside loops and switch clauses.",
+    "Loop scenarios: for...of and for...in generate zero-, one- and multiple-iteration collection shapes; loop-body aliases are mapped to a representative first item. Classic for loops support literal counter initializers and simple increment/decrement steps; while/do...while support simple property constraints and local numeric counter cases.",
+    "Loop analysis is an approximation: common break/continue transfers stop analysis of the current path; break inside switch exits the switch, while continue propagates to the enclosing loop. Labelled transfers, full iteration-state propagation and switch fallthrough are not modeled. Mutations to iterated collections, custom iterators, async iterator side effects, and complex counter updates are unsupported.",
+    "Array callback support: forEach/map/some/every with callbacks declared inline and collections resolved to function input paths. Callback item aliases map to a representative element; simple callback index checks are analyzed at indexes 0 and 1. some/every predicates support simple return expressions and one-element symbolic predicate solving. Complex callback state, chained methods, callback-local data flow, and many JavaScript coercion cases remain unsupported.",
+    "Undefined values are encoded as {\"$undefined\":true}; omit the corresponding argument/property or hydrate this marker before calling the function.",
+    "Mock templates are type-derived suggestions and are not automatically connected to branch scenarios."
+  ],
+  "functions": [
+    {
+      "name": "summarizeUntilStop",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.entries",
+            "Inferred from nested property access: input.entries.0.stop",
+            "Inferred from nested property access: input.entries.0.skip",
+            "Inferred from nested property access: input.entries.0.enabled",
+            "Inferred from nested property access: input.entries.0.priority"
+          ]
+        },
+        {
+          "path": "input.entries",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used as a for...of iterable",
+            "Inferred from nested property access: input.entries.0.stop",
+            "Inferred from nested property access: input.entries.0.skip",
+            "Inferred from nested property access: input.entries.0.enabled",
+            "Inferred from nested property access: input.entries.0.priority"
+          ]
+        },
+        {
+          "path": "input.entries.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.entries.0.stop",
+            "Inferred from nested property access: input.entries.0.skip",
+            "Inferred from nested property access: input.entries.0.enabled",
+            "Inferred from nested property access: input.entries.0.priority"
+          ]
+        },
+        {
+          "path": "input.entries.0.enabled",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.entries.0.priority",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 5"
+          ]
+        },
+        {
+          "path": "input.entries.0.skip",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.entries.0.stop",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 11,
+        "scenariosGenerated": 13,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3
+      },
+      "scenarios": [
+        {
+          "id": "loop-3-3-zero-iterations-1",
+          "target": {
+            "branchId": "loop-3-3",
+            "kind": "loop",
+            "loopType": "for-of",
+            "line": 3,
+            "column": 3,
+            "condition": "item of input.entries",
+            "outcome": "zero-iterations",
+            "phase": "before-first-iteration",
+            "collection": "input.entries"
+          },
+          "arguments": [
+            {
+              "entries": []
+            }
+          ],
+          "assumptions": [
+            "input.entries"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-3-3-one-iteration-1",
+          "target": {
+            "branchId": "loop-3-3",
+            "kind": "loop",
+            "loopType": "for-of",
+            "line": 3,
+            "column": 3,
+            "condition": "item of input.entries",
+            "outcome": "one-iteration",
+            "phase": "first-iteration",
+            "collection": "input.entries"
+          },
+          "arguments": [
+            {
+              "entries": [
+                {
+                  "stop": false,
+                  "skip": false,
+                  "enabled": false,
+                  "priority": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.entries"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-3-3-multiple-iterations-1",
+          "target": {
+            "branchId": "loop-3-3",
+            "kind": "loop",
+            "loopType": "for-of",
+            "line": 3,
+            "column": 3,
+            "condition": "item of input.entries",
+            "outcome": "multiple-iterations",
+            "phase": "repeated-iteration",
+            "collection": "input.entries"
+          },
+          "arguments": [
+            {
+              "entries": [
+                {
+                  "stop": false,
+                  "skip": false,
+                  "enabled": false,
+                  "priority": 1
+                },
+                {
+                  "stop": false,
+                  "skip": false,
+                  "enabled": false,
+                  "priority": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.entries"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-4-9-true-1",
+          "target": {
+            "branchId": "if-4-9",
+            "kind": "if",
+            "line": 4,
+            "column": 9,
+            "condition": "entry.stop",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "entries": [
+                {
+                  "stop": true,
+                  "skip": false,
+                  "enabled": false,
+                  "priority": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.entries",
+            "input.entries.0.stop"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-4-9-false-1",
+          "target": {
+            "branchId": "if-4-9",
+            "kind": "if",
+            "line": 4,
+            "column": 9,
+            "condition": "entry.stop",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "entries": [
+                {
+                  "stop": false,
+                  "skip": false,
+                  "enabled": false,
+                  "priority": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.entries",
+            "input.entries.0.stop"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-5-9-true-1",
+          "target": {
+            "branchId": "if-5-9",
+            "kind": "if",
+            "line": 5,
+            "column": 9,
+            "condition": "entry.skip",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "entries": [
+                {
+                  "stop": false,
+                  "skip": true,
+                  "enabled": false,
+                  "priority": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.entries",
+            "input.entries.0.stop",
+            "input.entries.0.skip"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-5-9-false-1",
+          "target": {
+            "branchId": "if-5-9",
+            "kind": "if",
+            "line": 5,
+            "column": 9,
+            "condition": "entry.skip",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "entries": [
+                {
+                  "stop": false,
+                  "skip": false,
+                  "enabled": false,
+                  "priority": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.entries",
+            "input.entries.0.stop",
+            "input.entries.0.skip"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-6-9-true-1",
+          "target": {
+            "branchId": "if-6-9",
+            "kind": "if",
+            "line": 6,
+            "column": 9,
+            "condition": "entry.enabled",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "entries": [
+                {
+                  "stop": false,
+                  "skip": false,
+                  "enabled": true,
+                  "priority": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.entries",
+            "input.entries.0.stop",
+            "input.entries.0.skip",
+            "input.entries.0.enabled"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-6-9-false-1",
+          "target": {
+            "branchId": "if-6-9",
+            "kind": "if",
+            "line": 6,
+            "column": 9,
+            "condition": "entry.enabled",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "entries": [
+                {
+                  "stop": false,
+                  "skip": false,
+                  "enabled": false,
+                  "priority": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.entries",
+            "input.entries.0.stop",
+            "input.entries.0.skip",
+            "input.entries.0.enabled"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-7-9-true-1",
+          "target": {
+            "branchId": "if-7-9",
+            "kind": "if",
+            "line": 7,
+            "column": 9,
+            "condition": "entry.priority > 5",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "entries": [
+                {
+                  "stop": false,
+                  "skip": false,
+                  "enabled": true,
+                  "priority": 6
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.entries",
+            "input.entries.0.stop",
+            "input.entries.0.skip",
+            "input.entries.0.enabled",
+            "input.entries.0.priority"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-7-9-true-2",
+          "target": {
+            "branchId": "if-7-9",
+            "kind": "if",
+            "line": 7,
+            "column": 9,
+            "condition": "entry.priority > 5",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "entries": [
+                {
+                  "stop": false,
+                  "skip": false,
+                  "enabled": false,
+                  "priority": 6
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.entries",
+            "input.entries.0.stop",
+            "input.entries.0.skip",
+            "input.entries.0.enabled",
+            "input.entries.0.priority"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-7-9-false-1",
+          "target": {
+            "branchId": "if-7-9",
+            "kind": "if",
+            "line": 7,
+            "column": 9,
+            "condition": "entry.priority > 5",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "entries": [
+                {
+                  "stop": false,
+                  "skip": false,
+                  "enabled": true,
+                  "priority": 5
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.entries",
+            "input.entries.0.stop",
+            "input.entries.0.skip",
+            "input.entries.0.enabled",
+            "input.entries.0.priority"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-7-9-false-2",
+          "target": {
+            "branchId": "if-7-9",
+            "kind": "if",
+            "line": 7,
+            "column": 9,
+            "condition": "entry.priority > 5",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "entries": [
+                {
+                  "stop": false,
+                  "skip": false,
+                  "enabled": false,
+                  "priority": 5
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.entries",
+            "input.entries.0.stop",
+            "input.entries.0.skip",
+            "input.entries.0.enabled",
+            "input.entries.0.priority"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mockTemplates": [],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 1,
+        "column": 1
+      }
+    },
+    {
+      "name": "summarizeWithNestedContinue",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0.skip",
+            "Inferred from nested property access: input.items.0.accepted"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used as a for...of iterable",
+            "Inferred from nested property access: input.items.0.skip",
+            "Inferred from nested property access: input.items.0.accepted"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.skip",
+            "Inferred from nested property access: input.items.0.accepted"
+          ]
+        },
+        {
+          "path": "input.items.0.accepted",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.items.0.skip",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 7,
+        "scenariosGenerated": 7,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3
+      },
+      "scenarios": [
+        {
+          "id": "loop-14-3-zero-iterations-1",
+          "target": {
+            "branchId": "loop-14-3",
+            "kind": "loop",
+            "loopType": "for-of",
+            "line": 14,
+            "column": 3,
+            "condition": "item of input.items",
+            "outcome": "zero-iterations",
+            "phase": "before-first-iteration",
+            "collection": "input.items"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-14-3-one-iteration-1",
+          "target": {
+            "branchId": "loop-14-3",
+            "kind": "loop",
+            "loopType": "for-of",
+            "line": 14,
+            "column": 3,
+            "condition": "item of input.items",
+            "outcome": "one-iteration",
+            "phase": "first-iteration",
+            "collection": "input.items"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "skip": false,
+                  "accepted": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-14-3-multiple-iterations-1",
+          "target": {
+            "branchId": "loop-14-3",
+            "kind": "loop",
+            "loopType": "for-of",
+            "line": 14,
+            "column": 3,
+            "condition": "item of input.items",
+            "outcome": "multiple-iterations",
+            "phase": "repeated-iteration",
+            "collection": "input.items"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "skip": false,
+                  "accepted": false
+                },
+                {
+                  "skip": false,
+                  "accepted": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-16-11-true-1",
+          "target": {
+            "branchId": "if-16-11",
+            "kind": "if",
+            "line": 16,
+            "column": 11,
+            "condition": "item.skip",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "skip": true,
+                  "accepted": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.skip"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-16-11-false-1",
+          "target": {
+            "branchId": "if-16-11",
+            "kind": "if",
+            "line": 16,
+            "column": 11,
+            "condition": "item.skip",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "skip": false,
+                  "accepted": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.skip"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-18-9-true-1",
+          "target": {
+            "branchId": "if-18-9",
+            "kind": "if",
+            "line": 18,
+            "column": 9,
+            "condition": "item.accepted",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "skip": false,
+                  "accepted": true
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.skip",
+            "input.items.0.accepted"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-18-9-false-1",
+          "target": {
+            "branchId": "if-18-9",
+            "kind": "if",
+            "line": 18,
+            "column": 9,
+            "condition": "item.accepted",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "skip": false,
+                  "accepted": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.skip",
+            "input.items.0.accepted"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mockTemplates": [],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 12,
+        "column": 1
+      }
+    },
+    {
+      "name": "countEnabledWithForEach",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0.enabled",
+            "Inferred from nested property access: input.items.0.score"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method forEach()",
+            "Inferred from nested property access: input.items.0.enabled",
+            "Inferred from nested property access: input.items.0.score"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.enabled",
+            "Inferred from nested property access: input.items.0.score"
+          ]
+        },
+        {
+          "path": "input.items.0.enabled",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.items.0.score",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 5"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 7,
+        "scenariosGenerated": 7,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3
+      },
+      "scenarios": [
+        {
+          "id": "loop-25-3-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-25-3",
+            "kind": "loop",
+            "loopType": "array-forEach",
+            "line": 25,
+            "column": 3,
+            "condition": "input.items.forEach(item => {\n    if (item.enabled) total += 1;\n    else if (item.score > 5) total += 2;\n  })",
+            "outcome": "zero-callbacks",
+            "phase": "before-first-callback",
+            "collection": "input.items",
+            "callbackMethod": "forEach"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-25-3-one-callback-1",
+          "target": {
+            "branchId": "loop-25-3",
+            "kind": "loop",
+            "loopType": "array-forEach",
+            "line": 25,
+            "column": 3,
+            "condition": "input.items.forEach(item => {\n    if (item.enabled) total += 1;\n    else if (item.score > 5) total += 2;\n  })",
+            "outcome": "one-callback",
+            "phase": "first-callback",
+            "collection": "input.items",
+            "callbackMethod": "forEach"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": false,
+                  "score": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-25-3-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-25-3",
+            "kind": "loop",
+            "loopType": "array-forEach",
+            "line": 25,
+            "column": 3,
+            "condition": "input.items.forEach(item => {\n    if (item.enabled) total += 1;\n    else if (item.score > 5) total += 2;\n  })",
+            "outcome": "multiple-callbacks",
+            "phase": "repeated-callback",
+            "collection": "input.items",
+            "callbackMethod": "forEach"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": false,
+                  "score": 1
+                },
+                {
+                  "enabled": false,
+                  "score": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-26-9-true-iteration-0-1",
+          "target": {
+            "branchId": "if-26-9",
+            "kind": "if",
+            "line": 26,
+            "column": 9,
+            "condition": "item.enabled",
+            "outcome": true,
+            "callbackMethod": "forEach",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": true,
+                  "score": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.enabled"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-26-9-false-iteration-0-1",
+          "target": {
+            "branchId": "if-26-9",
+            "kind": "if",
+            "line": 26,
+            "column": 9,
+            "condition": "item.enabled",
+            "outcome": false,
+            "callbackMethod": "forEach",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": false,
+                  "score": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.enabled"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-27-14-true-iteration-0-1",
+          "target": {
+            "branchId": "if-27-14",
+            "kind": "if",
+            "line": 27,
+            "column": 14,
+            "condition": "item.score > 5",
+            "outcome": true,
+            "callbackMethod": "forEach",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": false,
+                  "score": 6
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.enabled",
+            "input.items.0.score"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-27-14-false-iteration-0-1",
+          "target": {
+            "branchId": "if-27-14",
+            "kind": "if",
+            "line": 27,
+            "column": 14,
+            "condition": "item.score > 5",
+            "outcome": false,
+            "callbackMethod": "forEach",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "enabled": false,
+                  "score": 5
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.enabled",
+            "input.items.0.score"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mockTemplates": [
+        {
+          "call": "input.items.forEach",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 23,
+        "column": 1
+      }
+    },
+    {
+      "name": "mapAgeCategory",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.people",
+            "Inferred from nested property access: input.people.0.age"
+          ]
+        },
+        {
+          "path": "input.people",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method map()",
+            "Inferred from nested property access: input.people.0.age"
+          ]
+        },
+        {
+          "path": "input.people.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.people.0.age"
+          ]
+        },
+        {
+          "path": "input.people.0.age",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 18"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 5,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3
+      },
+      "scenarios": [
+        {
+          "id": "loop-33-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-33-10",
+            "kind": "loop",
+            "loopType": "array-map",
+            "line": 33,
+            "column": 10,
+            "condition": "input.people.map(person => person.age < 18 ? 'minor' : 'adult')",
+            "outcome": "zero-callbacks",
+            "phase": "before-first-callback",
+            "collection": "input.people",
+            "callbackMethod": "map"
+          },
+          "arguments": [
+            {
+              "people": []
+            }
+          ],
+          "assumptions": [
+            "input.people"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-33-10-one-callback-1",
+          "target": {
+            "branchId": "loop-33-10",
+            "kind": "loop",
+            "loopType": "array-map",
+            "line": 33,
+            "column": 10,
+            "condition": "input.people.map(person => person.age < 18 ? 'minor' : 'adult')",
+            "outcome": "one-callback",
+            "phase": "first-callback",
+            "collection": "input.people",
+            "callbackMethod": "map"
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-33-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-33-10",
+            "kind": "loop",
+            "loopType": "array-map",
+            "line": 33,
+            "column": 10,
+            "condition": "input.people.map(person => person.age < 18 ? 'minor' : 'adult')",
+            "outcome": "multiple-callbacks",
+            "phase": "repeated-callback",
+            "collection": "input.people",
+            "callbackMethod": "map"
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 1
+                },
+                {
+                  "age": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "ternary-33-37-true-iteration-0-1",
+          "target": {
+            "branchId": "ternary-33-37",
+            "kind": "ternary",
+            "line": 33,
+            "column": 37,
+            "condition": "person.age < 18",
+            "outcome": true,
+            "callbackMethod": "map",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 17
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people",
+            "input.people.0.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "ternary-33-37-false-iteration-0-1",
+          "target": {
+            "branchId": "ternary-33-37",
+            "kind": "ternary",
+            "line": 33,
+            "column": 37,
+            "condition": "person.age < 18",
+            "outcome": false,
+            "callbackMethod": "map",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 18
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people",
+            "input.people.0.age"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mockTemplates": [
+        {
+          "call": "input.people.map",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 32,
+        "column": 1
+      }
+    },
+    {
+      "name": "hasAdultWithSome",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.people",
+            "Inferred from nested property access: input.people.0.age"
+          ]
+        },
+        {
+          "path": "input.people",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method some()",
+            "Inferred from nested property access: input.people.0.age"
+          ]
+        },
+        {
+          "path": "input.people.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.people.0.age"
+          ]
+        },
+        {
+          "path": "input.people.0.age",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 18"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 5,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3
+      },
+      "scenarios": [
+        {
+          "id": "loop-37-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-37-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 37,
+            "column": 10,
+            "condition": "input.people.some(person => person.age >= 18)",
+            "outcome": "zero-callbacks",
+            "phase": "before-first-callback",
+            "collection": "input.people",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "people": []
+            }
+          ],
+          "assumptions": [
+            "input.people"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-37-10-one-callback-1",
+          "target": {
+            "branchId": "loop-37-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 37,
+            "column": 10,
+            "condition": "input.people.some(person => person.age >= 18)",
+            "outcome": "one-callback",
+            "phase": "first-callback",
+            "collection": "input.people",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-37-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-37-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 37,
+            "column": 10,
+            "condition": "input.people.some(person => person.age >= 18)",
+            "outcome": "multiple-callbacks",
+            "phase": "repeated-callback",
+            "collection": "input.people",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 1
+                },
+                {
+                  "age": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-37-38-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-37-38",
+            "kind": "array-predicate",
+            "line": 37,
+            "column": 38,
+            "condition": "person.age >= 18",
+            "outcome": true,
+            "callbackMethod": "some",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 18
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people",
+            "input.people.0.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-37-38-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-37-38",
+            "kind": "array-predicate",
+            "line": 37,
+            "column": 38,
+            "condition": "person.age >= 18",
+            "outcome": false,
+            "callbackMethod": "some",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 17
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people",
+            "input.people.0.age"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mockTemplates": [
+        {
+          "call": "input.people.some",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 36,
+        "column": 1
+      }
+    },
+    {
+      "name": "hasReadyWithSomeIf",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0.ready"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method some()",
+            "Inferred from nested property access: input.items.0.ready"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.ready"
+          ]
+        },
+        {
+          "path": "input.items.0.ready",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 7,
+        "scenariosGenerated": 7,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3
+      },
+      "scenarios": [
+        {
+          "id": "loop-41-7-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-41-7",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 41,
+            "column": 7,
+            "condition": "input.items.some(item => item.ready)",
+            "outcome": "zero-callbacks",
+            "phase": "before-first-callback",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-41-7-one-callback-1",
+          "target": {
+            "branchId": "loop-41-7",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 41,
+            "column": 7,
+            "condition": "input.items.some(item => item.ready)",
+            "outcome": "one-callback",
+            "phase": "first-callback",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "ready": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-41-7-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-41-7",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 41,
+            "column": 7,
+            "condition": "input.items.some(item => item.ready)",
+            "outcome": "multiple-callbacks",
+            "phase": "repeated-callback",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "ready": false
+                },
+                {
+                  "ready": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-41-32-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-41-32",
+            "kind": "array-predicate",
+            "line": 41,
+            "column": 32,
+            "condition": "item.ready",
+            "outcome": true,
+            "callbackMethod": "some",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "ready": true
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.ready"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-41-32-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-41-32",
+            "kind": "array-predicate",
+            "line": 41,
+            "column": 32,
+            "condition": "item.ready",
+            "outcome": false,
+            "callbackMethod": "some",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "ready": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.ready"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-41-7-true-1",
+          "target": {
+            "branchId": "if-41-7",
+            "kind": "if",
+            "line": 41,
+            "column": 7,
+            "condition": "input.items.some(item => item.ready)",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "ready": true
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.ready"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-41-7-false-1",
+          "target": {
+            "branchId": "if-41-7",
+            "kind": "if",
+            "line": 41,
+            "column": 7,
+            "condition": "input.items.some(item => item.ready)",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "ready": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.ready"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mockTemplates": [
+        {
+          "call": "input.items.some",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 40,
+        "column": 1
+      }
+    },
+    {
+      "name": "allReadyWithEvery",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0.ready"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method every()",
+            "Inferred from nested property access: input.items.0.ready"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.ready"
+          ]
+        },
+        {
+          "path": "input.items.0.ready",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 5,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3
+      },
+      "scenarios": [
+        {
+          "id": "loop-46-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-46-10",
+            "kind": "loop",
+            "loopType": "array-every",
+            "line": 46,
+            "column": 10,
+            "condition": "input.items.every(item => item.ready)",
+            "outcome": "zero-callbacks",
+            "phase": "before-first-callback",
+            "collection": "input.items",
+            "callbackMethod": "every"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-46-10-one-callback-1",
+          "target": {
+            "branchId": "loop-46-10",
+            "kind": "loop",
+            "loopType": "array-every",
+            "line": 46,
+            "column": 10,
+            "condition": "input.items.every(item => item.ready)",
+            "outcome": "one-callback",
+            "phase": "first-callback",
+            "collection": "input.items",
+            "callbackMethod": "every"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "ready": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-46-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-46-10",
+            "kind": "loop",
+            "loopType": "array-every",
+            "line": 46,
+            "column": 10,
+            "condition": "input.items.every(item => item.ready)",
+            "outcome": "multiple-callbacks",
+            "phase": "repeated-callback",
+            "collection": "input.items",
+            "callbackMethod": "every"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "ready": false
+                },
+                {
+                  "ready": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-46-36-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-46-36",
+            "kind": "array-predicate",
+            "line": 46,
+            "column": 36,
+            "condition": "item.ready",
+            "outcome": true,
+            "callbackMethod": "every",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "ready": true
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.ready"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-46-36-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-46-36",
+            "kind": "array-predicate",
+            "line": 46,
+            "column": 36,
+            "condition": "item.ready",
+            "outcome": false,
+            "callbackMethod": "every",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "ready": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.ready"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mockTemplates": [
+        {
+          "call": "input.items.every",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 45,
+        "column": 1
+      }
+    },
+    {
+      "name": "detectSecondCallbackIndex",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method forEach()"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 5,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3
+      },
+      "scenarios": [
+        {
+          "id": "loop-51-3-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-51-3",
+            "kind": "loop",
+            "loopType": "array-forEach",
+            "line": 51,
+            "column": 3,
+            "condition": "input.items.forEach((item, index) => {\n    if (index === 1) found = true;\n  })",
+            "outcome": "zero-callbacks",
+            "phase": "before-first-callback",
+            "collection": "input.items",
+            "callbackMethod": "forEach"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-51-3-one-callback-1",
+          "target": {
+            "branchId": "loop-51-3",
+            "kind": "loop",
+            "loopType": "array-forEach",
+            "line": 51,
+            "column": 3,
+            "condition": "input.items.forEach((item, index) => {\n    if (index === 1) found = true;\n  })",
+            "outcome": "one-callback",
+            "phase": "first-callback",
+            "collection": "input.items",
+            "callbackMethod": "forEach"
+          },
+          "arguments": [
+            {
+              "items": [
+                {}
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-51-3-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-51-3",
+            "kind": "loop",
+            "loopType": "array-forEach",
+            "line": 51,
+            "column": 3,
+            "condition": "input.items.forEach((item, index) => {\n    if (index === 1) found = true;\n  })",
+            "outcome": "multiple-callbacks",
+            "phase": "repeated-callback",
+            "collection": "input.items",
+            "callbackMethod": "forEach"
+          },
+          "arguments": [
+            {
+              "items": [
+                {},
+                {}
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-52-9-false-iteration-0-1",
+          "target": {
+            "branchId": "if-52-9",
+            "kind": "if",
+            "line": 52,
+            "column": 9,
+            "condition": "index === 1",
+            "outcome": false,
+            "callbackMethod": "forEach",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {}
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-52-9-true-iteration-1-1",
+          "target": {
+            "branchId": "if-52-9",
+            "kind": "if",
+            "line": 52,
+            "column": 9,
+            "condition": "index === 1",
+            "outcome": true,
+            "callbackMethod": "forEach",
+            "iterationIndex": 1
+          },
+          "arguments": [
+            {
+              "items": [
+                {},
+                {}
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mockTemplates": [
+        {
+          "call": "input.items.forEach",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 49,
+        "column": 1
+      }
+    },
+    {
+      "name": "summarizeWithSwitchContinue",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0.action",
+            "Inferred from nested property access: input.items.0.enabled",
+            "Inferred from nested property access: input.items.0.afterSwitch"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used as a for...of iterable",
+            "Inferred from nested property access: input.items.0.action",
+            "Inferred from nested property access: input.items.0.enabled",
+            "Inferred from nested property access: input.items.0.afterSwitch"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.action",
+            "Inferred from nested property access: input.items.0.enabled",
+            "Inferred from nested property access: input.items.0.afterSwitch"
+          ]
+        },
+        {
+          "path": "input.items.0.action",
+          "inferredType": "string",
+          "confidence": "high",
+          "evidence": [
+            "Used in switch with string case \"leave-switch\"",
+            "Used in switch with string case \"continue-loop\""
+          ]
+        },
+        {
+          "path": "input.items.0.afterSwitch",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.items.0.enabled",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 10,
+        "scenariosGenerated": 12,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3
+      },
+      "scenarios": [
+        {
+          "id": "loop-59-3-zero-iterations-1",
+          "target": {
+            "branchId": "loop-59-3",
+            "kind": "loop",
+            "loopType": "for-of",
+            "line": 59,
+            "column": 3,
+            "condition": "item of input.items",
+            "outcome": "zero-iterations",
+            "phase": "before-first-iteration",
+            "collection": "input.items"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-59-3-one-iteration-1",
+          "target": {
+            "branchId": "loop-59-3",
+            "kind": "loop",
+            "loopType": "for-of",
+            "line": 59,
+            "column": 3,
+            "condition": "item of input.items",
+            "outcome": "one-iteration",
+            "phase": "first-iteration",
+            "collection": "input.items"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "action": "test",
+                  "enabled": false,
+                  "afterSwitch": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-59-3-multiple-iterations-1",
+          "target": {
+            "branchId": "loop-59-3",
+            "kind": "loop",
+            "loopType": "for-of",
+            "line": 59,
+            "column": 3,
+            "condition": "item of input.items",
+            "outcome": "multiple-iterations",
+            "phase": "repeated-iteration",
+            "collection": "input.items"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "action": "test",
+                  "enabled": false,
+                  "afterSwitch": false
+                },
+                {
+                  "action": "test",
+                  "enabled": false,
+                  "afterSwitch": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "switch-case-61-7-1",
+          "target": {
+            "branchId": "switch-case-61-7",
+            "kind": "switch",
+            "line": 61,
+            "column": 7,
+            "condition": "'leave-switch'",
+            "outcome": "case"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "action": "test",
+                  "enabled": false,
+                  "afterSwitch": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "item.action"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "switch-case-63-7-1",
+          "target": {
+            "branchId": "switch-case-63-7",
+            "kind": "switch",
+            "line": 63,
+            "column": 7,
+            "condition": "'continue-loop'",
+            "outcome": "case"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "action": "test",
+                  "enabled": false,
+                  "afterSwitch": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "item.action"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "switch-default-65-7-1",
+          "target": {
+            "branchId": "switch-default-65-7",
+            "kind": "switch",
+            "line": 65,
+            "column": 7,
+            "condition": "default",
+            "outcome": "default"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "action": "test",
+                  "enabled": false,
+                  "afterSwitch": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "item.action"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-66-13-true-1",
+          "target": {
+            "branchId": "if-66-13",
+            "kind": "if",
+            "line": 66,
+            "column": 13,
+            "condition": "item.enabled",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "action": "test",
+                  "enabled": true,
+                  "afterSwitch": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "item.action",
+            "input.items.0.enabled"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-66-13-false-1",
+          "target": {
+            "branchId": "if-66-13",
+            "kind": "if",
+            "line": 66,
+            "column": 13,
+            "condition": "item.enabled",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "action": "test",
+                  "enabled": false,
+                  "afterSwitch": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "item.action",
+            "input.items.0.enabled"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-68-9-true-1",
+          "target": {
+            "branchId": "if-68-9",
+            "kind": "if",
+            "line": 68,
+            "column": 9,
+            "condition": "item.afterSwitch",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "action": "test",
+                  "enabled": true,
+                  "afterSwitch": true
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "item.action",
+            "input.items.0.enabled",
+            "input.items.0.afterSwitch"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-68-9-true-2",
+          "target": {
+            "branchId": "if-68-9",
+            "kind": "if",
+            "line": 68,
+            "column": 9,
+            "condition": "item.afterSwitch",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "action": "test",
+                  "enabled": false,
+                  "afterSwitch": true
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "item.action",
+            "input.items.0.enabled",
+            "input.items.0.afterSwitch"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-68-9-false-1",
+          "target": {
+            "branchId": "if-68-9",
+            "kind": "if",
+            "line": 68,
+            "column": 9,
+            "condition": "item.afterSwitch",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "action": "test",
+                  "enabled": true,
+                  "afterSwitch": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "item.action",
+            "input.items.0.enabled",
+            "input.items.0.afterSwitch"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-68-9-false-2",
+          "target": {
+            "branchId": "if-68-9",
+            "kind": "if",
+            "line": 68,
+            "column": 9,
+            "condition": "item.afterSwitch",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "action": "test",
+                  "enabled": false,
+                  "afterSwitch": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "item.action",
+            "input.items.0.enabled",
+            "input.items.0.afterSwitch"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mockTemplates": [],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 57,
+        "column": 1
+      }
+    },
+    {
+      "name": "hasSecondActiveItemWithSome",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0.active"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method some()",
+            "Inferred from nested property access: input.items.0.active"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.active"
+          ]
+        },
+        {
+          "path": "input.items.0.active",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 6,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3
+      },
+      "scenarios": [
+        {
+          "id": "loop-74-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-74-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 74,
+            "column": 10,
+            "condition": "input.items.some((item, index) => index === 1 && item.active)",
+            "outcome": "zero-callbacks",
+            "phase": "before-first-callback",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-74-10-one-callback-1",
+          "target": {
+            "branchId": "loop-74-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 74,
+            "column": 10,
+            "condition": "input.items.some((item, index) => index === 1 && item.active)",
+            "outcome": "one-callback",
+            "phase": "first-callback",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-74-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-74-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 74,
+            "column": 10,
+            "condition": "input.items.some((item, index) => index === 1 && item.active)",
+            "outcome": "multiple-callbacks",
+            "phase": "repeated-callback",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false
+                },
+                {
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-74-44-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-74-44",
+            "kind": "array-predicate",
+            "line": 74,
+            "column": 44,
+            "condition": "index === 1 && item.active",
+            "outcome": false,
+            "callbackMethod": "some",
+            "iterationIndex": 0
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-74-44-true-iteration-1-1",
+          "target": {
+            "branchId": "array-predicate-74-44",
+            "kind": "array-predicate",
+            "line": 74,
+            "column": 44,
+            "condition": "index === 1 && item.active",
+            "outcome": true,
+            "callbackMethod": "some",
+            "iterationIndex": 1
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false
+                },
+                {
+                  "active": true
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.1.active"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-74-44-false-iteration-1-1",
+          "target": {
+            "branchId": "array-predicate-74-44",
+            "kind": "array-predicate",
+            "line": 74,
+            "column": 44,
+            "condition": "index === 1 && item.active",
+            "outcome": false,
+            "callbackMethod": "some",
+            "iterationIndex": 1
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false
+                },
+                {
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.1.active"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mockTemplates": [
+        {
+          "call": "input.items.some",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 73,
+        "column": 1
+      }
+    }
+  ]
+}

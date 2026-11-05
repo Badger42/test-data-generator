@@ -1,0 +1,491 @@
+{
+  "baselineVersion": "0.18.0",
+  "baselineEntry": "branch-scenarios.mjs",
+  "currentVersion": "1.0.0-rc.5",
+  "architectureStatus": {
+    "legacyMonolithRemoved": true,
+    "legacySourceDirectoryRemoved": true,
+    "applicationRuntimeDependencyInjected": true,
+    "reportProjectionSeparatedFromDomain": true,
+    "automaticModuleBoundaryDiscovery": true,
+    "typescriptCompositionRoot": "src/runtime/typescript-analysis-runtime.mjs"
+  },
+  "modules": [
+    {
+      "id": "cli",
+      "target": "src/cli",
+      "purpose": "CLI parsing, help and command entrypoint.",
+      "implementedFiles": [
+        "branch-scenarios.mjs",
+        "src/cli/help.mjs",
+        "src/cli/main.mjs",
+        "src/cli/parse-args.mjs"
+      ],
+      "contractFiles": [
+        "contracts/cli.d.ts"
+      ],
+      "status": "implemented"
+    },
+    {
+      "id": "project",
+      "target": "src/project",
+      "purpose": "TypeScript Program loading, function discovery and project-wide symbol/function index.",
+      "implementedFiles": [
+        "src/project/discover-functions.mjs",
+        "src/project/function-index.mjs",
+        "src/project/load-typescript-project.mjs"
+      ],
+      "contractFiles": [],
+      "status": "implemented"
+    },
+    {
+      "id": "ast",
+      "target": "src/ast",
+      "purpose": "AST primitives, path resolution and source locations.",
+      "implementedFiles": [
+        "src/ast/ast-facade.mjs",
+        "src/ast/path-resolver.mjs",
+        "src/ast/source-spans.mjs"
+      ],
+      "contractFiles": [],
+      "status": "implemented"
+    },
+    {
+      "id": "domain",
+      "target": "src/domain",
+      "purpose": "Shared policies and stable domain values.",
+      "implementedFiles": [
+        "src/domain/array-method-policy.mjs",
+        "src/domain/version.mjs"
+      ],
+      "contractFiles": [
+        "contracts/domain.d.ts"
+      ],
+      "status": "implemented"
+    },
+    {
+      "id": "inference",
+      "target": "src/inference",
+      "purpose": "Type model and usage-based property inference.",
+      "implementedFiles": [
+        "src/inference/property-inference.mjs",
+        "src/inference/type-model-provider.mjs"
+      ],
+      "contractFiles": [
+        "contracts/ports.d.ts"
+      ],
+      "status": "implemented"
+    },
+    {
+      "id": "constraints",
+      "target": "src/constraints",
+      "purpose": "Constraint IR and TypeScript condition compiler.",
+      "implementedFiles": [
+        "src/constraints/compile-typescript-condition.mjs",
+        "src/constraints/constraint-ir.mjs",
+        "src/constraints/typescript-adapter.mjs"
+      ],
+      "contractFiles": [
+        "contracts/constraints.d.ts"
+      ],
+      "status": "implemented"
+    },
+    {
+      "id": "solver",
+      "target": "src/solver",
+      "purpose": "Parser-independent solver, orchestration service and recursive AST fallback.",
+      "implementedFiles": [
+        "src/solver/constraint-analysis-service.mjs",
+        "src/solver/constraint-solver.mjs",
+        "src/solver/recursive-ast-fallback.mjs"
+      ],
+      "contractFiles": [
+        "contracts/constraints.d.ts",
+        "contracts/solver-orchestration.d.ts"
+      ],
+      "status": "implemented"
+    },
+    {
+      "id": "data-flow",
+      "target": "src/data-flow",
+      "purpose": "CFG, SSA, points-to, memory effects, provenance and summaries.",
+      "implementedFiles": [
+        "src/data-flow/alias/alias-analyzer.mjs",
+        "src/data-flow/alias/points-to-analysis.mjs",
+        "src/data-flow/arrays/array-pipeline-flow.mjs",
+        "src/data-flow/ast-utils.mjs",
+        "src/data-flow/cfg/control-flow-graph.mjs",
+        "src/data-flow/cfg/graph-analysis.mjs",
+        "src/data-flow/data-flow-adapter.mjs",
+        "src/data-flow/data-flow-analyzer.mjs",
+        "src/data-flow/flow/reaching-definitions.mjs",
+        "src/data-flow/index.mjs",
+        "src/data-flow/mutation/mutation-analyzer.mjs",
+        "src/data-flow/ssa/cytron-ssa-builder.mjs",
+        "src/data-flow/ssa/heap-memory-ssa.mjs",
+        "src/data-flow/ssa/ssa-builder.mjs",
+        "src/data-flow/summaries/context-sensitive-summary.mjs",
+        "src/data-flow/summaries/function-summary.mjs",
+        "src/data-flow/summaries/interprocedural-summary.mjs",
+        "src/data-flow/summaries/loop-flow-summary.mjs",
+        "src/data-flow/summaries/reduce-flow-summary.mjs",
+        "src/data-flow/typescript-expression-facts.mjs"
+      ],
+      "contractFiles": [
+        "contracts/data-flow.d.ts"
+      ],
+      "status": "implemented"
+    },
+    {
+      "id": "analysis",
+      "target": "src/analysis",
+      "purpose": "Function sessions, state, CFG/loop/array analysis and orchestration.",
+      "implementedFiles": [
+        "src/analysis/analysis-operation-context.mjs",
+        "src/analysis/analysis-state-reducer.mjs",
+        "src/analysis/analysis-state-store.mjs",
+        "src/analysis/arrays/array-callback-analyzer.mjs",
+        "src/analysis/arrays/array-pipeline-runtime.mjs",
+        "src/analysis/arrays/callback-discovery.mjs",
+        "src/analysis/arrays/callback-expression-utils.mjs",
+        "src/analysis/arrays/pipeline/pipeline-composer.mjs",
+        "src/analysis/arrays/reduce-state-interpreter.mjs",
+        "src/analysis/ast-traversal/expression-traversal.mjs",
+        "src/analysis/control-flow/control-flow-analyzer.mjs",
+        "src/analysis/function-analysis-orchestrator.mjs",
+        "src/analysis/function-analysis-session.mjs",
+        "src/analysis/function-analyzer-adapter.mjs",
+        "src/analysis/function-context-builder.mjs",
+        "src/analysis/loops/index.mjs",
+        "src/analysis/loops/loop-analyzer.mjs",
+        "src/analysis/loops/loop-progress-analyzer.mjs",
+        "src/analysis/loops/path-sensitive-loop-planner.mjs"
+      ],
+      "contractFiles": [
+        "contracts/analysis-session.d.ts",
+        "contracts/analysis-state.d.ts",
+        "contracts/control-flow.d.ts",
+        "contracts/array-callbacks.d.ts",
+        "contracts/solver-orchestration.d.ts"
+      ],
+      "status": "implemented"
+    },
+    {
+      "id": "scenarios",
+      "target": "src/scenarios",
+      "purpose": "ScenarioCase construction, evidence, materialization and deduplication.",
+      "implementedFiles": [
+        "src/scenarios/assignment-materializer.mjs",
+        "src/scenarios/data-flow-evidence.mjs",
+        "src/scenarios/index.mjs",
+        "src/scenarios/scenario-builder.mjs",
+        "src/scenarios/scenario-deduplicator.mjs",
+        "src/scenarios/scenario-evidence-builder.mjs",
+        "src/scenarios/scenario-fingerprint.mjs",
+        "src/scenarios/scenario-generation-service.mjs",
+        "src/scenarios/serializers/undefined-value.mjs"
+      ],
+      "contractFiles": [
+        "contracts/scenarios.d.ts"
+      ],
+      "status": "implemented"
+    },
+    {
+      "id": "mocks",
+      "target": "src/mocks",
+      "purpose": "Mock discovery, planning, Data Flow enrichment and Jest adapter.",
+      "implementedFiles": [
+        "src/mocks/adapters/jest-mock-adapter.mjs",
+        "src/mocks/call-identity.mjs",
+        "src/mocks/data-flow-mock-enricher.mjs",
+        "src/mocks/dependency-discovery.mjs",
+        "src/mocks/index.mjs",
+        "src/mocks/mock-planner.mjs",
+        "src/mocks/mock-state-planner.mjs",
+        "src/mocks/mock-template-builder.mjs"
+      ],
+      "contractFiles": [
+        "contracts/mocks.d.ts"
+      ],
+      "status": "implemented"
+    },
+    {
+      "id": "mcdc",
+      "target": "src/mcdc",
+      "purpose": "MC/DC static planning, feasibility and runtime verification.",
+      "implementedFiles": [
+        "src/mcdc/index.mjs",
+        "src/mcdc/mcdc-analysis-orchestrator.mjs",
+        "src/mcdc/runtime/runtime-recorder.mjs",
+        "src/mcdc/runtime/runtime-verifier.mjs",
+        "src/mcdc/runtime/source-instrumenter.mjs",
+        "src/mcdc/static/decision-extractor.mjs",
+        "src/mcdc/static/pair-feasibility-verifier.mjs",
+        "src/mcdc/static/pair-planner.mjs",
+        "src/mcdc/static/scenario-materializer.mjs"
+      ],
+      "contractFiles": [
+        "contracts/mcdc.d.ts"
+      ],
+      "status": "implemented"
+    },
+    {
+      "id": "execution",
+      "target": "src/execution",
+      "purpose": "Jest process adapter, harness and test/trace readers.",
+      "implementedFiles": [
+        "src/execution/coverage-case-collector.mjs",
+        "src/execution/jest-runner.mjs",
+        "src/execution/jest-test-harness.mjs",
+        "src/execution/runtime-trace-reader.mjs",
+        "src/execution/test-result-reader.mjs"
+      ],
+      "contractFiles": [
+        "contracts/execution-coverage.d.ts"
+      ],
+      "status": "implemented"
+    },
+    {
+      "id": "coverage",
+      "target": "src/coverage",
+      "purpose": "Istanbul normalization, branch mapping, attribution and feedback transforms.",
+      "implementedFiles": [
+        "src/coverage/branch-mapper.mjs",
+        "src/coverage/coverage-feedback-builder.mjs",
+        "src/coverage/coverage-feedback-iteration.mjs",
+        "src/coverage/istanbul-reader.mjs",
+        "src/coverage/scenario-attributor.mjs",
+        "src/coverage/source-map-normalizer.mjs"
+      ],
+      "contractFiles": [
+        "contracts/execution-coverage.d.ts",
+        "contracts/iterative-coverage.d.ts"
+      ],
+      "status": "implemented"
+    },
+    {
+      "id": "minimization",
+      "target": "src/minimization",
+      "purpose": "Coverage obligations and minimal-suite selection.",
+      "implementedFiles": [
+        "src/minimization/index.mjs",
+        "src/minimization/obligation-builder.mjs",
+        "src/minimization/test-suite-minimizer.mjs"
+      ],
+      "contractFiles": [
+        "contracts/minimization.d.ts"
+      ],
+      "status": "implemented"
+    },
+    {
+      "id": "application",
+      "target": "src/application",
+      "purpose": "Application use cases with injected analysis/runtime ports.",
+      "implementedFiles": [
+        "src/application/generate-scenarios.mjs",
+        "src/application/run-coverage-feedback.mjs",
+        "src/application/run-iterative-coverage-feedback.mjs"
+      ],
+      "contractFiles": [
+        "contracts/application.d.ts",
+        "contracts/execution-coverage.d.ts",
+        "contracts/iterative-coverage.d.ts"
+      ],
+      "status": "implemented"
+    },
+    {
+      "id": "reporting",
+      "target": "src/reporting",
+      "purpose": "Public report projection, privacy-aware diagnostics, fillable execution form, finalization, schema validation and JSON writing.",
+      "implementedFiles": [
+        "src/reporting/index.mjs",
+        "src/reporting/json-writer.mjs",
+        "src/reporting/mock-report-adapter.mjs",
+        "src/reporting/report-builder.mjs",
+        "src/reporting/report-schema.mjs",
+        "src/reporting/scenario-report-adapter.mjs",
+        "src/reporting/analysis-report-builder.mjs",
+        "src/reporting/analysis-report-schema.mjs",
+        "src/reporting/analysis-run-form.mjs",
+        "src/reporting/analysis-run-form-schema.mjs",
+        "src/reporting/analysis-report-finalizer.mjs"
+      ],
+      "contractFiles": [
+        "contracts/reporting.d.ts",
+        "contracts/analysis-report.d.ts"
+      ],
+      "status": "implemented"
+    },
+    {
+      "id": "runtime",
+      "target": "src/runtime",
+      "purpose": "TypeScript-aware composition root and coverage-feedback runtime adapter.",
+      "implementedFiles": [
+        "src/runtime/coverage-feedback-runtime.mjs",
+        "src/runtime/typescript-analysis-runtime.mjs"
+      ],
+      "contractFiles": [],
+      "status": "implemented"
+    },
+    {
+      "id": "testing-batching",
+      "target": "src/testing",
+      "purpose": "Execution signatures, contiguous test batching and Jest each renderer.",
+      "implementedFiles": [
+        "src/testing/batching/execution-signature.mjs",
+        "src/testing/batching/jest-each-generator.mjs",
+        "src/testing/batching/test-batch-builder.mjs"
+      ],
+      "contractFiles": [
+        "contracts/testing-batching.d.ts"
+      ],
+      "status": "implemented"
+    }
+  ],
+  "migrationStatus": {
+    "completed": [
+      "characterization-baseline",
+      "cli-parse-and-help",
+      "application-shell",
+      "project-load",
+      "function-discovery",
+      "source-spans",
+      "json-writer",
+      "version-domain",
+      "function-analysis-session-lifecycle",
+      "ast-facade-core-primitives",
+      "stable-function-identity",
+      "data-flow-engine-coordinator",
+      "intraprocedural-ssa-and-phi-nodes",
+      "field-sensitive-alias-facts",
+      "mutation-and-escape-facts",
+      "local-function-summaries-and-call-sites",
+      "json-safe-data-model-expression-compiler-integration",
+      "control-flow-statement-dispatch-extraction",
+      "if-else-and-switch-flow-extraction",
+      "loop-analyzer-extraction",
+      "control-flow-loop-port-contracts",
+      "undefined-value-serialization-extraction",
+      "assignment-materializer-extraction",
+      "scenario-fingerprint-and-mock-aware-deduplication",
+      "scenario-evidence-builder-extraction",
+      "domain-scenario-builder-and-report-adapter-projection",
+      "production-branch-scenario-builder-integration",
+      "mock-dependency-discovery-extraction",
+      "mock-template-builder-extraction",
+      "json-safe-mock-plan-and-state-planner",
+      "jest-mock-adapter-extraction",
+      "production-mock-planner-integration",
+      "coverage-feedback-outcome-transformations",
+      "iterative-coverage-feedback-use-case",
+      "coverage-obligation-builder",
+      "test-suite-minimizer-exact-and-greedy-set-cover",
+      "expression-level-conditional-ast-traversal-extraction",
+      "per-function-analysis-orchestration",
+      "function-scoped-control-flow-analyzer-lifecycle",
+      "constraint-analysis-ir-first-orchestration",
+      "recursive-ast-solver-fallback-adapter",
+      "mcdc-joint-atom-and-unique-cause-orchestration",
+      "per-invocation-analysis-operation-context",
+      "typescript-path-resolver-extraction",
+      "typescript-type-model-provider-extraction",
+      "usage-based-property-inference-extraction",
+      "function-context-builder-extraction",
+      "opaque-operation-context-payload-removal",
+      "statement-level-control-flow-graph",
+      "cfg-linked-intraprocedural-ssa",
+      "interprocedural-call-graph-and-scc-classification",
+      "conservative-transitive-effect-propagation",
+      "reduce-accumulator-flow-summaries",
+      "array-pipeline-function-data-model-integration",
+      "expression-condition-cfg-for-short-circuit-and-conditional-expressions",
+      "cfg-dominators-postdominators-and-control-dependence",
+      "natural-loop-regions-with-break-and-exit-boundaries",
+      "reaching-definitions-and-liveness-fixed-points",
+      "dominance-frontier-phi-candidate-placement-and-use-bindings",
+      "symbol-resolved-interprocedural-return-path-substitution",
+      "validated-pure-helper-path-aliases-consumed-by-constraint-compiler",
+      "array-pipeline-stage-provenance-dataflow",
+      "loop-carried-live-out-and-reduce-flow-integration",
+      "cytron-iterated-dominance-frontier-phi-placement",
+      "dominator-tree-version-stack-renaming",
+      "versioned-def-use-bindings-and-complete-phi-operands",
+      "field-sensitive-heap-memory-ssa",
+      "must-alias-memory-location-normalization",
+      "may-alias-weak-memory-updates",
+      "dynamic-index-wildcard-memory-effects",
+      "intraprocedural-allocation-site-points-to-analysis",
+      "field-load-store-points-to-constraints",
+      "allocation-site-canonical-memory-ssa-locations",
+      "bounded-context-sensitive-local-call-summaries",
+      "ssa-occurrence-aliases-consumed-by-constraint-compiler",
+      "composed-symbolic-array-index-provenance",
+      "scenario-data-flow-evidence-builder-and-opt-in-report-projection",
+      "mock-plan-data-flow-input-dependency-and-effect-enrichment",
+      "bounded-path-sensitive-loop-planner-with-solver-feedback",
+      "loop-progress-helper-extraction",
+      "report-builder-and-public-report-schema-validation",
+      "v1-cli-end-to-end-evidence-and-mock-metadata-test",
+      "v1-golden-compatible-default-report-projection",
+      "legacy-monolith-and-src-legacy-directory-removed",
+      "duplicate-monolith-archive-removed",
+      "array-pipeline-runtime-extraction",
+      "test-batching-execution-signature",
+      "deterministic-test-each-batch-planning",
+      "coverage-feedback-test-each-harness-integration",
+      "individual-test-fallback-for-incompatible-cases",
+      "application-runtime-dependency-injected-at-cli-composition-root",
+      "domain-array-method-policy-extracted-from-analysis-layer",
+      "scenario-and-mock-domain-separated-from-report-projection",
+      "mock-report-and-scenario-report-adapters-extracted",
+      "typescript-runtime-and-array-pipeline-runtime-separated",
+      "automatic-all-source-module-boundary-discovery",
+      "implementation-history-consolidated-in-docs-releases"
+    ],
+    "partial": [
+      "typescript-analysis-runtime-composition-root-further-decomposition-only-when-ports-are-stable",
+      "cross-module-context-sensitive-interprocedural-summaries",
+      "escaped-reference-points-to-and-interprocedural-memory-ssa",
+      "complete-dataflow-evidence-attribution-for-all-mcdc-loop-and-feedback-producers",
+      "real-jest-and-test-each-runtime-validation",
+      "performance-benchmarks-on-large-real-world-projects"
+    ],
+    "transitional": [
+      "typescript-aware-runtime-composition-root",
+      "recursive-ast-fallback-for-explicitly-unsupported-or-unproven-constraint-ir-fragments",
+      "public-constraint-engine-legacy-alias-and-deprecated-contract-type-aliases"
+    ],
+    "planned": [
+      "real-jest-and-test-each-runtime-validation",
+      "large-project-performance-and-memory-budgets",
+      "cross-module-call-summary-and-escaped-reference-expansion",
+      "complete-runtime-evidence-audit-for-all-scenario-producers"
+    ]
+  },
+  "compatibilityPolicy": {
+    "publicConstraintEngineAlias": "legacy",
+    "internalConstraintEngine": "recursive-ast",
+    "retainedReportTelemetry": [
+      "legacyFallback"
+    ],
+    "deprecatedTypeAliases": [
+      "LegacyConstraintExpr",
+      "LegacyControlFlowContext"
+    ],
+    "note": "These names are retained only for public API/report compatibility. No legacy analyzer module, legacy source directory or opaque compatibility context exists."
+  },
+  "implementedIsolated": [
+    "constraints",
+    "solver",
+    "data-flow",
+    "analysis-state-reducer",
+    "scenario-domain",
+    "mock-domain",
+    "mcdc-engine",
+    "execution-coverage",
+    "minimization",
+    "reporting",
+    "test-batching",
+    "domain-policies"
+  ]
+}

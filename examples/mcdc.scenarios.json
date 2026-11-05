@@ -1,0 +1,2274 @@
+{
+  "generator": {
+    "name": "branch-scenarios-generator",
+    "version": "0.9.0"
+  },
+  "source": "examples/mcdc.js",
+  "sourceLanguage": "javascript",
+  "generatedAt": "2026-11-03T06:40:23.497Z",
+  "limitations": [
+    "Static MVP: generated scenarios are candidates; run the function and verify actual branch coverage with Jest/Istanbul.",
+    "MC/DC mode uses unique-cause independence: for each atomic condition, a pair must differ only in that condition while the full decision changes. This is static candidate generation; execute and verify the pairs in the target runtime.",
+    "JavaScript is supported via the TypeScript parser with allowJs. Without JSDoc, property types are inferred from comparisons, truthiness checks, switch cases, nested accesses and .length; inferredProperties reports confidence and evidence.",
+    "Supported conditions: direct parameter paths, literals, truthiness, !, &&, ||, equality, numeric comparisons, and simple numeric comparisons between two input paths. Unknown truthy/falsy properties use boolean representatives unless nested access implies an object/array.",
+    "Supported control flow: if/else, switch with literal cases, ternary expressions, for/for...of/for...in/while/do...while loops, plus break/continue path termination inside loops and switch clauses.",
+    "Loop scenarios: for...of and for...in generate zero-, one- and multiple-iteration collection shapes; loop-body aliases are mapped to a representative first item. Classic for loops support literal counter initializers and simple increment/decrement steps; while/do...while support simple property constraints and local numeric counter cases.",
+    "Loop analysis is an approximation: common break/continue transfers stop analysis of the current path; break inside switch exits the switch, while continue propagates to the enclosing loop. Labelled transfers, full iteration-state propagation and switch fallthrough are not modeled. Mutations to iterated collections, custom iterators, async iterator side effects, and complex counter updates are unsupported.",
+    "Array callback support: forEach/map/flatMap/some/every/filter/find/findIndex and reduce with inline callbacks and collections resolved to function input paths. Predicate callbacks support simple return expressions; direct find() checks and find() comparisons with null/undefined are supported, as are findIndex() comparisons against numeric literals. some/every have representative match/no-match scenarios. flatMap chains support a direct array-property projection (for example group => group.passengers). reduce analyzes callback indexes through 2 with an initial value and through 3 without one, replaying up to two prior callback invocations over bounded candidate items. This is concrete interpretation, not general symbolic execution; unsupported reducer statements are not replaced with a fabricated initial accumulator state.",
+    "Undefined values are encoded as {\"$undefined\":true}; omit the corresponding argument/property or hydrate this marker before calling the function.",
+    "Mock templates are type-derived suggestions and are not automatically connected to branch scenarios."
+  ],
+  "functions": [
+    {
+      "name": "canBoard",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.isActive",
+            "Inferred from nested property access: input.hasPermission"
+          ]
+        },
+        {
+          "path": "input.hasPermission",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.isActive",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 2,
+        "scenariosGenerated": 3,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 0,
+        "loopScenariosGenerated": 0,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 2,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "if-2-7-true-1",
+          "target": {
+            "branchId": "if-2-7",
+            "kind": "if",
+            "line": 2,
+            "column": 7,
+            "condition": "input.isActive && input.hasPermission",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "isActive": true,
+              "hasPermission": true
+            }
+          ],
+          "assumptions": [
+            "input.isActive",
+            "input.hasPermission"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-2-7-false-1",
+          "target": {
+            "branchId": "if-2-7",
+            "kind": "if",
+            "line": 2,
+            "column": 7,
+            "condition": "input.isActive && input.hasPermission",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "isActive": false,
+              "hasPermission": false
+            }
+          ],
+          "assumptions": [
+            "input.isActive"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-2-7-false-2",
+          "target": {
+            "branchId": "if-2-7",
+            "kind": "if",
+            "line": 2,
+            "column": 7,
+            "condition": "input.isActive && input.hasPermission",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "isActive": true,
+              "hasPermission": false
+            }
+          ],
+          "assumptions": [
+            "input.isActive",
+            "input.hasPermission"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 2,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-if-2-7",
+            "kind": "if",
+            "line": 2,
+            "column": 7,
+            "expression": "input.isActive && input.hasPermission",
+            "criterion": "unique-cause",
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "input.isActive",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-2-7-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-2-7-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "isActive": false,
+                            "hasPermission": true
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.isActive",
+                          "input.hasPermission"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-2-7-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "isActive": true,
+                            "hasPermission": true
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.isActive",
+                          "input.hasPermission"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "input.hasPermission",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-2-7-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-2-7-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "isActive": true,
+                            "hasPermission": false
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.isActive",
+                          "input.hasPermission"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-2-7-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "isActive": true,
+                            "hasPermission": true
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.isActive",
+                          "input.hasPermission"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 1,
+        "column": 1
+      }
+    },
+    {
+      "name": "canAccess",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.isAdmin",
+            "Inferred from nested property access: input.isOwner",
+            "Inferred from nested property access: input.isActive"
+          ]
+        },
+        {
+          "path": "input.isActive",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.isAdmin",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.isOwner",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 2,
+        "scenariosGenerated": 4,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 0,
+        "loopScenariosGenerated": 0,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 3,
+        "mcdcIndependencePairsFound": 3,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "if-7-7-true-1",
+          "target": {
+            "branchId": "if-7-7",
+            "kind": "if",
+            "line": 7,
+            "column": 7,
+            "condition": "input.isAdmin || (input.isOwner && input.isActive)",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "isAdmin": true,
+              "isOwner": false,
+              "isActive": false
+            }
+          ],
+          "assumptions": [
+            "input.isAdmin"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-7-7-true-2",
+          "target": {
+            "branchId": "if-7-7",
+            "kind": "if",
+            "line": 7,
+            "column": 7,
+            "condition": "input.isAdmin || (input.isOwner && input.isActive)",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "isAdmin": false,
+              "isOwner": true,
+              "isActive": true
+            }
+          ],
+          "assumptions": [
+            "input.isAdmin",
+            "input.isOwner",
+            "input.isActive"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-7-7-false-1",
+          "target": {
+            "branchId": "if-7-7",
+            "kind": "if",
+            "line": 7,
+            "column": 7,
+            "condition": "input.isAdmin || (input.isOwner && input.isActive)",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "isAdmin": false,
+              "isOwner": false,
+              "isActive": false
+            }
+          ],
+          "assumptions": [
+            "input.isAdmin",
+            "input.isOwner"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-7-7-false-2",
+          "target": {
+            "branchId": "if-7-7",
+            "kind": "if",
+            "line": 7,
+            "column": 7,
+            "condition": "input.isAdmin || (input.isOwner && input.isActive)",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "isAdmin": false,
+              "isOwner": true,
+              "isActive": false
+            }
+          ],
+          "assumptions": [
+            "input.isAdmin",
+            "input.isOwner",
+            "input.isActive"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 3,
+        "independencePairsFound": 3,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-if-7-7",
+            "kind": "if",
+            "line": 7,
+            "column": 7,
+            "expression": "input.isAdmin || (input.isOwner && input.isActive)",
+            "criterion": "unique-cause",
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "input.isAdmin",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-7-7-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": false,
+                      "C3": false
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-7-7-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "isAdmin": false,
+                            "isOwner": false,
+                            "isActive": false
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": false,
+                          "C3": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.isAdmin",
+                          "input.isOwner",
+                          "input.isActive"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-7-7-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "isAdmin": true,
+                            "isOwner": false,
+                            "isActive": false
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false,
+                          "C3": false
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.isAdmin",
+                          "input.isOwner",
+                          "input.isActive"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "input.isOwner",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-7-7-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": false,
+                      "C3": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-7-7-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "isAdmin": false,
+                            "isOwner": false,
+                            "isActive": true
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": false,
+                          "C3": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.isAdmin",
+                          "input.isOwner",
+                          "input.isActive"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-7-7-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "isAdmin": false,
+                            "isOwner": true,
+                            "isActive": true
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true,
+                          "C3": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.isAdmin",
+                          "input.isOwner",
+                          "input.isActive"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C3",
+                "expression": "input.isActive",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-7-7-C3-pair-1",
+                    "fixedConditions": {
+                      "C1": false,
+                      "C2": true
+                    },
+                    "changedCondition": "C3",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-7-7-C3-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "isAdmin": false,
+                            "isOwner": true,
+                            "isActive": false
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true,
+                          "C3": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.isAdmin",
+                          "input.isOwner",
+                          "input.isActive"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-7-7-C3-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "isAdmin": false,
+                            "isOwner": true,
+                            "isActive": true
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true,
+                          "C3": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.isAdmin",
+                          "input.isOwner",
+                          "input.isActive"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 6,
+        "column": 1
+      }
+    },
+    {
+      "name": "canEnter",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.isBlocked",
+            "Inferred from nested property access: input.isExpired",
+            "Inferred from nested property access: input.isVerified"
+          ]
+        },
+        {
+          "path": "input.isBlocked",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.isExpired",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.isVerified",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 2,
+        "scenariosGenerated": 4,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 0,
+        "loopScenariosGenerated": 0,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 3,
+        "mcdcIndependencePairsFound": 3,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "if-12-7-true-1",
+          "target": {
+            "branchId": "if-12-7",
+            "kind": "if",
+            "line": 12,
+            "column": 7,
+            "condition": "!(input.isBlocked || input.isExpired) && input.isVerified",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "isBlocked": false,
+              "isExpired": false,
+              "isVerified": true
+            }
+          ],
+          "assumptions": [
+            "input.isBlocked",
+            "input.isExpired",
+            "input.isVerified"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-12-7-false-1",
+          "target": {
+            "branchId": "if-12-7",
+            "kind": "if",
+            "line": 12,
+            "column": 7,
+            "condition": "!(input.isBlocked || input.isExpired) && input.isVerified",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "isBlocked": true,
+              "isExpired": false,
+              "isVerified": false
+            }
+          ],
+          "assumptions": [
+            "input.isBlocked"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-12-7-false-2",
+          "target": {
+            "branchId": "if-12-7",
+            "kind": "if",
+            "line": 12,
+            "column": 7,
+            "condition": "!(input.isBlocked || input.isExpired) && input.isVerified",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "isBlocked": false,
+              "isExpired": true,
+              "isVerified": false
+            }
+          ],
+          "assumptions": [
+            "input.isBlocked",
+            "input.isExpired"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-12-7-false-3",
+          "target": {
+            "branchId": "if-12-7",
+            "kind": "if",
+            "line": 12,
+            "column": 7,
+            "condition": "!(input.isBlocked || input.isExpired) && input.isVerified",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "isBlocked": false,
+              "isExpired": false,
+              "isVerified": false
+            }
+          ],
+          "assumptions": [
+            "input.isBlocked",
+            "input.isExpired",
+            "input.isVerified"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 3,
+        "independencePairsFound": 3,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-if-12-7",
+            "kind": "if",
+            "line": 12,
+            "column": 7,
+            "expression": "!(input.isBlocked || input.isExpired) && input.isVerified",
+            "criterion": "unique-cause",
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "input.isBlocked",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-12-7-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": false,
+                      "C3": true
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": true,
+                      "conditionTrue": false
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-12-7-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "isBlocked": false,
+                            "isExpired": false,
+                            "isVerified": true
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": false,
+                          "C3": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.isBlocked",
+                          "input.isExpired",
+                          "input.isVerified"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-12-7-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "isBlocked": true,
+                            "isExpired": false,
+                            "isVerified": true
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false,
+                          "C3": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.isBlocked",
+                          "input.isExpired",
+                          "input.isVerified"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "input.isExpired",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-12-7-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": false,
+                      "C3": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": true,
+                      "conditionTrue": false
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-12-7-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "isBlocked": false,
+                            "isExpired": false,
+                            "isVerified": true
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": false,
+                          "C3": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.isBlocked",
+                          "input.isExpired",
+                          "input.isVerified"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-12-7-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "isBlocked": false,
+                            "isExpired": true,
+                            "isVerified": true
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true,
+                          "C3": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.isBlocked",
+                          "input.isExpired",
+                          "input.isVerified"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C3",
+                "expression": "input.isVerified",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-12-7-C3-pair-1",
+                    "fixedConditions": {
+                      "C1": false,
+                      "C2": false
+                    },
+                    "changedCondition": "C3",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-12-7-C3-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "isBlocked": false,
+                            "isExpired": false,
+                            "isVerified": false
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": false,
+                          "C3": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.isBlocked",
+                          "input.isExpired",
+                          "input.isVerified"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-12-7-C3-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "isBlocked": false,
+                            "isExpired": false,
+                            "isVerified": true
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": false,
+                          "C3": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.isBlocked",
+                          "input.isExpired",
+                          "input.isVerified"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 11,
+        "column": 1
+      }
+    },
+    {
+      "name": "canTravel",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.age",
+            "Inferred from nested property access: input.hasConsent"
+          ]
+        },
+        {
+          "path": "input.age",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 18"
+          ]
+        },
+        {
+          "path": "input.hasConsent",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 2,
+        "scenariosGenerated": 3,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 0,
+        "loopScenariosGenerated": 0,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 2,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "if-17-7-true-1",
+          "target": {
+            "branchId": "if-17-7",
+            "kind": "if",
+            "line": 17,
+            "column": 7,
+            "condition": "input.age >= 18 && input.hasConsent",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "age": 18,
+              "hasConsent": true
+            }
+          ],
+          "assumptions": [
+            "input.age",
+            "input.hasConsent"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-17-7-false-1",
+          "target": {
+            "branchId": "if-17-7",
+            "kind": "if",
+            "line": 17,
+            "column": 7,
+            "condition": "input.age >= 18 && input.hasConsent",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "age": 17,
+              "hasConsent": false
+            }
+          ],
+          "assumptions": [
+            "input.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-17-7-false-2",
+          "target": {
+            "branchId": "if-17-7",
+            "kind": "if",
+            "line": 17,
+            "column": 7,
+            "condition": "input.age >= 18 && input.hasConsent",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "age": 18,
+              "hasConsent": false
+            }
+          ],
+          "assumptions": [
+            "input.age",
+            "input.hasConsent"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 2,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-if-17-7",
+            "kind": "if",
+            "line": 17,
+            "column": 7,
+            "expression": "input.age >= 18 && input.hasConsent",
+            "criterion": "unique-cause",
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "input.age >= 18",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-17-7-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-17-7-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "age": 17,
+                            "hasConsent": true
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.age",
+                          "input.hasConsent"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-17-7-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "age": 18,
+                            "hasConsent": true
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.age",
+                          "input.hasConsent"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "input.hasConsent",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-17-7-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-17-7-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "age": 18,
+                            "hasConsent": false
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.age",
+                          "input.hasConsent"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-17-7-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "age": 18,
+                            "hasConsent": true
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.age",
+                          "input.hasConsent"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 16,
+        "column": 1
+      }
+    },
+    {
+      "name": "correlatedConditions",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.age"
+          ]
+        },
+        {
+          "path": "input.age",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 18",
+            "Compared with numeric literal 20"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 2,
+        "scenariosGenerated": 3,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 0,
+        "loopScenariosGenerated": 0,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 1,
+        "mcdcConditionsWithoutPair": 1
+      },
+      "scenarios": [
+        {
+          "id": "if-22-7-true-1",
+          "target": {
+            "branchId": "if-22-7",
+            "kind": "if",
+            "line": 22,
+            "column": 7,
+            "condition": "input.age >= 18 && input.age > 20",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "age": 21
+            }
+          ],
+          "assumptions": [
+            "input.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-22-7-false-1",
+          "target": {
+            "branchId": "if-22-7",
+            "kind": "if",
+            "line": 22,
+            "column": 7,
+            "condition": "input.age >= 18 && input.age > 20",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "age": 17
+            }
+          ],
+          "assumptions": [
+            "input.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-22-7-false-2",
+          "target": {
+            "branchId": "if-22-7",
+            "kind": "if",
+            "line": 22,
+            "column": 7,
+            "condition": "input.age >= 18 && input.age > 20",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "age": 19
+            }
+          ],
+          "assumptions": [
+            "input.age"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 1,
+        "conditionsWithoutIndependencePair": [
+          {
+            "decisionId": "mcdc-if-22-7",
+            "conditionId": "C1",
+            "expression": "input.age >= 18",
+            "reason": "The logical independence pair exists, but the input constraints could not be solved consistently."
+          }
+        ],
+        "decisions": [
+          {
+            "decisionId": "mcdc-if-22-7",
+            "kind": "if",
+            "line": 22,
+            "column": 7,
+            "expression": "input.age >= 18 && input.age > 20",
+            "criterion": "unique-cause",
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "input.age >= 18",
+                "independencePairs": [],
+                "status": "no-pair",
+                "reason": "The logical independence pair exists, but the input constraints could not be solved consistently."
+              },
+              {
+                "id": "C2",
+                "expression": "input.age > 20",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-22-7-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-22-7-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "age": 19
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.age"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-22-7-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "age": 21
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.age"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "partial"
+          }
+        ]
+      },
+      "mockTemplates": [],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 21,
+        "column": 1
+      }
+    },
+    {
+      "name": "ternaryDecision",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.isPremium",
+            "Inferred from nested property access: input.country"
+          ]
+        },
+        {
+          "path": "input.country",
+          "inferredType": "string",
+          "confidence": "high",
+          "evidence": [
+            "Compared with string literal \"NL\""
+          ]
+        },
+        {
+          "path": "input.isPremium",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 2,
+        "scenariosGenerated": 3,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 0,
+        "loopScenariosGenerated": 0,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 2,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "ternary-27-10-true-1",
+          "target": {
+            "branchId": "ternary-27-10",
+            "kind": "ternary",
+            "line": 27,
+            "column": 10,
+            "condition": "input.isPremium && input.country === 'NL'",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "isPremium": true,
+              "country": "NL"
+            }
+          ],
+          "assumptions": [
+            "input.isPremium",
+            "input.country"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "ternary-27-10-false-1",
+          "target": {
+            "branchId": "ternary-27-10",
+            "kind": "ternary",
+            "line": 27,
+            "column": 10,
+            "condition": "input.isPremium && input.country === 'NL'",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "isPremium": false,
+              "country": "test"
+            }
+          ],
+          "assumptions": [
+            "input.isPremium"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "ternary-27-10-false-2",
+          "target": {
+            "branchId": "ternary-27-10",
+            "kind": "ternary",
+            "line": 27,
+            "column": 10,
+            "condition": "input.isPremium && input.country === 'NL'",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "isPremium": true,
+              "country": "NL_other"
+            }
+          ],
+          "assumptions": [
+            "input.isPremium",
+            "input.country"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 2,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-ternary-27-10",
+            "kind": "ternary",
+            "line": 27,
+            "column": 10,
+            "expression": "input.isPremium && input.country === 'NL'",
+            "criterion": "unique-cause",
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "input.isPremium",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-ternary-27-10-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-ternary-27-10-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "isPremium": false,
+                            "country": "NL"
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.isPremium",
+                          "input.country"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-ternary-27-10-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "isPremium": true,
+                            "country": "NL"
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.isPremium",
+                          "input.country"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "input.country === 'NL'",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-ternary-27-10-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-ternary-27-10-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "isPremium": true,
+                            "country": "NL_other"
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.isPremium",
+                          "input.country"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-ternary-27-10-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "isPremium": true,
+                            "country": "NL"
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.isPremium",
+                          "input.country"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 26,
+        "column": 1
+      }
+    },
+    {
+      "name": "whileDecision",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.count",
+            "Inferred from nested property access: input.limit",
+            "Inferred from nested property access: input.isEnabled"
+          ]
+        },
+        {
+          "path": "input.count",
+          "inferredType": "number",
+          "confidence": "medium",
+          "evidence": [
+            "Compared numerically with another input property"
+          ]
+        },
+        {
+          "path": "input.isEnabled",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.limit",
+          "inferredType": "number",
+          "confidence": "medium",
+          "evidence": [
+            "Compared numerically with another input property"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 2,
+        "scenariosGenerated": 3,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 2,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-31-10-true-1",
+          "target": {
+            "branchId": "loop-31-10",
+            "kind": "loop",
+            "line": 31,
+            "column": 10,
+            "condition": "input.count < input.limit && input.isEnabled",
+            "outcome": true,
+            "loopType": "while",
+            "phase": "condition-check"
+          },
+          "arguments": [
+            {
+              "count": 0,
+              "limit": 1,
+              "isEnabled": true
+            }
+          ],
+          "assumptions": [
+            "input.count",
+            "input.limit",
+            "input.isEnabled"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-31-10-false-1",
+          "target": {
+            "branchId": "loop-31-10",
+            "kind": "loop",
+            "line": 31,
+            "column": 10,
+            "condition": "input.count < input.limit && input.isEnabled",
+            "outcome": false,
+            "loopType": "while",
+            "phase": "condition-check"
+          },
+          "arguments": [
+            {
+              "count": 1,
+              "limit": 0,
+              "isEnabled": false
+            }
+          ],
+          "assumptions": [
+            "input.count",
+            "input.limit"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-31-10-false-2",
+          "target": {
+            "branchId": "loop-31-10",
+            "kind": "loop",
+            "line": 31,
+            "column": 10,
+            "condition": "input.count < input.limit && input.isEnabled",
+            "outcome": false,
+            "loopType": "while",
+            "phase": "condition-check"
+          },
+          "arguments": [
+            {
+              "count": 0,
+              "limit": 1,
+              "isEnabled": false
+            }
+          ],
+          "assumptions": [
+            "input.count",
+            "input.limit",
+            "input.isEnabled"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 2,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-while-loop-31-10",
+            "kind": "while-loop",
+            "line": 31,
+            "column": 10,
+            "expression": "input.count < input.limit && input.isEnabled",
+            "criterion": "unique-cause",
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "input.count < input.limit",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-while-loop-31-10-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-while-loop-31-10-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "count": 1,
+                            "limit": 0,
+                            "isEnabled": true
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.count",
+                          "input.limit",
+                          "input.isEnabled"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-while-loop-31-10-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "count": 0,
+                            "limit": 1,
+                            "isEnabled": true
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.count",
+                          "input.limit",
+                          "input.isEnabled"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "input.isEnabled",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-while-loop-31-10-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-while-loop-31-10-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "count": 0,
+                            "limit": 1,
+                            "isEnabled": false
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.count",
+                          "input.limit",
+                          "input.isEnabled"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-while-loop-31-10-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "count": 0,
+                            "limit": 1,
+                            "isEnabled": true
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.count",
+                          "input.limit",
+                          "input.isEnabled"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 30,
+        "column": 1
+      }
+    },
+    {
+      "name": "forDecision",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.count",
+            "Inferred from nested property access: input.limit",
+            "Inferred from nested property access: input.forceRun"
+          ]
+        },
+        {
+          "path": "input.count",
+          "inferredType": "number",
+          "confidence": "medium",
+          "evidence": [
+            "Compared numerically with another input property"
+          ]
+        },
+        {
+          "path": "input.forceRun",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.limit",
+          "inferredType": "number",
+          "confidence": "medium",
+          "evidence": [
+            "Compared numerically with another input property"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 2,
+        "scenariosGenerated": 3,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 2,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-38-10-true-1",
+          "target": {
+            "branchId": "loop-38-10",
+            "kind": "loop",
+            "line": 38,
+            "column": 10,
+            "condition": "input.count < input.limit || input.forceRun",
+            "outcome": true,
+            "loopType": "for",
+            "phase": "initial-condition"
+          },
+          "arguments": [
+            {
+              "count": 0,
+              "limit": 1,
+              "forceRun": false
+            }
+          ],
+          "assumptions": [
+            "input.count",
+            "input.limit"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-38-10-true-2",
+          "target": {
+            "branchId": "loop-38-10",
+            "kind": "loop",
+            "line": 38,
+            "column": 10,
+            "condition": "input.count < input.limit || input.forceRun",
+            "outcome": true,
+            "loopType": "for",
+            "phase": "initial-condition"
+          },
+          "arguments": [
+            {
+              "count": 1,
+              "limit": 0,
+              "forceRun": true
+            }
+          ],
+          "assumptions": [
+            "input.count",
+            "input.limit",
+            "input.forceRun"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-38-10-false-1",
+          "target": {
+            "branchId": "loop-38-10",
+            "kind": "loop",
+            "line": 38,
+            "column": 10,
+            "condition": "input.count < input.limit || input.forceRun",
+            "outcome": false,
+            "loopType": "for",
+            "phase": "zero-iterations"
+          },
+          "arguments": [
+            {
+              "count": 1,
+              "limit": 0,
+              "forceRun": false
+            }
+          ],
+          "assumptions": [
+            "input.count",
+            "input.limit",
+            "input.forceRun"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 2,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-for-loop-38-10",
+            "kind": "for-loop",
+            "line": 38,
+            "column": 10,
+            "expression": "input.count < input.limit || input.forceRun",
+            "criterion": "unique-cause",
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "input.count < input.limit",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-for-loop-38-10-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": false
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-for-loop-38-10-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "count": 1,
+                            "limit": 0,
+                            "forceRun": false
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.count",
+                          "input.limit",
+                          "input.forceRun"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-for-loop-38-10-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "count": 0,
+                            "limit": 1,
+                            "forceRun": false
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.count",
+                          "input.limit",
+                          "input.forceRun"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "input.forceRun",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-for-loop-38-10-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": false
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-for-loop-38-10-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "count": 1,
+                            "limit": 0,
+                            "forceRun": false
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.count",
+                          "input.limit",
+                          "input.forceRun"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-for-loop-38-10-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "count": 1,
+                            "limit": 0,
+                            "forceRun": true
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.count",
+                          "input.limit",
+                          "input.forceRun"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 37,
+        "column": 1
+      }
+    }
+  ]
+}

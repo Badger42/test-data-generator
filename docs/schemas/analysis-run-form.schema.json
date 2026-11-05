@@ -1,0 +1,332 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://branch-scenarios-generator.local/schemas/analysis-run-form.schema.json",
+  "title": "Branch Scenarios Generator Execution Results Form",
+  "type": "object",
+  "required": [
+    "formType",
+    "schemaVersion",
+    "reportId",
+    "execution",
+    "testResults",
+    "coverage",
+    "artifacts",
+    "notes",
+    "issues",
+    "completion"
+  ],
+  "properties": {
+    "formType": {
+      "const": "branch-scenarios-execution-results-form"
+    },
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "reportId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "generatorVersion": {
+      "type": "string"
+    },
+    "project": {
+      "type": "object",
+      "required": [
+        "source",
+        "sourceSha256",
+        "sourceFileCount",
+        "projectFingerprint"
+      ],
+      "properties": {
+        "projectFingerprint": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "sourceSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "instructions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "execution": {
+      "type": "object",
+      "required": [
+        "status",
+        "runner",
+        "command",
+        "environment"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "awaiting-manual-run",
+            "captured-by-generator"
+          ]
+        },
+        "runner": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "command": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "startedAt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "completedAt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "durationMs": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "environment": {
+          "type": "object"
+        }
+      }
+    },
+    "testResults": {
+      "type": "object",
+      "required": [
+        "plannedCases",
+        "cases",
+        "additionalTestsNotLinkedToScenarios"
+      ],
+      "properties": {
+        "total": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "passed": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "failed": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "skipped": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "plannedCases": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "scenarioId",
+              "status",
+              "failure"
+            ],
+            "properties": {
+              "scenarioId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "functionId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "functionName": {
+                "type": "string"
+              },
+              "branchId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "outcome": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "testName": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "batchId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "passed",
+                  "failed",
+                  "skipped",
+                  "pending",
+                  "not-run"
+                ]
+              },
+              "durationMs": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "failure": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "message": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "stack": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              },
+              "notes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "additionalTestsNotLinkedToScenarios": {
+          "type": "array"
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "required": [
+        "metrics"
+      ],
+      "properties": {
+        "provider": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reportPath": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "metrics": {
+          "type": "object"
+        },
+        "uncovered": {
+          "type": "array"
+        },
+        "notes": {
+          "type": "array"
+        }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "properties": {
+        "junitXml": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "jestJson": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "coverageFinalJson": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "consoleLog": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "custom": {
+          "type": "array"
+        }
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "issues": {
+      "type": "array"
+    },
+    "completion": {
+      "type": "object",
+      "required": [
+        "ready",
+        "completed",
+        "requiredBeforeAnalysis"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

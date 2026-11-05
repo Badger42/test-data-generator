@@ -1,0 +1,1240 @@
+{
+  "generator": {
+    "name": "branch-scenarios-generator",
+    "version": "0.17.0"
+  },
+  "source": "examples/coverage-feedback-target.js",
+  "sourceLanguage": "javascript",
+  "generatedAt": "2026-11-04T08:44:40.962Z",
+  "limitations": [
+    "Static MVP: generated scenarios are candidates; run the function and verify actual branch coverage with Jest/Istanbul.",
+    "MC/DC mode uses unique-cause independence: for each atomic condition, a pair must differ only in that condition while the full decision changes. This is static candidate generation; execute and verify the pairs in the target runtime.",
+    "JavaScript is supported via the TypeScript parser with allowJs. Without JSDoc, property types are inferred from comparisons, truthiness checks, switch cases, nested accesses and .length; inferredProperties reports confidence and evidence.",
+    "Supported conditions: direct parameter paths, literals, truthiness, !, &&, ||, equality, numeric comparisons, and simple numeric comparisons between two input paths. Unknown truthy/falsy properties use boolean representatives unless nested access implies an object/array.",
+    "Supported control flow: if/else, switch with literal cases, ternary expressions, for/for...of/for...in/while/do...while loops, plus break/continue path termination inside loops and switch clauses.",
+    "Loop scenarios: for...of and for...in generate zero-, one- and multiple-iteration collection shapes; loop-body aliases are mapped to a representative first item. Classic for loops support literal counter initializers and simple increment/decrement steps; while/do...while support simple property constraints and local numeric counter cases.",
+    "Loop analysis is an approximation: common break/continue transfers stop analysis of the current path; break inside switch exits the switch, while continue propagates to the enclosing loop. Labelled transfers, full iteration-state propagation and switch fallthrough are not modeled. Mutations to iterated collections, custom iterators, async iterator side effects, and complex counter updates are unsupported.",
+    "Array callback support: forEach/map/flatMap/some/every/filter/find/findIndex/findLast/findLastIndex/sort/toSorted and reduce with inline callbacks and collections resolved to function input paths. Predicate callbacks support concise expressions and block callbacks with a single return; safe top-level const aliases are expanded before MC/DC analysis. Block callbacks with explicit if decisions also expand safe const aliases in their conditions. For predicates that use the callback index parameter, unique-cause MC/DC searches representative callback indexes 0 and 1 and can emit a cross-index independence pair; pair scenarios carry the actual iterationIndex. Only immutable const declarations with side-effect-free initializers are inlined; let/var, destructuring, reassignment, helper calls, getters and mutation-dependent values are not symbolically expanded. Direct find()/findLast() checks and comparisons with null/undefined are supported, as are findIndex()/findLastIndex() comparisons against numeric literals. sort()/toSorted() comparator callbacks use two distinct representative source elements; flat() propagates nested element paths through literal depths 0–3. some/every have representative match/no-match scenarios. flatMap chains support a direct array-property projection (for example group => group.passengers). flat() chains support default and literal depths 0–3. sort()/toSorted() comparator branches are analyzed with a two-element collection. reduce analyzes callback indexes through 2 with an initial value and through 3 without one, replaying up to two prior callback invocations over bounded candidate items. This is concrete interpretation, not general symbolic execution; unsupported reducer statements are not replaced with a fabricated initial accumulator state.",
+    "Array pipeline data-flow (v0.15.0): each function reports arrayPipelines summaries with stage order, source/output aliases, object projections, upstream filter constraints and comparator-order assumptions. Branch scenarios carry arrayPipelineTrace and MC/DC callback contexts carry pipeline metadata. The analyzer materializes representative outputs for all source elements needed by downstream callbacks, including comparator pairs. This is a bounded representative mapping: flatMap uses one representative child per source item; flat() uses the first nested child per item; recognized sort comparators preserve mapping by constructing an input already in comparator order, not by simulating arbitrary sort permutations. Inspect arrayPipelines[].warnings and assumptions, and execute generated scenarios.",
+    "Undefined values are encoded as {\"$undefined\":true}; omit the corresponding argument/property or hydrate this marker before calling the function.",
+    "Mock templates are type-derived suggestions. For Jest coverage feedback, configure project mocks in --jest-setup; the setup can read globalThis.__BRANCH_SCENARIO__ and globalThis.__BRANCH_SCENARIO_MOCKS__ or define globalThis.__BRANCH_SCENARIO_APPLY_MOCKS__.",
+    "Iterative Jest coverage feedback executes the accumulated scenario suite, reads Istanbul coverage-final.json, and performs bounded candidate expansion for uncovered static branch outcomes (up to --coverage-iterations passes). Branch counters are aggregated for the source file; they do not independently prove MC/DC atom values. Branch-to-Istanbul mapping is heuristic and unmapped targets may remain unresolved. --coverage-from loads an existing report without iterative execution."
+  ],
+  "functions": [
+    {
+      "name": "coverageTarget",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.enabled",
+            "Inferred from nested property access: input.score"
+          ]
+        },
+        {
+          "path": "input.enabled",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.score",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 10"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 2,
+        "scenariosGenerated": 3,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 0,
+        "loopScenariosGenerated": 0,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 2,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "if-2-7-true-1",
+          "target": {
+            "branchId": "if-2-7",
+            "kind": "if",
+            "line": 2,
+            "column": 7,
+            "startOffset": 46,
+            "endOffset": 79,
+            "endLine": 2,
+            "endColumn": 40,
+            "sourceText": "input.enabled && input.score > 10",
+            "coverageOutcomeIndex": 0,
+            "condition": "input.enabled && input.score > 10",
+            "outcome": true,
+            "coverageAnchor": "if-statement",
+            "coverageLine": 2,
+            "coverageColumn": 3,
+            "coverageStartOffset": 42,
+            "coverageEndOffset": 107
+          },
+          "arguments": [
+            {
+              "enabled": true,
+              "score": 11
+            }
+          ],
+          "assumptions": [
+            "input.enabled",
+            "input.score"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-2-7-false-1",
+          "target": {
+            "branchId": "if-2-7",
+            "kind": "if",
+            "line": 2,
+            "column": 7,
+            "startOffset": 46,
+            "endOffset": 79,
+            "endLine": 2,
+            "endColumn": 40,
+            "sourceText": "input.enabled && input.score > 10",
+            "coverageOutcomeIndex": 1,
+            "condition": "input.enabled && input.score > 10",
+            "outcome": false,
+            "coverageAnchor": "if-statement",
+            "coverageLine": 2,
+            "coverageColumn": 3,
+            "coverageStartOffset": 42,
+            "coverageEndOffset": 107
+          },
+          "arguments": [
+            {
+              "enabled": false,
+              "score": 1
+            }
+          ],
+          "assumptions": [
+            "input.enabled"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-2-7-false-2",
+          "target": {
+            "branchId": "if-2-7",
+            "kind": "if",
+            "line": 2,
+            "column": 7,
+            "startOffset": 46,
+            "endOffset": 79,
+            "endLine": 2,
+            "endColumn": 40,
+            "sourceText": "input.enabled && input.score > 10",
+            "coverageOutcomeIndex": 1,
+            "condition": "input.enabled && input.score > 10",
+            "outcome": false,
+            "coverageAnchor": "if-statement",
+            "coverageLine": 2,
+            "coverageColumn": 3,
+            "coverageStartOffset": 42,
+            "coverageEndOffset": 107
+          },
+          "arguments": [
+            {
+              "enabled": true,
+              "score": 10
+            }
+          ],
+          "assumptions": [
+            "input.enabled",
+            "input.score"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 2,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-if-2-7",
+            "kind": "if",
+            "line": 2,
+            "column": 7,
+            "expression": "input.enabled && input.score > 10",
+            "runtimeExpressionRange": {
+              "startOffset": 46,
+              "endOffset": 79
+            },
+            "criterion": "unique-cause",
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "input.enabled",
+                "runtimeExpressionRange": {
+                  "startOffset": 46,
+                  "endOffset": 59
+                },
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-2-7-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-2-7-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "enabled": false,
+                            "score": 11
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.enabled",
+                          "input.score"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-2-7-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "enabled": true,
+                            "score": 11
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.enabled",
+                          "input.score"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "input.score > 10",
+                "runtimeExpressionRange": {
+                  "startOffset": 63,
+                  "endOffset": 79
+                },
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-2-7-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-2-7-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "enabled": true,
+                            "score": 10
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.enabled",
+                          "input.score"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-2-7-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "enabled": true,
+                            "score": 11
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.enabled",
+                          "input.score"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 1,
+        "column": 1
+      }
+    }
+  ],
+  "coverageFeedback": {
+    "version": 1,
+    "status": "passed",
+    "runner": "/opt/nvm/versions/node/v22.16.0/bin/node",
+    "provider": "v8",
+    "sourceFile": "examples/coverage-feedback-target.js",
+    "sourceFileMatch": "absolute-path",
+    "executedScenarioCount": 4,
+    "testResults": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "pending": 0
+    },
+    "totals": {
+      "statements": {
+        "covered": 1,
+        "total": 1,
+        "pct": 100
+      },
+      "functions": {
+        "covered": 1,
+        "total": 1,
+        "pct": 100
+      },
+      "branches": {
+        "covered": 2,
+        "total": 2,
+        "pct": 100
+      },
+      "lines": {
+        "covered": 1,
+        "total": 1,
+        "pct": 100
+      }
+    },
+    "branchCoverage": {
+      "allFileBranchesCovered": true,
+      "staticTargetsCovered": 1,
+      "staticTargetsPartiallyCovered": 0,
+      "staticTargetsUncovered": 0,
+      "staticTargetsUnmapped": 0,
+      "staticTargetsAmbiguous": 0,
+      "staticTargetsNotApplicable": 0
+    },
+    "staticBranchTargets": [
+      {
+        "id": "if-2-7",
+        "functionName": "coverageTarget",
+        "kind": "if",
+        "loopType": null,
+        "callbackMethod": null,
+        "line": 2,
+        "column": 7,
+        "endLine": 2,
+        "endColumn": 40,
+        "startOffset": 46,
+        "endOffset": 79,
+        "coverageLine": 2,
+        "coverageColumn": 3,
+        "coverageStartOffset": 42,
+        "coverageEndOffset": 107,
+        "coverageAnchor": "if-statement",
+        "coverageApplicable": true,
+        "condition": "input.enabled && input.score > 10",
+        "outcomes": [
+          {
+            "value": true,
+            "coverageOutcomeIndex": 0,
+            "scenarioIds": [
+              "if-2-7-true-1"
+            ],
+            "covered": true,
+            "coverageCount": 1
+          },
+          {
+            "value": false,
+            "coverageOutcomeIndex": 1,
+            "scenarioIds": [
+              "if-2-7-false-1",
+              "if-2-7-false-2"
+            ],
+            "covered": true,
+            "coverageCount": 1
+          }
+        ],
+        "coverageStatus": "covered",
+        "mappingStatus": "exact-start",
+        "coverageBranchId": "0",
+        "coverageType": "if",
+        "columnMatchDistance": 0,
+        "endLineMatchDistance": 0,
+        "endColumnMatchDistance": 0,
+        "coverageOutcomes": [
+          {
+            "index": 0,
+            "count": 1,
+            "covered": true,
+            "location": {
+              "start": {
+                "line": 2,
+                "column": 44
+              },
+              "end": {
+                "line": 4,
+                "column": 3
+              }
+            }
+          },
+          {
+            "index": 1,
+            "count": 1,
+            "covered": true,
+            "location": {
+              "start": {
+                "line": 5,
+                "column": 2
+              },
+              "end": {
+                "line": 5,
+                "column": 22
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "coverageBranchEntries": [
+      {
+        "id": "0",
+        "type": "if",
+        "loc": {
+          "start": {
+            "line": 2,
+            "column": 2
+          },
+          "end": {
+            "line": 2,
+            "column": 43
+          }
+        },
+        "locations": [
+          {
+            "start": {
+              "line": 2,
+              "column": 44
+            },
+            "end": {
+              "line": 4,
+              "column": 3
+            }
+          },
+          {
+            "start": {
+              "line": 5,
+              "column": 2
+            },
+            "end": {
+              "line": 5,
+              "column": 22
+            }
+          }
+        ],
+        "counts": [
+          1,
+          1
+        ]
+      }
+    ],
+    "uncoveredBranchEntries": [],
+    "mcdc": {
+      "generatedIndependencePairs": 2,
+      "inputPairVerification": "all-pairs-runtime-verified-with-short-circuit-inference",
+      "note": "Istanbul branch counters do not prove unique-cause MC/DC. With --mcdc --coverage-feedback, the target source is copied to a temporary sibling and instrumented at each analyzed decision and atomic-condition expression. The runtime recorder captures evaluated atom values and actual decision outcomes. Short-circuited fixed conditions may be inferred from the separately verified concrete input model and are explicitly distinguished from fully observed atoms. The target condition must be observed on both sides of a pair.",
+      "runtimeInstrumentation": {
+        "enabled": true,
+        "instrumentedSource": "coverage-feedback-target.branch-scenarios-runtime-14693-1793781880987.js",
+        "instrumentedSourceCleanup": "removed-after-run",
+        "decisionsDiscovered": 1,
+        "decisionsInstrumented": 1,
+        "conditionsDiscovered": 2,
+        "conditionsInstrumented": 2,
+        "skipped": [],
+        "recordedDecisionExecutions": 4,
+        "verifiedIndependencePairs": 2,
+        "shortCircuitInferencePairs": 1,
+        "coveragePathRemapped": true,
+        "coveragePathRemappedFrom": "examples/coverage-feedback-target.branch-scenarios-runtime-14693-1793781880987.js",
+        "semantics": "The target source is instrumented at each analyzed decision and atomic-condition expression. Instrumentation records actual evaluated atom values and the actual decision outcome during target-function execution. Short-circuited fixed conditions are reported separately as inferred from the concrete-input check; the target condition whose independent effect is being measured must be observed at runtime on both sides. A pair is fully runtime-instrumented only when every atom is observed on both sides."
+      },
+      "verificationScope": {
+        "generatedPairs": 2,
+        "runtimeVerifiedPairs": 2,
+        "fullyInstrumentedPairs": 1,
+        "shortCircuitInferencePairs": 1,
+        "notRuntimeVerifiedPairs": 0,
+        "note": "A pair is runtime-verified only when both scenarios pass, the actual instrumented decision outcome matches, the target atom is observed with its expected value on both sides, all observed atoms match, and any short-circuited fixed atoms are independently confirmed by the concrete input check."
+      }
+    },
+    "notes": [
+      "Coverage is aggregated across all generated scenarios, not isolated per scenario.",
+      "Static branch-to-Istanbul mapping uses source line, branch kind and source start column. Ambiguous or distant matches are reported as ambiguous/not-mapped instead of silently selecting a potentially wrong entry. Switch outcomes share one Istanbul switch entry and are mapped by clause index.",
+      "Array callback predicates may be represented as binary-expression coverage entries rather than regular if branches."
+    ],
+    "jest": {
+      "cwd": ".",
+      "exitCode": 0,
+      "signal": null,
+      "launchError": null,
+      "stdoutTail": "",
+      "stderrTail": ""
+    },
+    "execution": {
+      "generatedCases": 4,
+      "testResults": {
+        "success": true,
+        "numTotalTests": 4,
+        "numPassedTests": 4,
+        "numFailedTests": 0,
+        "numPendingTests": 0,
+        "setupHookCalls": 0,
+        "cases": [
+          {
+            "id": "coverage-case-1",
+            "status": "passed",
+            "failureMessages": [],
+            "references": [
+              {
+                "type": "branch",
+                "functionName": "coverageTarget",
+                "scenarioId": "if-2-7-true-1",
+                "branchId": "if-2-7",
+                "outcome": true
+              },
+              {
+                "type": "mcdc",
+                "functionName": "coverageTarget",
+                "decisionId": "mcdc-if-2-7",
+                "conditionId": "C1",
+                "pairId": "mcdc-if-2-7-C1-pair-1",
+                "side": "conditionTrue",
+                "mcdcAssertion": {
+                  "decisionExpression": "input.enabled && input.score > 10",
+                  "conditions": [
+                    {
+                      "id": "C1",
+                      "expression": "input.enabled"
+                    },
+                    {
+                      "id": "C2",
+                      "expression": "input.score > 10"
+                    }
+                  ],
+                  "expectedAtomicConditionValues": {
+                    "C1": true,
+                    "C2": true
+                  },
+                  "expectedDecisionOutcome": true,
+                  "callbackContext": null,
+                  "functionParameterNames": [
+                    "input"
+                  ]
+                }
+              },
+              {
+                "type": "mcdc",
+                "functionName": "coverageTarget",
+                "decisionId": "mcdc-if-2-7",
+                "conditionId": "C2",
+                "pairId": "mcdc-if-2-7-C2-pair-1",
+                "side": "conditionTrue",
+                "mcdcAssertion": {
+                  "decisionExpression": "input.enabled && input.score > 10",
+                  "conditions": [
+                    {
+                      "id": "C1",
+                      "expression": "input.enabled"
+                    },
+                    {
+                      "id": "C2",
+                      "expression": "input.score > 10"
+                    }
+                  ],
+                  "expectedAtomicConditionValues": {
+                    "C1": true,
+                    "C2": true
+                  },
+                  "expectedDecisionOutcome": true,
+                  "callbackContext": null,
+                  "functionParameterNames": [
+                    "input"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "coverage-case-2",
+            "status": "passed",
+            "failureMessages": [],
+            "references": [
+              {
+                "type": "branch",
+                "functionName": "coverageTarget",
+                "scenarioId": "if-2-7-false-1",
+                "branchId": "if-2-7",
+                "outcome": false
+              }
+            ]
+          },
+          {
+            "id": "coverage-case-3",
+            "status": "passed",
+            "failureMessages": [],
+            "references": [
+              {
+                "type": "branch",
+                "functionName": "coverageTarget",
+                "scenarioId": "if-2-7-false-2",
+                "branchId": "if-2-7",
+                "outcome": false
+              },
+              {
+                "type": "mcdc",
+                "functionName": "coverageTarget",
+                "decisionId": "mcdc-if-2-7",
+                "conditionId": "C2",
+                "pairId": "mcdc-if-2-7-C2-pair-1",
+                "side": "conditionFalse",
+                "mcdcAssertion": {
+                  "decisionExpression": "input.enabled && input.score > 10",
+                  "conditions": [
+                    {
+                      "id": "C1",
+                      "expression": "input.enabled"
+                    },
+                    {
+                      "id": "C2",
+                      "expression": "input.score > 10"
+                    }
+                  ],
+                  "expectedAtomicConditionValues": {
+                    "C1": true,
+                    "C2": false
+                  },
+                  "expectedDecisionOutcome": false,
+                  "callbackContext": null,
+                  "functionParameterNames": [
+                    "input"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "coverage-case-4",
+            "status": "passed",
+            "failureMessages": [],
+            "references": [
+              {
+                "type": "mcdc",
+                "functionName": "coverageTarget",
+                "decisionId": "mcdc-if-2-7",
+                "conditionId": "C1",
+                "pairId": "mcdc-if-2-7-C1-pair-1",
+                "side": "conditionFalse",
+                "mcdcAssertion": {
+                  "decisionExpression": "input.enabled && input.score > 10",
+                  "conditions": [
+                    {
+                      "id": "C1",
+                      "expression": "input.enabled"
+                    },
+                    {
+                      "id": "C2",
+                      "expression": "input.score > 10"
+                    }
+                  ],
+                  "expectedAtomicConditionValues": {
+                    "C1": false,
+                    "C2": true
+                  },
+                  "expectedDecisionOutcome": false,
+                  "callbackContext": null,
+                  "functionParameterNames": [
+                    "input"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "mcdcPairs": [
+        {
+          "functionName": "coverageTarget",
+          "decisionId": "mcdc-if-2-7",
+          "conditionId": "C1",
+          "pairId": "mcdc-if-2-7-C1-pair-1",
+          "callbackContext": null,
+          "conditionFalseCaseId": "coverage-case-4",
+          "conditionTrueCaseId": "coverage-case-1",
+          "status": "runtime-mcdc-verified-with-short-circuit-inference",
+          "bothScenariosPassed": true,
+          "inputChecks": {
+            "conditionFalse": {
+              "caseId": "coverage-case-4",
+              "pairId": "mcdc-if-2-7-C1-pair-1",
+              "decisionId": "mcdc-if-2-7",
+              "conditionId": "C1",
+              "side": "conditionFalse",
+              "status": "verified",
+              "decisionOutcome": false,
+              "actualConditions": {
+                "C1": false,
+                "C2": true
+              }
+            },
+            "conditionTrue": {
+              "caseId": "coverage-case-1",
+              "pairId": "mcdc-if-2-7-C1-pair-1",
+              "decisionId": "mcdc-if-2-7",
+              "conditionId": "C1",
+              "side": "conditionTrue",
+              "status": "verified",
+              "decisionOutcome": true,
+              "actualConditions": {
+                "C1": true,
+                "C2": true
+              }
+            }
+          },
+          "runtimeChecks": {
+            "conditionFalse": {
+              "status": "runtime-verified-with-short-circuit-inference",
+              "trace": {
+                "caseId": "coverage-case-4",
+                "decisionId": "mcdc-if-2-7",
+                "decisionOutcome": false,
+                "conditions": {
+                  "C1": {
+                    "value": false,
+                    "evaluated": true,
+                    "callbackInvocationId": null,
+                    "callbackContext": null
+                  }
+                },
+                "callbackContext": null,
+                "executionStatus": "completed"
+              },
+              "decisionOutcome": false,
+              "targetConditionId": "C1",
+              "actualConditions": {
+                "C1": false
+              },
+              "shortCircuitedConditions": [
+                "C2"
+              ],
+              "inferredFromVerifiedConcreteInputs": [
+                "C2"
+              ],
+              "callbackContext": null
+            },
+            "conditionTrue": {
+              "status": "runtime-instrumented-verified",
+              "trace": {
+                "caseId": "coverage-case-1",
+                "decisionId": "mcdc-if-2-7",
+                "decisionOutcome": true,
+                "conditions": {
+                  "C1": {
+                    "value": true,
+                    "evaluated": true,
+                    "callbackInvocationId": null,
+                    "callbackContext": null
+                  },
+                  "C2": {
+                    "value": true,
+                    "evaluated": true,
+                    "callbackInvocationId": null,
+                    "callbackContext": null
+                  }
+                },
+                "callbackContext": null,
+                "executionStatus": "completed"
+              },
+              "decisionOutcome": true,
+              "targetConditionId": "C1",
+              "actualConditions": {
+                "C1": true,
+                "C2": true
+              },
+              "shortCircuitedConditions": [],
+              "inferredFromVerifiedConcreteInputs": [],
+              "callbackContext": null
+            }
+          }
+        },
+        {
+          "functionName": "coverageTarget",
+          "decisionId": "mcdc-if-2-7",
+          "conditionId": "C2",
+          "pairId": "mcdc-if-2-7-C2-pair-1",
+          "callbackContext": null,
+          "conditionFalseCaseId": "coverage-case-3",
+          "conditionTrueCaseId": "coverage-case-1",
+          "status": "runtime-mcdc-verified",
+          "bothScenariosPassed": true,
+          "inputChecks": {
+            "conditionFalse": {
+              "caseId": "coverage-case-3",
+              "pairId": "mcdc-if-2-7-C2-pair-1",
+              "decisionId": "mcdc-if-2-7",
+              "conditionId": "C2",
+              "side": "conditionFalse",
+              "status": "verified",
+              "decisionOutcome": false,
+              "actualConditions": {
+                "C1": true,
+                "C2": false
+              }
+            },
+            "conditionTrue": {
+              "caseId": "coverage-case-1",
+              "pairId": "mcdc-if-2-7-C2-pair-1",
+              "decisionId": "mcdc-if-2-7",
+              "conditionId": "C2",
+              "side": "conditionTrue",
+              "status": "verified",
+              "decisionOutcome": true,
+              "actualConditions": {
+                "C1": true,
+                "C2": true
+              }
+            }
+          },
+          "runtimeChecks": {
+            "conditionFalse": {
+              "status": "runtime-instrumented-verified",
+              "trace": {
+                "caseId": "coverage-case-3",
+                "decisionId": "mcdc-if-2-7",
+                "decisionOutcome": false,
+                "conditions": {
+                  "C1": {
+                    "value": true,
+                    "evaluated": true,
+                    "callbackInvocationId": null,
+                    "callbackContext": null
+                  },
+                  "C2": {
+                    "value": false,
+                    "evaluated": true,
+                    "callbackInvocationId": null,
+                    "callbackContext": null
+                  }
+                },
+                "callbackContext": null,
+                "executionStatus": "completed"
+              },
+              "decisionOutcome": false,
+              "targetConditionId": "C2",
+              "actualConditions": {
+                "C1": true,
+                "C2": false
+              },
+              "shortCircuitedConditions": [],
+              "inferredFromVerifiedConcreteInputs": [],
+              "callbackContext": null
+            },
+            "conditionTrue": {
+              "status": "runtime-instrumented-verified",
+              "trace": {
+                "caseId": "coverage-case-1",
+                "decisionId": "mcdc-if-2-7",
+                "decisionOutcome": true,
+                "conditions": {
+                  "C1": {
+                    "value": true,
+                    "evaluated": true,
+                    "callbackInvocationId": null,
+                    "callbackContext": null
+                  },
+                  "C2": {
+                    "value": true,
+                    "evaluated": true,
+                    "callbackInvocationId": null,
+                    "callbackContext": null
+                  }
+                },
+                "callbackContext": null,
+                "executionStatus": "completed"
+              },
+              "decisionOutcome": true,
+              "targetConditionId": "C2",
+              "actualConditions": {
+                "C1": true,
+                "C2": true
+              },
+              "shortCircuitedConditions": [],
+              "inferredFromVerifiedConcreteInputs": [],
+              "callbackContext": null
+            }
+          }
+        }
+      ],
+      "mcdcPairsInputVerified": 2,
+      "mcdcPairsRuntimeVerified": 2,
+      "mcdcPairsFullyRuntimeInstrumented": 1,
+      "mcdcPairsWithBothScenariosPassed": 2,
+      "mcdcInputChecks": [
+        {
+          "caseId": "coverage-case-1",
+          "pairId": "mcdc-if-2-7-C1-pair-1",
+          "decisionId": "mcdc-if-2-7",
+          "conditionId": "C1",
+          "side": "conditionTrue",
+          "status": "verified",
+          "decisionOutcome": true,
+          "actualConditions": {
+            "C1": true,
+            "C2": true
+          }
+        },
+        {
+          "caseId": "coverage-case-1",
+          "pairId": "mcdc-if-2-7-C2-pair-1",
+          "decisionId": "mcdc-if-2-7",
+          "conditionId": "C2",
+          "side": "conditionTrue",
+          "status": "verified",
+          "decisionOutcome": true,
+          "actualConditions": {
+            "C1": true,
+            "C2": true
+          }
+        },
+        {
+          "caseId": "coverage-case-3",
+          "pairId": "mcdc-if-2-7-C2-pair-1",
+          "decisionId": "mcdc-if-2-7",
+          "conditionId": "C2",
+          "side": "conditionFalse",
+          "status": "verified",
+          "decisionOutcome": false,
+          "actualConditions": {
+            "C1": true,
+            "C2": false
+          }
+        },
+        {
+          "caseId": "coverage-case-4",
+          "pairId": "mcdc-if-2-7-C1-pair-1",
+          "decisionId": "mcdc-if-2-7",
+          "conditionId": "C1",
+          "side": "conditionFalse",
+          "status": "verified",
+          "decisionOutcome": false,
+          "actualConditions": {
+            "C1": false,
+            "C2": true
+          }
+        }
+      ],
+      "mcdcRuntimeChecks": [
+        {
+          "pairId": "mcdc-if-2-7-C1-pair-1",
+          "side": "conditionFalse",
+          "status": "runtime-verified-with-short-circuit-inference",
+          "trace": {
+            "caseId": "coverage-case-4",
+            "decisionId": "mcdc-if-2-7",
+            "decisionOutcome": false,
+            "conditions": {
+              "C1": {
+                "value": false,
+                "evaluated": true,
+                "callbackInvocationId": null,
+                "callbackContext": null
+              }
+            },
+            "callbackContext": null,
+            "executionStatus": "completed"
+          },
+          "decisionOutcome": false,
+          "targetConditionId": "C1",
+          "actualConditions": {
+            "C1": false
+          },
+          "shortCircuitedConditions": [
+            "C2"
+          ],
+          "inferredFromVerifiedConcreteInputs": [
+            "C2"
+          ],
+          "callbackContext": null
+        },
+        {
+          "pairId": "mcdc-if-2-7-C1-pair-1",
+          "side": "conditionTrue",
+          "status": "runtime-instrumented-verified",
+          "trace": {
+            "caseId": "coverage-case-1",
+            "decisionId": "mcdc-if-2-7",
+            "decisionOutcome": true,
+            "conditions": {
+              "C1": {
+                "value": true,
+                "evaluated": true,
+                "callbackInvocationId": null,
+                "callbackContext": null
+              },
+              "C2": {
+                "value": true,
+                "evaluated": true,
+                "callbackInvocationId": null,
+                "callbackContext": null
+              }
+            },
+            "callbackContext": null,
+            "executionStatus": "completed"
+          },
+          "decisionOutcome": true,
+          "targetConditionId": "C1",
+          "actualConditions": {
+            "C1": true,
+            "C2": true
+          },
+          "shortCircuitedConditions": [],
+          "inferredFromVerifiedConcreteInputs": [],
+          "callbackContext": null
+        },
+        {
+          "pairId": "mcdc-if-2-7-C2-pair-1",
+          "side": "conditionFalse",
+          "status": "runtime-instrumented-verified",
+          "trace": {
+            "caseId": "coverage-case-3",
+            "decisionId": "mcdc-if-2-7",
+            "decisionOutcome": false,
+            "conditions": {
+              "C1": {
+                "value": true,
+                "evaluated": true,
+                "callbackInvocationId": null,
+                "callbackContext": null
+              },
+              "C2": {
+                "value": false,
+                "evaluated": true,
+                "callbackInvocationId": null,
+                "callbackContext": null
+              }
+            },
+            "callbackContext": null,
+            "executionStatus": "completed"
+          },
+          "decisionOutcome": false,
+          "targetConditionId": "C2",
+          "actualConditions": {
+            "C1": true,
+            "C2": false
+          },
+          "shortCircuitedConditions": [],
+          "inferredFromVerifiedConcreteInputs": [],
+          "callbackContext": null
+        },
+        {
+          "pairId": "mcdc-if-2-7-C2-pair-1",
+          "side": "conditionTrue",
+          "status": "runtime-instrumented-verified",
+          "trace": {
+            "caseId": "coverage-case-1",
+            "decisionId": "mcdc-if-2-7",
+            "decisionOutcome": true,
+            "conditions": {
+              "C1": {
+                "value": true,
+                "evaluated": true,
+                "callbackInvocationId": null,
+                "callbackContext": null
+              },
+              "C2": {
+                "value": true,
+                "evaluated": true,
+                "callbackInvocationId": null,
+                "callbackContext": null
+              }
+            },
+            "callbackContext": null,
+            "executionStatus": "completed"
+          },
+          "decisionOutcome": true,
+          "targetConditionId": "C2",
+          "actualConditions": {
+            "C1": true,
+            "C2": true
+          },
+          "shortCircuitedConditions": [],
+          "inferredFromVerifiedConcreteInputs": [],
+          "callbackContext": null
+        }
+      ],
+      "mcdcRuntimeTraces": [
+        {
+          "caseId": "coverage-case-1",
+          "decisionId": "mcdc-if-2-7",
+          "decisionOutcome": true,
+          "conditions": {
+            "C1": {
+              "value": true,
+              "evaluated": true,
+              "callbackInvocationId": null,
+              "callbackContext": null
+            },
+            "C2": {
+              "value": true,
+              "evaluated": true,
+              "callbackInvocationId": null,
+              "callbackContext": null
+            }
+          },
+          "callbackContext": null,
+          "executionStatus": "completed"
+        },
+        {
+          "caseId": "coverage-case-2",
+          "decisionId": "mcdc-if-2-7",
+          "decisionOutcome": false,
+          "conditions": {
+            "C1": {
+              "value": false,
+              "evaluated": true,
+              "callbackInvocationId": null,
+              "callbackContext": null
+            }
+          },
+          "callbackContext": null,
+          "executionStatus": "completed"
+        },
+        {
+          "caseId": "coverage-case-3",
+          "decisionId": "mcdc-if-2-7",
+          "decisionOutcome": false,
+          "conditions": {
+            "C1": {
+              "value": true,
+              "evaluated": true,
+              "callbackInvocationId": null,
+              "callbackContext": null
+            },
+            "C2": {
+              "value": false,
+              "evaluated": true,
+              "callbackInvocationId": null,
+              "callbackContext": null
+            }
+          },
+          "callbackContext": null,
+          "executionStatus": "completed"
+        },
+        {
+          "caseId": "coverage-case-4",
+          "decisionId": "mcdc-if-2-7",
+          "decisionOutcome": false,
+          "conditions": {
+            "C1": {
+              "value": false,
+              "evaluated": true,
+              "callbackInvocationId": null,
+              "callbackContext": null
+            }
+          },
+          "callbackContext": null,
+          "executionStatus": "completed"
+        }
+      ]
+    },
+    "coverageFile": "examples/coverage-feedback-runtime-mcdc.example.coverage-final.json",
+    "iterative": {
+      "enabled": true,
+      "strategy": "targeted-static-branch-expansion",
+      "maxIterations": 3,
+      "coverageGoalPct": 100,
+      "initialMaxScenarios": 40,
+      "finalMaxScenarios": 40,
+      "totalAdditionalScenarios": 0,
+      "iterations": [
+        {
+          "iteration": 1,
+          "status": "passed",
+          "generatedScenarioCount": 3,
+          "addedScenarioCount": 0,
+          "executedScenarioCount": 4,
+          "jestTests": {
+            "total": 4,
+            "passed": 4,
+            "failed": 0
+          },
+          "branchCoverage": {
+            "covered": 2,
+            "total": 2,
+            "pct": 100
+          },
+          "staticTargets": {
+            "covered": 1,
+            "partiallyCovered": 0,
+            "uncovered": 0,
+            "unmapped": 0
+          }
+        }
+      ],
+      "stopReason": "coverage-goal-reached",
+      "goalReached": true,
+      "note": "Each pass expands solver alternatives only for static branch outcomes still uncovered according to the preceding Istanbul report. The full accumulated scenario set is re-executed on every pass. This is bounded candidate expansion, not unrestricted symbolic execution."
+    }
+  }
+}

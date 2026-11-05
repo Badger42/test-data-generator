@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": []
+  },
+  "files": [
+    "contracts/domain.d.ts",
+    "contracts/data-flow.d.ts",
+    "contracts/ports.d.ts",
+    "contracts/application.d.ts",
+    "contracts/cli.d.ts",
+    "contracts/constraints.d.ts",
+    "contracts/analysis-state.d.ts",
+    "contracts/analysis-session.d.ts",
+    "contracts/control-flow.d.ts",
+    "contracts/array-callbacks.d.ts",
+    "contracts/scenarios.d.ts",
+    "contracts/mcdc.d.ts",
+    "contracts/execution-coverage.d.ts",
+    "contracts/minimization.d.ts",
+    "contracts/iterative-coverage.d.ts",
+    "contracts/reporting.d.ts",
+    "contracts/analysis-report.d.ts",
+    "contracts/testing-batching.d.ts",
+    "contracts/solver-orchestration.d.ts"
+  ]
+}

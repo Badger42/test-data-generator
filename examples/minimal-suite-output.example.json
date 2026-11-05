@@ -1,0 +1,465 @@
+{
+  "generator": {
+    "name": "branch-scenarios-generator",
+    "version": "0.18.0"
+  },
+  "source": "examples/minimal-suite-target.js",
+  "sourceLanguage": "javascript",
+  "generatedAt": "2026-11-04T09:12:51.442Z",
+  "minimalTestSet": {
+    "status": "complete",
+    "objective": "Preserve every runtime-observed static branch outcome, both sides of each runtime-verified MC/DC pair, and at least one generated candidate for each conservative static-target outcome.",
+    "algorithm": "branch-and-bound-exact-set-cover",
+    "exactMinimumProven": true,
+    "searchNodes": 6,
+    "candidateCases": 8,
+    "selectedCases": 5,
+    "removedCases": 3,
+    "reductionPct": 37.5,
+    "obligations": 10,
+    "coveredObligations": 10,
+    "missingObligations": [],
+    "uncoveredBranchOutcomes": [],
+    "conservativeFallbackCaseIds": [],
+    "conservativeFallbacks": [],
+    "branchObligations": 4,
+    "mcdcPairsEligible": 3,
+    "mcdcPairsPreserved": 3,
+    "selectedCaseIds": [
+      "coverage-case-1",
+      "coverage-case-3",
+      "coverage-case-4",
+      "coverage-case-6",
+      "coverage-case-8"
+    ],
+    "removedCaseIds": [
+      "coverage-case-2",
+      "coverage-case-5",
+      "coverage-case-7"
+    ],
+    "scenarios": [
+      {
+        "caseId": "coverage-case-1",
+        "testName": "[Branch Scenario] 0001 coverage-case-1",
+        "arguments": [
+          {
+            "enabled": true,
+            "score": 10,
+            "region": "test"
+          }
+        ],
+        "mocks": [],
+        "references": [
+          {
+            "type": "branch",
+            "functionName": "minimalSuiteTarget",
+            "scenarioId": "if-2-7-true-1",
+            "branchId": "if-2-7",
+            "outcome": true
+          },
+          {
+            "type": "mcdc",
+            "functionName": "minimalSuiteTarget",
+            "decisionId": "mcdc-if-2-7",
+            "conditionId": "C1",
+            "pairId": "mcdc-if-2-7-C1-pair-1",
+            "side": "conditionTrue",
+            "mcdcAssertion": {
+              "decisionExpression": "input.enabled && input.score >= 10",
+              "conditions": [
+                {
+                  "id": "C1",
+                  "expression": "input.enabled"
+                },
+                {
+                  "id": "C2",
+                  "expression": "input.score >= 10"
+                }
+              ],
+              "expectedAtomicConditionValues": {
+                "C1": true,
+                "C2": true
+              },
+              "expectedDecisionOutcome": true,
+              "callbackContext": null,
+              "functionParameterNames": [
+                "input"
+              ]
+            }
+          },
+          {
+            "type": "mcdc",
+            "functionName": "minimalSuiteTarget",
+            "decisionId": "mcdc-if-2-7",
+            "conditionId": "C2",
+            "pairId": "mcdc-if-2-7-C2-pair-1",
+            "side": "conditionTrue",
+            "mcdcAssertion": {
+              "decisionExpression": "input.enabled && input.score >= 10",
+              "conditions": [
+                {
+                  "id": "C1",
+                  "expression": "input.enabled"
+                },
+                {
+                  "id": "C2",
+                  "expression": "input.score >= 10"
+                }
+              ],
+              "expectedAtomicConditionValues": {
+                "C1": true,
+                "C2": true
+              },
+              "expectedDecisionOutcome": true,
+              "callbackContext": null,
+              "functionParameterNames": [
+                "input"
+              ]
+            }
+          }
+        ],
+        "coveredBranchOutcomes": [
+          {
+            "branchId": "if-2-7",
+            "outcome": true,
+            "executionCount": 1,
+            "decisionIds": [
+              "mcdc-if-2-7"
+            ],
+            "callbackContexts": []
+          }
+        ],
+        "mcdcPairSides": [
+          {
+            "pairId": "mcdc-if-2-7-C1-pair-1",
+            "decisionId": "mcdc-if-2-7",
+            "conditionId": "C1",
+            "side": "conditionTrue",
+            "verified": true,
+            "pairStatus": "runtime-mcdc-verified-with-short-circuit-inference"
+          },
+          {
+            "pairId": "mcdc-if-2-7-C2-pair-1",
+            "decisionId": "mcdc-if-2-7",
+            "conditionId": "C2",
+            "side": "conditionTrue",
+            "verified": true,
+            "pairStatus": "runtime-mcdc-verified"
+          }
+        ]
+      },
+      {
+        "caseId": "coverage-case-3",
+        "testName": "[Branch Scenario] 0003 coverage-case-3",
+        "arguments": [
+          {
+            "enabled": true,
+            "score": 9,
+            "region": "test"
+          }
+        ],
+        "mocks": [],
+        "references": [
+          {
+            "type": "branch",
+            "functionName": "minimalSuiteTarget",
+            "scenarioId": "if-2-7-false-2",
+            "branchId": "if-2-7",
+            "outcome": false
+          },
+          {
+            "type": "mcdc",
+            "functionName": "minimalSuiteTarget",
+            "decisionId": "mcdc-if-2-7",
+            "conditionId": "C2",
+            "pairId": "mcdc-if-2-7-C2-pair-1",
+            "side": "conditionFalse",
+            "mcdcAssertion": {
+              "decisionExpression": "input.enabled && input.score >= 10",
+              "conditions": [
+                {
+                  "id": "C1",
+                  "expression": "input.enabled"
+                },
+                {
+                  "id": "C2",
+                  "expression": "input.score >= 10"
+                }
+              ],
+              "expectedAtomicConditionValues": {
+                "C1": true,
+                "C2": false
+              },
+              "expectedDecisionOutcome": false,
+              "callbackContext": null,
+              "functionParameterNames": [
+                "input"
+              ]
+            }
+          }
+        ],
+        "coveredBranchOutcomes": [
+          {
+            "branchId": "if-2-7",
+            "outcome": false,
+            "executionCount": 1,
+            "decisionIds": [
+              "mcdc-if-2-7"
+            ],
+            "callbackContexts": []
+          },
+          {
+            "branchId": "if-3-7",
+            "outcome": false,
+            "executionCount": 1,
+            "decisionIds": [
+              "mcdc-if-3-7"
+            ],
+            "callbackContexts": []
+          }
+        ],
+        "mcdcPairSides": [
+          {
+            "pairId": "mcdc-if-2-7-C2-pair-1",
+            "decisionId": "mcdc-if-2-7",
+            "conditionId": "C2",
+            "side": "conditionFalse",
+            "verified": true,
+            "pairStatus": "runtime-mcdc-verified"
+          }
+        ]
+      },
+      {
+        "caseId": "coverage-case-4",
+        "testName": "[Branch Scenario] 0004 coverage-case-4",
+        "arguments": [
+          {
+            "enabled": false,
+            "score": 1,
+            "region": "NL"
+          }
+        ],
+        "mocks": [],
+        "references": [
+          {
+            "type": "branch",
+            "functionName": "minimalSuiteTarget",
+            "scenarioId": "if-3-7-true-1",
+            "branchId": "if-3-7",
+            "outcome": true
+          },
+          {
+            "type": "mcdc",
+            "functionName": "minimalSuiteTarget",
+            "decisionId": "mcdc-if-3-7",
+            "conditionId": "C1",
+            "pairId": "mcdc-if-3-7-C1-pair-1",
+            "side": "conditionTrue",
+            "mcdcAssertion": {
+              "decisionExpression": "input.region === 'NL'",
+              "conditions": [
+                {
+                  "id": "C1",
+                  "expression": "input.region === 'NL'"
+                }
+              ],
+              "expectedAtomicConditionValues": {
+                "C1": true
+              },
+              "expectedDecisionOutcome": true,
+              "callbackContext": null,
+              "functionParameterNames": [
+                "input"
+              ]
+            }
+          }
+        ],
+        "coveredBranchOutcomes": [
+          {
+            "branchId": "if-2-7",
+            "outcome": false,
+            "executionCount": 1,
+            "decisionIds": [
+              "mcdc-if-2-7"
+            ],
+            "callbackContexts": []
+          },
+          {
+            "branchId": "if-3-7",
+            "outcome": true,
+            "executionCount": 1,
+            "decisionIds": [
+              "mcdc-if-3-7"
+            ],
+            "callbackContexts": []
+          }
+        ],
+        "mcdcPairSides": [
+          {
+            "pairId": "mcdc-if-3-7-C1-pair-1",
+            "decisionId": "mcdc-if-3-7",
+            "conditionId": "C1",
+            "side": "conditionTrue",
+            "verified": true,
+            "pairStatus": "runtime-mcdc-verified"
+          }
+        ]
+      },
+      {
+        "caseId": "coverage-case-6",
+        "testName": "[Branch Scenario] 0006 coverage-case-6",
+        "arguments": [
+          {
+            "enabled": false,
+            "score": 1,
+            "region": "NL_other"
+          }
+        ],
+        "mocks": [],
+        "references": [
+          {
+            "type": "branch",
+            "functionName": "minimalSuiteTarget",
+            "scenarioId": "if-3-7-false-1",
+            "branchId": "if-3-7",
+            "outcome": false
+          },
+          {
+            "type": "mcdc",
+            "functionName": "minimalSuiteTarget",
+            "decisionId": "mcdc-if-3-7",
+            "conditionId": "C1",
+            "pairId": "mcdc-if-3-7-C1-pair-1",
+            "side": "conditionFalse",
+            "mcdcAssertion": {
+              "decisionExpression": "input.region === 'NL'",
+              "conditions": [
+                {
+                  "id": "C1",
+                  "expression": "input.region === 'NL'"
+                }
+              ],
+              "expectedAtomicConditionValues": {
+                "C1": false
+              },
+              "expectedDecisionOutcome": false,
+              "callbackContext": null,
+              "functionParameterNames": [
+                "input"
+              ]
+            }
+          }
+        ],
+        "coveredBranchOutcomes": [
+          {
+            "branchId": "if-2-7",
+            "outcome": false,
+            "executionCount": 1,
+            "decisionIds": [
+              "mcdc-if-2-7"
+            ],
+            "callbackContexts": []
+          },
+          {
+            "branchId": "if-3-7",
+            "outcome": false,
+            "executionCount": 1,
+            "decisionIds": [
+              "mcdc-if-3-7"
+            ],
+            "callbackContexts": []
+          }
+        ],
+        "mcdcPairSides": [
+          {
+            "pairId": "mcdc-if-3-7-C1-pair-1",
+            "decisionId": "mcdc-if-3-7",
+            "conditionId": "C1",
+            "side": "conditionFalse",
+            "verified": true,
+            "pairStatus": "runtime-mcdc-verified"
+          }
+        ]
+      },
+      {
+        "caseId": "coverage-case-8",
+        "testName": "[Branch Scenario] 0008 coverage-case-8",
+        "arguments": [
+          {
+            "enabled": false,
+            "score": 10,
+            "region": "test"
+          }
+        ],
+        "mocks": [],
+        "references": [
+          {
+            "type": "mcdc",
+            "functionName": "minimalSuiteTarget",
+            "decisionId": "mcdc-if-2-7",
+            "conditionId": "C1",
+            "pairId": "mcdc-if-2-7-C1-pair-1",
+            "side": "conditionFalse",
+            "mcdcAssertion": {
+              "decisionExpression": "input.enabled && input.score >= 10",
+              "conditions": [
+                {
+                  "id": "C1",
+                  "expression": "input.enabled"
+                },
+                {
+                  "id": "C2",
+                  "expression": "input.score >= 10"
+                }
+              ],
+              "expectedAtomicConditionValues": {
+                "C1": false,
+                "C2": true
+              },
+              "expectedDecisionOutcome": false,
+              "callbackContext": null,
+              "functionParameterNames": [
+                "input"
+              ]
+            }
+          }
+        ],
+        "coveredBranchOutcomes": [
+          {
+            "branchId": "if-2-7",
+            "outcome": false,
+            "executionCount": 1,
+            "decisionIds": [
+              "mcdc-if-2-7"
+            ],
+            "callbackContexts": []
+          },
+          {
+            "branchId": "if-3-7",
+            "outcome": false,
+            "executionCount": 1,
+            "decisionIds": [
+              "mcdc-if-3-7"
+            ],
+            "callbackContexts": []
+          }
+        ],
+        "mcdcPairSides": [
+          {
+            "pairId": "mcdc-if-2-7-C1-pair-1",
+            "decisionId": "mcdc-if-2-7",
+            "conditionId": "C1",
+            "side": "conditionFalse",
+            "verified": true,
+            "pairStatus": "runtime-mcdc-verified-with-short-circuit-inference"
+          }
+        ]
+      }
+    ],
+    "notes": [
+      "This is a minimal set-cover solution over the obligations observed in the executed generated suite, not a proof of a globally minimal test suite over all possible inputs.",
+      "Exact minimum is proven only when exactMinimumProven=true; otherwise the deterministic greedy approximation is used.",
+      "Conservative target-reference fallback obligations are not runtime proof. Their candidate cases participate in set cover and at least one selected candidate is retained per such outcome."
+    ]
+  }
+}

@@ -1,0 +1,4255 @@
+{
+  "generator": {
+    "name": "branch-scenarios-generator",
+    "version": "0.14.0"
+  },
+  "source": "examples/array-methods-sorting-flat-last.js",
+  "sourceLanguage": "javascript",
+  "generatedAt": "2026-11-03T21:43:13.673Z",
+  "limitations": [
+    "Static MVP: generated scenarios are candidates; run the function and verify actual branch coverage with Jest/Istanbul.",
+    "MC/DC mode uses unique-cause independence: for each atomic condition, a pair must differ only in that condition while the full decision changes. This is static candidate generation; execute and verify the pairs in the target runtime.",
+    "JavaScript is supported via the TypeScript parser with allowJs. Without JSDoc, property types are inferred from comparisons, truthiness checks, switch cases, nested accesses and .length; inferredProperties reports confidence and evidence.",
+    "Supported conditions: direct parameter paths, literals, truthiness, !, &&, ||, equality, numeric comparisons, and simple numeric comparisons between two input paths. Unknown truthy/falsy properties use boolean representatives unless nested access implies an object/array.",
+    "Supported control flow: if/else, switch with literal cases, ternary expressions, for/for...of/for...in/while/do...while loops, plus break/continue path termination inside loops and switch clauses.",
+    "Loop scenarios: for...of and for...in generate zero-, one- and multiple-iteration collection shapes; loop-body aliases are mapped to a representative first item. Classic for loops support literal counter initializers and simple increment/decrement steps; while/do...while support simple property constraints and local numeric counter cases.",
+    "Loop analysis is an approximation: common break/continue transfers stop analysis of the current path; break inside switch exits the switch, while continue propagates to the enclosing loop. Labelled transfers, full iteration-state propagation and switch fallthrough are not modeled. Mutations to iterated collections, custom iterators, async iterator side effects, and complex counter updates are unsupported.",
+    "Array callback support: forEach/map/flatMap/some/every/filter/find/findIndex/findLast/findLastIndex/sort/toSorted and reduce with inline callbacks and collections resolved to function input paths. Predicate callbacks support concise expressions and block callbacks with a single return; safe top-level const aliases are expanded before MC/DC analysis. Block callbacks with explicit if decisions also expand safe const aliases in their conditions. For predicates that use the callback index parameter, unique-cause MC/DC searches representative callback indexes 0 and 1 and can emit a cross-index independence pair; pair scenarios carry the actual iterationIndex. Only immutable const declarations with side-effect-free initializers are inlined; let/var, destructuring, reassignment, helper calls, getters and mutation-dependent values are not symbolically expanded. Direct find()/findLast() checks and comparisons with null/undefined are supported, as are findIndex()/findLastIndex() comparisons against numeric literals. sort()/toSorted() comparator callbacks use two distinct representative source elements; flat() propagates nested element paths through literal depths 0–3. some/every have representative match/no-match scenarios. flatMap chains support a direct array-property projection (for example group => group.passengers). flat() chains support default and literal depths 0–3. sort()/toSorted() comparator branches are analyzed with a two-element collection. reduce analyzes callback indexes through 2 with an initial value and through 3 without one, replaying up to two prior callback invocations over bounded candidate items. This is concrete interpretation, not general symbolic execution; unsupported reducer statements are not replaced with a fabricated initial accumulator state.",
+    "Undefined values are encoded as {\"$undefined\":true}; omit the corresponding argument/property or hydrate this marker before calling the function.",
+    "Mock templates are type-derived suggestions. For Jest coverage feedback, configure project mocks in --jest-setup; the setup can read globalThis.__BRANCH_SCENARIO__ and globalThis.__BRANCH_SCENARIO_MOCKS__ or define globalThis.__BRANCH_SCENARIO_APPLY_MOCKS__."
+  ],
+  "functions": [
+    {
+      "name": "findLastAdult",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.people",
+            "Inferred from nested property access: input.people.0.age",
+            "Inferred from nested property access: input.people.0.active"
+          ]
+        },
+        {
+          "path": "input.people",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method findLast()",
+            "Inferred from nested property access: input.people.0.age",
+            "Inferred from nested property access: input.people.0.active"
+          ]
+        },
+        {
+          "path": "input.people.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.people.0.age",
+            "Inferred from nested property access: input.people.0.active"
+          ]
+        },
+        {
+          "path": "input.people.0.active",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.people.0.age",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 18"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 7,
+        "scenariosGenerated": 10,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 2,
+        "mcdcConditionsAnalyzed": 3,
+        "mcdcIndependencePairsFound": 3,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-2-7-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-2-7",
+            "kind": "loop",
+            "loopType": "array-findLast",
+            "line": 2,
+            "column": 7,
+            "condition": "input.people.findLast(person => person.age >= 18 && person.active)",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.people",
+            "callbackMethod": "findLast"
+          },
+          "arguments": [
+            {
+              "people": []
+            }
+          ],
+          "assumptions": [
+            "input.people"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-2-7-one-callback-1",
+          "target": {
+            "branchId": "loop-2-7",
+            "kind": "loop",
+            "loopType": "array-findLast",
+            "line": 2,
+            "column": 7,
+            "condition": "input.people.findLast(person => person.age >= 18 && person.active)",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.people",
+            "callbackMethod": "findLast"
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 1,
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-2-7-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-2-7",
+            "kind": "loop",
+            "loopType": "array-findLast",
+            "line": 2,
+            "column": 7,
+            "condition": "input.people.findLast(person => person.age >= 18 && person.active)",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.people",
+            "callbackMethod": "findLast"
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 1,
+                  "active": false
+                },
+                {
+                  "age": 1,
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-2-39-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-2-39",
+            "kind": "array-predicate",
+            "line": 2,
+            "column": 39,
+            "condition": "person.age >= 18 && person.active",
+            "outcome": true,
+            "callbackMethod": "findLast",
+            "collection": "input.people",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "person"
+            ]
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 18,
+                  "active": true
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people",
+            "input.people.0.age",
+            "input.people.0.active"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-2-39-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-2-39",
+            "kind": "array-predicate",
+            "line": 2,
+            "column": 39,
+            "condition": "person.age >= 18 && person.active",
+            "outcome": false,
+            "callbackMethod": "findLast",
+            "collection": "input.people",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "person"
+            ]
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 17,
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people",
+            "input.people.0.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-2-39-false-iteration-0-2",
+          "target": {
+            "branchId": "array-predicate-2-39",
+            "kind": "array-predicate",
+            "line": 2,
+            "column": 39,
+            "condition": "person.age >= 18 && person.active",
+            "outcome": false,
+            "callbackMethod": "findLast",
+            "collection": "input.people",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "person"
+            ]
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 18,
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people",
+            "input.people.0.age",
+            "input.people.0.active"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-2-7-true-1",
+          "target": {
+            "branchId": "if-2-7",
+            "kind": "if",
+            "line": 2,
+            "column": 7,
+            "condition": "input.people.findLast(person => person.age >= 18 && person.active)",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 18,
+                  "active": true
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people",
+            "input.people.0.age",
+            "input.people.0.active"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-2-7-false-1",
+          "target": {
+            "branchId": "if-2-7",
+            "kind": "if",
+            "line": 2,
+            "column": 7,
+            "condition": "input.people.findLast(person => person.age >= 18 && person.active)",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 17,
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people",
+            "input.people.0.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-2-7-false-2",
+          "target": {
+            "branchId": "if-2-7",
+            "kind": "if",
+            "line": 2,
+            "column": 7,
+            "condition": "input.people.findLast(person => person.age >= 18 && person.active)",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "people": [
+                {
+                  "age": 18,
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.people",
+            "input.people.0.age",
+            "input.people.0.active"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-2-7-false-3",
+          "target": {
+            "branchId": "if-2-7",
+            "kind": "if",
+            "line": 2,
+            "column": 7,
+            "condition": "input.people.findLast(person => person.age >= 18 && person.active)",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "people": []
+            }
+          ],
+          "assumptions": [
+            "input.people"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 2,
+        "conditionsAnalyzed": 3,
+        "independencePairsFound": 3,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-array-predicate-findLast-2-39",
+            "kind": "array-predicate-findLast",
+            "line": 2,
+            "column": 39,
+            "expression": "person.age >= 18 && person.active",
+            "sourceExpression": "person.age >= 18 && person.active",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "findLast",
+              "collection": "input.people",
+              "iterationIndex": 0,
+              "parameters": [
+                "person"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "person.age >= 18",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-findLast-2-39-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-findLast-2-39-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "people": [
+                              {
+                                "age": 17,
+                                "active": true
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "findLast",
+                          "collection": "input.people",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "person"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.people",
+                          "input.people.0.age",
+                          "input.people.0.active"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-findLast-2-39-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "people": [
+                              {
+                                "age": 18,
+                                "active": true
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "findLast",
+                          "collection": "input.people",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "person"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.people",
+                          "input.people.0.age",
+                          "input.people.0.active"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "person.active",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-findLast-2-39-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-findLast-2-39-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "people": [
+                              {
+                                "age": 18,
+                                "active": false
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "findLast",
+                          "collection": "input.people",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "person"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.people",
+                          "input.people.0.age",
+                          "input.people.0.active"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-findLast-2-39-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "people": [
+                              {
+                                "age": 18,
+                                "active": true
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "findLast",
+                          "collection": "input.people",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "person"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.people",
+                          "input.people.0.age",
+                          "input.people.0.active"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          },
+          {
+            "decisionId": "mcdc-if-2-7",
+            "kind": "if",
+            "line": 2,
+            "column": 7,
+            "expression": "input.people.findLast(person => person.age >= 18 && person.active)",
+            "criterion": "unique-cause",
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "input.people.findLast(person => person.age >= 18 && person.active)",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-2-7-C1-pair-1",
+                    "fixedConditions": {},
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-2-7-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "people": [
+                              {
+                                "age": 17,
+                                "active": false
+                              }
+                            ]
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.people",
+                          "input.people.0.age"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-2-7-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "people": [
+                              {
+                                "age": 18,
+                                "active": true
+                              }
+                            ]
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.people",
+                          "input.people.0.age",
+                          "input.people.0.active"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.people.findLast",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 1,
+        "column": 1
+      }
+    },
+    {
+      "name": "findLastIndexSecondActive",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0.active"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method findLastIndex()",
+            "Inferred from nested property access: input.items.0.active"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.active"
+          ]
+        },
+        {
+          "path": "input.items.0.active",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 7,
+        "scenariosGenerated": 8,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 2,
+        "mcdcConditionsAnalyzed": 3,
+        "mcdcIndependencePairsFound": 3,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-7-7-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-7-7",
+            "kind": "loop",
+            "loopType": "array-findLastIndex",
+            "line": 7,
+            "column": 7,
+            "condition": "input.items.findLastIndex((item, index) => index === 1 && item.active)",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.items",
+            "callbackMethod": "findLastIndex"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-7-7-one-callback-1",
+          "target": {
+            "branchId": "loop-7-7",
+            "kind": "loop",
+            "loopType": "array-findLastIndex",
+            "line": 7,
+            "column": 7,
+            "condition": "input.items.findLastIndex((item, index) => index === 1 && item.active)",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.items",
+            "callbackMethod": "findLastIndex"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-7-7-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-7-7",
+            "kind": "loop",
+            "loopType": "array-findLastIndex",
+            "line": 7,
+            "column": 7,
+            "condition": "input.items.findLastIndex((item, index) => index === 1 && item.active)",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.items",
+            "callbackMethod": "findLastIndex"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false
+                },
+                {
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-7-50-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-7-50",
+            "kind": "array-predicate",
+            "line": 7,
+            "column": 50,
+            "condition": "index === 1 && item.active",
+            "outcome": false,
+            "callbackMethod": "findLastIndex",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "item",
+              "index"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-7-50-true-iteration-1-1",
+          "target": {
+            "branchId": "array-predicate-7-50",
+            "kind": "array-predicate",
+            "line": 7,
+            "column": 50,
+            "condition": "index === 1 && item.active",
+            "outcome": true,
+            "callbackMethod": "findLastIndex",
+            "collection": "input.items",
+            "iterationIndex": 1,
+            "callbackParameters": [
+              "item",
+              "index"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false
+                },
+                {
+                  "active": true
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.1.active"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-7-50-false-iteration-1-1",
+          "target": {
+            "branchId": "array-predicate-7-50",
+            "kind": "array-predicate",
+            "line": 7,
+            "column": 50,
+            "condition": "index === 1 && item.active",
+            "outcome": false,
+            "callbackMethod": "findLastIndex",
+            "collection": "input.items",
+            "iterationIndex": 1,
+            "callbackParameters": [
+              "item",
+              "index"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false
+                },
+                {
+                  "active": false
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.1.active"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-7-7-true-1",
+          "target": {
+            "branchId": "if-7-7",
+            "kind": "if",
+            "line": 7,
+            "column": 7,
+            "condition": "input.items.findLastIndex((item, index) => index === 1 && item.active) >= 0",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "active": false
+                },
+                {
+                  "active": true
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.1.active"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-7-7-false-1",
+          "target": {
+            "branchId": "if-7-7",
+            "kind": "if",
+            "line": 7,
+            "column": 7,
+            "condition": "input.items.findLastIndex((item, index) => index === 1 && item.active) >= 0",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 2,
+        "conditionsAnalyzed": 3,
+        "independencePairsFound": 3,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-array-predicate-findLastIndex-7-50",
+            "kind": "array-predicate-findLastIndex",
+            "line": 7,
+            "column": 50,
+            "expression": "index === 1 && item.active",
+            "sourceExpression": "index === 1 && item.active",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "findLastIndex",
+              "collection": "input.items",
+              "iterationIndex": 0,
+              "candidateIterationIndexes": [
+                0,
+                1
+              ],
+              "parameters": [
+                "item",
+                "index"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "index === 1",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-findLastIndex-7-50-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true
+                    },
+                    "changedCondition": "C1",
+                    "variedCallbackIndex": {
+                      "conditionFalse": 0,
+                      "conditionTrue": 1
+                    },
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-findLastIndex-7-50-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "active": true
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "findLastIndex",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item",
+                            "index"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.active"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-findLastIndex-7-50-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "active": false
+                              },
+                              {
+                                "active": true
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "findLastIndex",
+                          "collection": "input.items",
+                          "iterationIndex": 1,
+                          "parameters": [
+                            "item",
+                            "index"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.1.active"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "item.active",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-findLastIndex-7-50-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-findLastIndex-7-50-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "active": false
+                              },
+                              {
+                                "active": false
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "findLastIndex",
+                          "collection": "input.items",
+                          "iterationIndex": 1,
+                          "parameters": [
+                            "item",
+                            "index"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.1.active"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-findLastIndex-7-50-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "active": false
+                              },
+                              {
+                                "active": true
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "findLastIndex",
+                          "collection": "input.items",
+                          "iterationIndex": 1,
+                          "parameters": [
+                            "item",
+                            "index"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.1.active"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          },
+          {
+            "decisionId": "mcdc-if-7-7",
+            "kind": "if",
+            "line": 7,
+            "column": 7,
+            "expression": "input.items.findLastIndex((item, index) => index === 1 && item.active) >= 0",
+            "criterion": "unique-cause",
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "input.items.findLastIndex((item, index) => index === 1 && item.active) >= 0",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-7-7-C1-pair-1",
+                    "fixedConditions": {},
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-7-7-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "items": []
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.items"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-7-7-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "active": false
+                              },
+                              {
+                                "active": true
+                              }
+                            ]
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.1.active"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.items.findLastIndex",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 6,
+        "column": 1
+      }
+    },
+    {
+      "name": "findLastIndexNotFound",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0.id",
+            "Inferred from nested property access: input.targetId"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method findLastIndex()",
+            "Inferred from nested property access: input.items.0.id"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.id"
+          ]
+        },
+        {
+          "path": "input.items.0.id",
+          "inferredType": "unknown",
+          "confidence": "low",
+          "evidence": [
+            "Property is accessed but no primitive type constraint was found"
+          ]
+        },
+        {
+          "path": "input.targetId",
+          "inferredType": "unknown",
+          "confidence": "low",
+          "evidence": [
+            "Property is accessed but no primitive type constraint was found"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 7,
+        "scenariosGenerated": 9,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 2,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 2,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-12-7-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-12-7",
+            "kind": "loop",
+            "loopType": "array-findLastIndex",
+            "line": 12,
+            "column": 7,
+            "condition": "input.items.findLastIndex(item => item.id === input.targetId)",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.items",
+            "callbackMethod": "findLastIndex"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-12-7-one-callback-1",
+          "target": {
+            "branchId": "loop-12-7",
+            "kind": "loop",
+            "loopType": "array-findLastIndex",
+            "line": 12,
+            "column": 7,
+            "condition": "input.items.findLastIndex(item => item.id === input.targetId)",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.items",
+            "callbackMethod": "findLastIndex"
+          },
+          "arguments": [
+            {
+              "items": [
+                {}
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-12-7-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-12-7",
+            "kind": "loop",
+            "loopType": "array-findLastIndex",
+            "line": 12,
+            "column": 7,
+            "condition": "input.items.findLastIndex(item => item.id === input.targetId)",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.items",
+            "callbackMethod": "findLastIndex"
+          },
+          "arguments": [
+            {
+              "items": [
+                {},
+                {}
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-12-41-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-12-41",
+            "kind": "array-predicate",
+            "line": 12,
+            "column": 41,
+            "condition": "item.id === input.targetId",
+            "outcome": true,
+            "callbackMethod": "findLastIndex",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "item"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "id": 0
+                }
+              ],
+              "targetId": 0
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.id",
+            "input.targetId"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-12-41-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-12-41",
+            "kind": "array-predicate",
+            "line": 12,
+            "column": 41,
+            "condition": "item.id === input.targetId",
+            "outcome": false,
+            "callbackMethod": "findLastIndex",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "item"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "id": 0
+                }
+              ],
+              "targetId": 1
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.id",
+            "input.targetId"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-12-41-false-iteration-0-2",
+          "target": {
+            "branchId": "array-predicate-12-41",
+            "kind": "array-predicate",
+            "line": 12,
+            "column": 41,
+            "condition": "item.id === input.targetId",
+            "outcome": false,
+            "callbackMethod": "findLastIndex",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "item"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "id": 1
+                }
+              ],
+              "targetId": 0
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.id",
+            "input.targetId"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-12-7-true-1",
+          "target": {
+            "branchId": "if-12-7",
+            "kind": "if",
+            "line": 12,
+            "column": 7,
+            "condition": "input.items.findLastIndex(item => item.id === input.targetId) === -1",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-12-7-false-1",
+          "target": {
+            "branchId": "if-12-7",
+            "kind": "if",
+            "line": 12,
+            "column": 7,
+            "condition": "input.items.findLastIndex(item => item.id === input.targetId) === -1",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "id": 0
+                }
+              ],
+              "targetId": 0
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.id",
+            "input.targetId"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-12-7-false-2",
+          "target": {
+            "branchId": "if-12-7",
+            "kind": "if",
+            "line": 12,
+            "column": 7,
+            "condition": "input.items.findLastIndex(item => item.id === input.targetId) === -1",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "items": [
+                {},
+                {
+                  "id": 0
+                }
+              ],
+              "targetId": 0
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.1.id",
+            "input.targetId"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 2,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 2,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-array-predicate-findLastIndex-12-41",
+            "kind": "array-predicate-findLastIndex",
+            "line": 12,
+            "column": 41,
+            "expression": "item.id === input.targetId",
+            "sourceExpression": "item.id === input.targetId",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "findLastIndex",
+              "collection": "input.items",
+              "iterationIndex": 0,
+              "parameters": [
+                "item"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "item.id === input.targetId",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-findLastIndex-12-41-C1-pair-1",
+                    "fixedConditions": {},
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-findLastIndex-12-41-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "id": 0
+                              }
+                            ],
+                            "targetId": 1
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "findLastIndex",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.id",
+                          "input.targetId"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-findLastIndex-12-41-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "id": 0
+                              }
+                            ],
+                            "targetId": 0
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "findLastIndex",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.id",
+                          "input.targetId"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          },
+          {
+            "decisionId": "mcdc-if-12-7",
+            "kind": "if",
+            "line": 12,
+            "column": 7,
+            "expression": "input.items.findLastIndex(item => item.id === input.targetId) === -1",
+            "criterion": "unique-cause",
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "input.items.findLastIndex(item => item.id === input.targetId) === -1",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-12-7-C1-pair-1",
+                    "fixedConditions": {},
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-12-7-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "id": 0
+                              }
+                            ],
+                            "targetId": 0
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.id",
+                          "input.targetId"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-12-7-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "items": []
+                          }
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.items"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.items.findLastIndex",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 11,
+        "column": 1
+      }
+    },
+    {
+      "name": "sortByPrice",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0.price",
+            "Inferred from nested property access: input.items.1.price"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method sort()",
+            "Inferred from nested property access: input.items.0.price",
+            "Inferred from nested property access: input.items.1.price"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.price"
+          ]
+        },
+        {
+          "path": "input.items.0.price",
+          "inferredType": "number",
+          "confidence": "medium",
+          "evidence": [
+            "Compared numerically with another input property"
+          ]
+        },
+        {
+          "path": "input.items.1",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.1.price"
+          ]
+        },
+        {
+          "path": "input.items.1.price",
+          "inferredType": "number",
+          "confidence": "medium",
+          "evidence": [
+            "Compared numerically with another input property"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 6,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 1,
+        "mcdcDecisionsAnalyzed": 2,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 2,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-17-18-comparator-pair-1",
+          "target": {
+            "branchId": "loop-17-18",
+            "kind": "loop",
+            "loopType": "array-sort",
+            "line": 17,
+            "column": 18,
+            "condition": "input.items.sort((left, right) => {\n    if (left.price < right.price) return -1;\n    if (left.price === right.price) return 0;\n    return 1;\n  })",
+            "outcome": "comparator-pair",
+            "phase": "compare-two-elements",
+            "collection": "input.items",
+            "callbackMethod": "sort"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "price": 1
+                },
+                {
+                  "price": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-18-9-true-iteration-0-1",
+          "target": {
+            "branchId": "if-18-9",
+            "kind": "if",
+            "line": 18,
+            "column": 9,
+            "condition": "left.price < right.price",
+            "outcome": true,
+            "callbackMethod": "sort",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "left",
+              "right"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "price": 0
+                },
+                {
+                  "price": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.price",
+            "input.items.1.price"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-18-9-false-iteration-0-1",
+          "target": {
+            "branchId": "if-18-9",
+            "kind": "if",
+            "line": 18,
+            "column": 9,
+            "condition": "left.price < right.price",
+            "outcome": false,
+            "callbackMethod": "sort",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "left",
+              "right"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "price": 1
+                },
+                {
+                  "price": 0
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.price",
+            "input.items.1.price"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-18-9-false-iteration-0-2",
+          "target": {
+            "branchId": "if-18-9",
+            "kind": "if",
+            "line": 18,
+            "column": 9,
+            "condition": "left.price < right.price",
+            "outcome": false,
+            "callbackMethod": "sort",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "left",
+              "right"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "price": 0
+                },
+                {
+                  "price": 0
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.price",
+            "input.items.1.price"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-19-9-true-iteration-0-1",
+          "target": {
+            "branchId": "if-19-9",
+            "kind": "if",
+            "line": 19,
+            "column": 9,
+            "condition": "left.price === right.price",
+            "outcome": true,
+            "callbackMethod": "sort",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "left",
+              "right"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "price": 0
+                },
+                {
+                  "price": 0
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.price",
+            "input.items.1.price"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-19-9-false-iteration-0-1",
+          "target": {
+            "branchId": "if-19-9",
+            "kind": "if",
+            "line": 19,
+            "column": 9,
+            "condition": "left.price === right.price",
+            "outcome": false,
+            "callbackMethod": "sort",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "left",
+              "right"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "price": 1
+                },
+                {
+                  "price": 0
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.price",
+            "input.items.1.price"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 2,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 2,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-if-18-9",
+            "kind": "if",
+            "line": 18,
+            "column": 9,
+            "expression": "left.price < right.price",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "sort",
+              "collection": "input.items",
+              "iterationIndex": 0,
+              "parameters": [
+                "left",
+                "right"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "left.price < right.price",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-18-9-C1-pair-1",
+                    "fixedConditions": {},
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-18-9-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "price": 1
+                              },
+                              {
+                                "price": 0
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "sort",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "left",
+                            "right"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.price",
+                          "input.items.1.price"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-18-9-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "price": 0
+                              },
+                              {
+                                "price": 1
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "sort",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "left",
+                            "right"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.price",
+                          "input.items.1.price"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          },
+          {
+            "decisionId": "mcdc-if-19-9",
+            "kind": "if",
+            "line": 19,
+            "column": 9,
+            "expression": "left.price === right.price",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "sort",
+              "collection": "input.items",
+              "iterationIndex": 0,
+              "parameters": [
+                "left",
+                "right"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "left.price === right.price",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-19-9-C1-pair-1",
+                    "fixedConditions": {},
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-19-9-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "price": 1
+                              },
+                              {
+                                "price": 0
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "sort",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "left",
+                            "right"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.price",
+                          "input.items.1.price"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-19-9-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "price": 0
+                              },
+                              {
+                                "price": 0
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "sort",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "left",
+                            "right"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.price",
+                          "input.items.1.price"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.items.sort",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 16,
+        "column": 1
+      }
+    },
+    {
+      "name": "toSortedByPriority",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0.priority",
+            "Inferred from nested property access: input.items.1.priority"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method map()",
+            "Inferred from nested property access: input.items.0.priority",
+            "Inferred from nested property access: input.items.1.priority"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.0.priority"
+          ]
+        },
+        {
+          "path": "input.items.0.priority",
+          "inferredType": "number",
+          "confidence": "medium",
+          "evidence": [
+            "Compared numerically with another input property"
+          ]
+        },
+        {
+          "path": "input.items.1",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items.1.priority"
+          ]
+        },
+        {
+          "path": "input.items.1.priority",
+          "inferredType": "number",
+          "confidence": "medium",
+          "evidence": [
+            "Compared numerically with another input property"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 6,
+        "scenariosGenerated": 9,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 2,
+        "loopScenariosGenerated": 4,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 1,
+        "mcdcIndependencePairsFound": 1,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-26-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-26-10",
+            "kind": "loop",
+            "loopType": "array-map",
+            "line": 26,
+            "column": 10,
+            "condition": "input.items.toSorted((left, right) =>\n    left.priority > right.priority ? -1 : 1\n  ).map(item => item.priority)",
+            "outcome": "zero-callbacks",
+            "phase": "before-first-callback",
+            "collection": "input.items",
+            "callbackMethod": "map"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-26-10-one-callback-1",
+          "target": {
+            "branchId": "loop-26-10",
+            "kind": "loop",
+            "loopType": "array-map",
+            "line": 26,
+            "column": 10,
+            "condition": "input.items.toSorted((left, right) =>\n    left.priority > right.priority ? -1 : 1\n  ).map(item => item.priority)",
+            "outcome": "one-callback",
+            "phase": "first-callback",
+            "collection": "input.items",
+            "callbackMethod": "map"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "priority": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-26-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-26-10",
+            "kind": "loop",
+            "loopType": "array-map",
+            "line": 26,
+            "column": 10,
+            "condition": "input.items.toSorted((left, right) =>\n    left.priority > right.priority ? -1 : 1\n  ).map(item => item.priority)",
+            "outcome": "multiple-callbacks",
+            "phase": "repeated-callback",
+            "collection": "input.items",
+            "callbackMethod": "map"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "priority": 1
+                },
+                {
+                  "priority": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-26-10-comparator-pair-1",
+          "target": {
+            "branchId": "loop-26-10",
+            "kind": "loop",
+            "loopType": "array-toSorted",
+            "line": 26,
+            "column": 10,
+            "condition": "input.items.toSorted((left, right) =>\n    left.priority > right.priority ? -1 : 1\n  )",
+            "outcome": "comparator-pair",
+            "phase": "compare-two-elements",
+            "collection": "input.items",
+            "callbackMethod": "toSorted"
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "priority": 1
+                },
+                {
+                  "priority": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "ternary-27-5-true-iteration-0-1",
+          "target": {
+            "branchId": "ternary-27-5",
+            "kind": "ternary",
+            "line": 27,
+            "column": 5,
+            "condition": "left.priority > right.priority",
+            "outcome": true,
+            "callbackMethod": "toSorted",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "left",
+              "right"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "priority": 1
+                },
+                {
+                  "priority": 0
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.priority",
+            "input.items.1.priority"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "ternary-27-5-false-iteration-0-1",
+          "target": {
+            "branchId": "ternary-27-5",
+            "kind": "ternary",
+            "line": 27,
+            "column": 5,
+            "condition": "left.priority > right.priority",
+            "outcome": false,
+            "callbackMethod": "toSorted",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "left",
+              "right"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "priority": 0
+                },
+                {
+                  "priority": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.priority",
+            "input.items.1.priority"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "ternary-27-5-false-iteration-0-2",
+          "target": {
+            "branchId": "ternary-27-5",
+            "kind": "ternary",
+            "line": 27,
+            "column": 5,
+            "condition": "left.priority > right.priority",
+            "outcome": false,
+            "callbackMethod": "toSorted",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "left",
+              "right"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "priority": 0
+                },
+                {
+                  "priority": 0
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0.priority",
+            "input.items.1.priority"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "ternary-27-5-true-1",
+          "target": {
+            "branchId": "ternary-27-5",
+            "kind": "ternary",
+            "line": 27,
+            "column": 5,
+            "condition": "left.priority > right.priority",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "priority": 1
+                },
+                {
+                  "priority": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "left.priority",
+            "right.priority"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "ternary-27-5-false-1",
+          "target": {
+            "branchId": "ternary-27-5",
+            "kind": "ternary",
+            "line": 27,
+            "column": 5,
+            "condition": "left.priority > right.priority",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "items": [
+                {
+                  "priority": 1
+                },
+                {
+                  "priority": 1
+                }
+              ]
+            }
+          ],
+          "assumptions": [
+            "left.priority",
+            "right.priority"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 1,
+        "independencePairsFound": 1,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-ternary-27-5",
+            "kind": "ternary",
+            "line": 27,
+            "column": 5,
+            "expression": "left.priority > right.priority",
+            "sourceExpression": "left.priority > right.priority ? -1 : 1",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "toSorted",
+              "collection": "input.items",
+              "iterationIndex": 0,
+              "parameters": [
+                "left",
+                "right"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "left.priority > right.priority",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-ternary-27-5-C1-pair-1",
+                    "fixedConditions": {},
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-ternary-27-5-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "priority": 0
+                              },
+                              {
+                                "priority": 1
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "toSorted",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "left",
+                            "right"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.priority",
+                          "input.items.1.priority"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-ternary-27-5-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "items": [
+                              {
+                                "priority": 1
+                              },
+                              {
+                                "priority": 0
+                              }
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "toSorted",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "left",
+                            "right"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0.priority",
+                          "input.items.1.priority"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.items.toSorted((left, right) =>\n    left.priority > right.priority ? -1 : 1\n  ).map",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        },
+        {
+          "call": "input.items.toSorted",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 25,
+        "column": 1
+      }
+    },
+    {
+      "name": "flatGroupsFindAdult",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.groups",
+            "Inferred from nested property access: input.groups.0",
+            "Inferred from nested property access: input.groups.0.0.age",
+            "Inferred from nested property access: input.groups.0.0.active"
+          ]
+        },
+        {
+          "path": "input.groups",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method findLast()",
+            "Inferred from nested property access: input.groups.0",
+            "Inferred from nested property access: input.groups.0.0.age",
+            "Inferred from nested property access: input.groups.0.0.active"
+          ]
+        },
+        {
+          "path": "input.groups.0",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Nested array inferred before flat() stage",
+            "Inferred from nested property access: input.groups.0.0.age",
+            "Inferred from nested property access: input.groups.0.0.active"
+          ]
+        },
+        {
+          "path": "input.groups.0.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.groups.0.0.age",
+            "Inferred from nested property access: input.groups.0.0.active"
+          ]
+        },
+        {
+          "path": "input.groups.0.0.active",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        },
+        {
+          "path": "input.groups.0.0.age",
+          "inferredType": "number",
+          "confidence": "high",
+          "evidence": [
+            "Compared with numeric literal 18"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 6,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 2,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-32-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-32-10",
+            "kind": "loop",
+            "loopType": "array-findLast",
+            "line": 32,
+            "column": 10,
+            "condition": "input.groups.flat().findLast(person => person.age >= 18 && person.active)",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.groups",
+            "callbackMethod": "findLast"
+          },
+          "arguments": [
+            {
+              "groups": []
+            }
+          ],
+          "assumptions": [
+            "input.groups"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-32-10-one-callback-1",
+          "target": {
+            "branchId": "loop-32-10",
+            "kind": "loop",
+            "loopType": "array-findLast",
+            "line": 32,
+            "column": 10,
+            "condition": "input.groups.flat().findLast(person => person.age >= 18 && person.active)",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.groups",
+            "callbackMethod": "findLast"
+          },
+          "arguments": [
+            {
+              "groups": [
+                [
+                  {
+                    "age": 1,
+                    "active": false
+                  }
+                ]
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.groups"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-32-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-32-10",
+            "kind": "loop",
+            "loopType": "array-findLast",
+            "line": 32,
+            "column": 10,
+            "condition": "input.groups.flat().findLast(person => person.age >= 18 && person.active)",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.groups",
+            "callbackMethod": "findLast"
+          },
+          "arguments": [
+            {
+              "groups": [
+                [
+                  {
+                    "age": 1,
+                    "active": false
+                  }
+                ],
+                [
+                  {
+                    "age": 1,
+                    "active": false
+                  }
+                ]
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.groups"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-32-49-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-32-49",
+            "kind": "array-predicate",
+            "line": 32,
+            "column": 49,
+            "condition": "person.age >= 18 && person.active",
+            "outcome": true,
+            "callbackMethod": "findLast",
+            "collection": "input.groups",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "person"
+            ]
+          },
+          "arguments": [
+            {
+              "groups": [
+                [
+                  {
+                    "age": 18,
+                    "active": true
+                  }
+                ]
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.groups",
+            "input.groups.0.0.age",
+            "input.groups.0.0.active"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-32-49-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-32-49",
+            "kind": "array-predicate",
+            "line": 32,
+            "column": 49,
+            "condition": "person.age >= 18 && person.active",
+            "outcome": false,
+            "callbackMethod": "findLast",
+            "collection": "input.groups",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "person"
+            ]
+          },
+          "arguments": [
+            {
+              "groups": [
+                [
+                  {
+                    "age": 17,
+                    "active": false
+                  }
+                ]
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.groups",
+            "input.groups.0.0.age"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-32-49-false-iteration-0-2",
+          "target": {
+            "branchId": "array-predicate-32-49",
+            "kind": "array-predicate",
+            "line": 32,
+            "column": 49,
+            "condition": "person.age >= 18 && person.active",
+            "outcome": false,
+            "callbackMethod": "findLast",
+            "collection": "input.groups",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "person"
+            ]
+          },
+          "arguments": [
+            {
+              "groups": [
+                [
+                  {
+                    "age": 18,
+                    "active": false
+                  }
+                ]
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.groups",
+            "input.groups.0.0.age",
+            "input.groups.0.0.active"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 2,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-array-predicate-findLast-32-49",
+            "kind": "array-predicate-findLast",
+            "line": 32,
+            "column": 49,
+            "expression": "person.age >= 18 && person.active",
+            "sourceExpression": "person.age >= 18 && person.active",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "findLast",
+              "collection": "input.groups",
+              "iterationIndex": 0,
+              "parameters": [
+                "person"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "person.age >= 18",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-findLast-32-49-C1-pair-1",
+                    "fixedConditions": {
+                      "C2": true
+                    },
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-findLast-32-49-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "groups": [
+                              [
+                                {
+                                  "age": 17,
+                                  "active": true
+                                }
+                              ]
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "findLast",
+                          "collection": "input.groups",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "person"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false,
+                          "C2": true
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.groups",
+                          "input.groups.0.0.age",
+                          "input.groups.0.0.active"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-findLast-32-49-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "groups": [
+                              [
+                                {
+                                  "age": 18,
+                                  "active": true
+                                }
+                              ]
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "findLast",
+                          "collection": "input.groups",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "person"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.groups",
+                          "input.groups.0.0.age",
+                          "input.groups.0.0.active"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              },
+              {
+                "id": "C2",
+                "expression": "person.active",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-findLast-32-49-C2-pair-1",
+                    "fixedConditions": {
+                      "C1": true
+                    },
+                    "changedCondition": "C2",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-findLast-32-49-C2-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "groups": [
+                              [
+                                {
+                                  "age": 18,
+                                  "active": false
+                                }
+                              ]
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "findLast",
+                          "collection": "input.groups",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "person"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.groups",
+                          "input.groups.0.0.age",
+                          "input.groups.0.0.active"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-findLast-32-49-C2-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "groups": [
+                              [
+                                {
+                                  "age": 18,
+                                  "active": true
+                                }
+                              ]
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "findLast",
+                          "collection": "input.groups",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "person"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true,
+                          "C2": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.groups",
+                          "input.groups.0.0.age",
+                          "input.groups.0.0.active"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.groups.flat().findLast",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        },
+        {
+          "call": "input.groups.flat",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 31,
+        "column": 1
+      }
+    },
+    {
+      "name": "flatDepthTwoFindFlag",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.matrix",
+            "Inferred from nested property access: input.matrix.0",
+            "Inferred from nested property access: input.matrix.0.0",
+            "Inferred from nested property access: input.matrix.0.0.0.flag"
+          ]
+        },
+        {
+          "path": "input.matrix",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method some()",
+            "Inferred from nested property access: input.matrix.0",
+            "Inferred from nested property access: input.matrix.0.0",
+            "Inferred from nested property access: input.matrix.0.0.0.flag"
+          ]
+        },
+        {
+          "path": "input.matrix.0",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Nested array inferred before flat() stage",
+            "Inferred from nested property access: input.matrix.0.0",
+            "Inferred from nested property access: input.matrix.0.0.0.flag"
+          ]
+        },
+        {
+          "path": "input.matrix.0.0",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Nested array inferred before flat() stage",
+            "Inferred from nested property access: input.matrix.0.0.0.flag"
+          ]
+        },
+        {
+          "path": "input.matrix.0.0.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.matrix.0.0.0.flag"
+          ]
+        },
+        {
+          "path": "input.matrix.0.0.0.flag",
+          "inferredType": "boolean",
+          "confidence": "high",
+          "evidence": [
+            "Compared with boolean literal true"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 5,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 1,
+        "mcdcIndependencePairsFound": 1,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-36-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-36-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 36,
+            "column": 10,
+            "condition": "input.matrix.flat(2).some(item => item.flag === true)",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.matrix",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "matrix": []
+            }
+          ],
+          "assumptions": [
+            "input.matrix"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-36-10-one-callback-1",
+          "target": {
+            "branchId": "loop-36-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 36,
+            "column": 10,
+            "condition": "input.matrix.flat(2).some(item => item.flag === true)",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.matrix",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "matrix": [
+                [
+                  [
+                    {
+                      "flag": false
+                    }
+                  ]
+                ]
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.matrix"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-36-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-36-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 36,
+            "column": 10,
+            "condition": "input.matrix.flat(2).some(item => item.flag === true)",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.matrix",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "matrix": [
+                [
+                  [
+                    {
+                      "flag": false
+                    }
+                  ]
+                ],
+                [
+                  [
+                    {
+                      "flag": false
+                    }
+                  ]
+                ]
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.matrix"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-36-44-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-36-44",
+            "kind": "array-predicate",
+            "line": 36,
+            "column": 44,
+            "condition": "item.flag === true",
+            "outcome": true,
+            "callbackMethod": "some",
+            "collection": "input.matrix",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "item"
+            ]
+          },
+          "arguments": [
+            {
+              "matrix": [
+                [
+                  [
+                    {
+                      "flag": true
+                    }
+                  ]
+                ]
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.matrix",
+            "input.matrix.0.0.0.flag"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-36-44-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-36-44",
+            "kind": "array-predicate",
+            "line": 36,
+            "column": 44,
+            "condition": "item.flag === true",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.matrix",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "item"
+            ]
+          },
+          "arguments": [
+            {
+              "matrix": [
+                [
+                  [
+                    {
+                      "flag": false
+                    }
+                  ]
+                ]
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.matrix",
+            "input.matrix.0.0.0.flag"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 1,
+        "independencePairsFound": 1,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-array-predicate-some-36-44",
+            "kind": "array-predicate-some",
+            "line": 36,
+            "column": 44,
+            "expression": "item.flag === true",
+            "sourceExpression": "item.flag === true",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "some",
+              "collection": "input.matrix",
+              "iterationIndex": 0,
+              "parameters": [
+                "item"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "item.flag === true",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-some-36-44-C1-pair-1",
+                    "fixedConditions": {},
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-some-36-44-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "matrix": [
+                              [
+                                [
+                                  {
+                                    "flag": false
+                                  }
+                                ]
+                              ]
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.matrix",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.matrix",
+                          "input.matrix.0.0.0.flag"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-some-36-44-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "matrix": [
+                              [
+                                [
+                                  {
+                                    "flag": true
+                                  }
+                                ]
+                              ]
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.matrix",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.matrix",
+                          "input.matrix.0.0.0.flag"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.matrix.flat(2).some",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        },
+        {
+          "call": "input.matrix.flat",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 35,
+        "column": 1
+      }
+    },
+    {
+      "name": "sortedThenSome",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method some()",
+            "Inferred from nested property access: input.items.0"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "string",
+          "confidence": "high",
+          "evidence": [
+            "Compared with string literal \"active\""
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 5,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 1,
+        "mcdcIndependencePairsFound": 1,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-40-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-40-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 40,
+            "column": 10,
+            "condition": "input.items.toSorted().some(item => item === 'active')",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-40-10-one-callback-1",
+          "target": {
+            "branchId": "loop-40-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 40,
+            "column": 10,
+            "condition": "input.items.toSorted().some(item => item === 'active')",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": [
+                "test"
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-40-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-40-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 40,
+            "column": 10,
+            "condition": "input.items.toSorted().some(item => item === 'active')",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": [
+                "test",
+                "test"
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-40-46-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-40-46",
+            "kind": "array-predicate",
+            "line": 40,
+            "column": 46,
+            "condition": "item === 'active'",
+            "outcome": true,
+            "callbackMethod": "some",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "item"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                "active"
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-40-46-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-40-46",
+            "kind": "array-predicate",
+            "line": 40,
+            "column": 46,
+            "condition": "item === 'active'",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "item"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                "active_other"
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 1,
+        "independencePairsFound": 1,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-array-predicate-some-40-46",
+            "kind": "array-predicate-some",
+            "line": 40,
+            "column": 46,
+            "expression": "item === 'active'",
+            "sourceExpression": "item === 'active'",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "some",
+              "collection": "input.items",
+              "iterationIndex": 0,
+              "parameters": [
+                "item"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "item === 'active'",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-some-40-46-C1-pair-1",
+                    "fixedConditions": {},
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-some-40-46-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "items": [
+                              "active_other"
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-some-40-46-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "items": [
+                              "active"
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.items.toSorted().some",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        },
+        {
+          "call": "input.items.toSorted",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 39,
+        "column": 1
+      }
+    },
+    {
+      "name": "defaultSortThenSome",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: input.items",
+            "Inferred from nested property access: input.items.0"
+          ]
+        },
+        {
+          "path": "input.items",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method some()",
+            "Inferred from nested property access: input.items.0"
+          ]
+        },
+        {
+          "path": "input.items.0",
+          "inferredType": "string",
+          "confidence": "high",
+          "evidence": [
+            "Compared with string literal \"a\""
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 5,
+        "scenariosGenerated": 5,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 1,
+        "mcdcIndependencePairsFound": 1,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-44-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-44-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 44,
+            "column": 10,
+            "condition": "input.items.sort().some(item => item === 'a')",
+            "outcome": "zero-callbacks",
+            "phase": "no-match",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": []
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-44-10-one-callback-1",
+          "target": {
+            "branchId": "loop-44-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 44,
+            "column": 10,
+            "condition": "input.items.sort().some(item => item === 'a')",
+            "outcome": "one-callback",
+            "phase": "first-match-or-stop",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": [
+                "test"
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-44-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-44-10",
+            "kind": "loop",
+            "loopType": "array-some",
+            "line": 44,
+            "column": 10,
+            "condition": "input.items.sort().some(item => item === 'a')",
+            "outcome": "multiple-callbacks",
+            "phase": "later-match-or-no-match",
+            "collection": "input.items",
+            "callbackMethod": "some"
+          },
+          "arguments": [
+            {
+              "items": [
+                "test",
+                "test"
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-44-42-true-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-44-42",
+            "kind": "array-predicate",
+            "line": 44,
+            "column": 42,
+            "condition": "item === 'a'",
+            "outcome": true,
+            "callbackMethod": "some",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "item"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                "a"
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "array-predicate-44-42-false-iteration-0-1",
+          "target": {
+            "branchId": "array-predicate-44-42",
+            "kind": "array-predicate",
+            "line": 44,
+            "column": 42,
+            "condition": "item === 'a'",
+            "outcome": false,
+            "callbackMethod": "some",
+            "collection": "input.items",
+            "iterationIndex": 0,
+            "callbackParameters": [
+              "item"
+            ]
+          },
+          "arguments": [
+            {
+              "items": [
+                "a_other"
+              ]
+            }
+          ],
+          "assumptions": [
+            "input.items",
+            "input.items.0"
+          ],
+          "unsupported": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 1,
+        "independencePairsFound": 1,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-array-predicate-some-44-42",
+            "kind": "array-predicate-some",
+            "line": 44,
+            "column": 42,
+            "expression": "item === 'a'",
+            "sourceExpression": "item === 'a'",
+            "criterion": "unique-cause",
+            "callbackContext": {
+              "method": "some",
+              "collection": "input.items",
+              "iterationIndex": 0,
+              "parameters": [
+                "item"
+              ]
+            },
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "item === 'a'",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-array-predicate-some-44-42-C1-pair-1",
+                    "fixedConditions": {},
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-array-predicate-some-44-42-C1-pair-1-condition-false",
+                        "arguments": [
+                          {
+                            "items": [
+                              "a_other"
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-array-predicate-some-44-42-C1-pair-1-condition-true",
+                        "arguments": [
+                          {
+                            "items": [
+                              "a"
+                            ]
+                          }
+                        ],
+                        "callbackContext": {
+                          "method": "some",
+                          "collection": "input.items",
+                          "iterationIndex": 0,
+                          "parameters": [
+                            "item"
+                          ]
+                        },
+                        "atomicConditionValues": {
+                          "C1": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "input.items",
+                          "input.items.0"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "input.items.sort().some",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        },
+        {
+          "call": "input.items.sort",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 43,
+        "column": 1
+      }
+    }
+  ]
+}

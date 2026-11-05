@@ -1,0 +1,410 @@
+{
+  "generator": {
+    "name": "branch-scenarios-generator",
+    "version": "0.13.0"
+  },
+  "source": "examples/coverage-feedback-iterative-target.js",
+  "sourceLanguage": "javascript",
+  "generatedAt": "2026-11-03T21:29:51.874Z",
+  "limitations": [
+    "Static MVP: generated scenarios are candidates; run the function and verify actual branch coverage with Jest/Istanbul.",
+    "JavaScript is supported via the TypeScript parser with allowJs. Without JSDoc, property types are inferred from comparisons, truthiness checks, switch cases, nested accesses and .length; inferredProperties reports confidence and evidence.",
+    "Supported conditions: direct parameter paths, literals, truthiness, !, &&, ||, equality, numeric comparisons, and simple numeric comparisons between two input paths. Unknown truthy/falsy properties use boolean representatives unless nested access implies an object/array.",
+    "Supported control flow: if/else, switch with literal cases, ternary expressions, for/for...of/for...in/while/do...while loops, plus break/continue path termination inside loops and switch clauses.",
+    "Loop scenarios: for...of and for...in generate zero-, one- and multiple-iteration collection shapes; loop-body aliases are mapped to a representative first item. Classic for loops support literal counter initializers and simple increment/decrement steps; while/do...while support simple property constraints and local numeric counter cases.",
+    "Loop analysis is an approximation: common break/continue transfers stop analysis of the current path; break inside switch exits the switch, while continue propagates to the enclosing loop. Labelled transfers, full iteration-state propagation and switch fallthrough are not modeled. Mutations to iterated collections, custom iterators, async iterator side effects, and complex counter updates are unsupported.",
+    "Array callback support: forEach/map/flatMap/some/every/filter/find/findIndex and reduce with inline callbacks and collections resolved to function input paths. Predicate callbacks support concise expressions and block callbacks with a single return; safe top-level const aliases are expanded before MC/DC analysis. Block callbacks with explicit if decisions also expand safe const aliases in their conditions. For predicates that use the callback index parameter, unique-cause MC/DC searches representative callback indexes 0 and 1 and can emit a cross-index independence pair; pair scenarios carry the actual iterationIndex. Only immutable const declarations with side-effect-free initializers are inlined; let/var, destructuring, reassignment, helper calls, getters and mutation-dependent values are not symbolically expanded. Direct find() checks and find() comparisons with null/undefined are supported, as are findIndex() comparisons against numeric literals. some/every have representative match/no-match scenarios. flatMap chains support a direct array-property projection (for example group => group.passengers). reduce analyzes callback indexes through 2 with an initial value and through 3 without one, replaying up to two prior callback invocations over bounded candidate items. This is concrete interpretation, not general symbolic execution; unsupported reducer statements are not replaced with a fabricated initial accumulator state.",
+    "Undefined values are encoded as {\"$undefined\":true}; omit the corresponding argument/property or hydrate this marker before calling the function.",
+    "Mock templates are type-derived suggestions. For Jest coverage feedback, configure project mocks in --jest-setup; the setup can read globalThis.__BRANCH_SCENARIO__ and globalThis.__BRANCH_SCENARIO_MOCKS__ or define globalThis.__BRANCH_SCENARIO_APPLY_MOCKS__.",
+    "Iterative Jest coverage feedback executes the accumulated scenario suite, reads Istanbul coverage-final.json, and performs bounded candidate expansion for uncovered static branch outcomes (up to --coverage-iterations passes). Branch counters are aggregated for the source file; they do not independently prove MC/DC atom values. Branch-to-Istanbul mapping is heuristic and unmapped targets may remain unresolved. --coverage-from loads an existing report without iterative execution."
+  ],
+  "functions": [
+    {
+      "name": "iterativeCoverageTarget",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "IterativeCoverageInput",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "input",
+          "inferredType": "object",
+          "confidence": "declared",
+          "evidence": [
+            "Inferred from nested property access: input.region",
+            "Confirmed by TypeScript/JSDoc type: IterativeCoverageInput"
+          ]
+        },
+        {
+          "path": "input.region",
+          "inferredType": "string",
+          "confidence": "declared",
+          "evidence": [
+            "Compared with string literal \"NL\"",
+            "Confirmed by TypeScript/JSDoc type: \"NL\" | \"BE\" | \"DE\""
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 2,
+        "scenariosGenerated": 3,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 0,
+        "loopScenariosGenerated": 0,
+        "feedbackScenariosAdded": 1
+      },
+      "scenarios": [
+        {
+          "id": "if-5-7-true-1",
+          "target": {
+            "branchId": "if-5-7",
+            "kind": "if",
+            "line": 5,
+            "column": 7,
+            "condition": "input.region === 'NL'",
+            "outcome": true
+          },
+          "arguments": [
+            {
+              "region": "NL"
+            }
+          ],
+          "assumptions": [
+            "input.region"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-5-7-false-1",
+          "target": {
+            "branchId": "if-5-7",
+            "kind": "if",
+            "line": 5,
+            "column": 7,
+            "condition": "input.region === 'NL'",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "region": "BE"
+            }
+          ],
+          "assumptions": [
+            "input.region"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "if-5-7-false-2",
+          "target": {
+            "branchId": "if-5-7",
+            "kind": "if",
+            "line": 5,
+            "column": 7,
+            "condition": "input.region === 'NL'",
+            "outcome": false
+          },
+          "arguments": [
+            {
+              "region": "DE"
+            }
+          ],
+          "assumptions": [
+            "input.region"
+          ],
+          "unsupported": [],
+          "feedbackIteration": 2
+        }
+      ],
+      "mockTemplates": [],
+      "unsupportedBranches": []
+    }
+  ],
+  "coverageFeedback": {
+    "version": 1,
+    "status": "passed",
+    "runner": "/opt/nvm/versions/node/v22.16.0/bin/node",
+    "provider": "v8",
+    "sourceFile": "/mnt/data/work-v013/branch-scenarios-generator/examples/coverage-feedback-iterative-target.js",
+    "executedScenarioCount": 3,
+    "testResults": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "pending": 0
+    },
+    "totals": {
+      "statements": {
+        "covered": 1,
+        "total": 1,
+        "pct": 100
+      },
+      "functions": {
+        "covered": 1,
+        "total": 1,
+        "pct": 100
+      },
+      "branches": {
+        "covered": 2,
+        "total": 2,
+        "pct": 100
+      },
+      "lines": {
+        "covered": 1,
+        "total": 1,
+        "pct": 100
+      }
+    },
+    "branchCoverage": {
+      "allFileBranchesCovered": true,
+      "staticTargetsCovered": 1,
+      "staticTargetsPartiallyCovered": 0,
+      "staticTargetsUncovered": 0,
+      "staticTargetsUnmapped": 0
+    },
+    "staticBranchTargets": [
+      {
+        "id": "if-5-7",
+        "functionName": "iterativeCoverageTarget",
+        "kind": "if",
+        "line": 5,
+        "column": 7,
+        "condition": "input.region === 'NL'",
+        "outcomes": [
+          {
+            "value": true,
+            "scenarioIds": [
+              "if-5-7-true-1"
+            ]
+          },
+          {
+            "value": false,
+            "scenarioIds": [
+              "if-5-7-false-1",
+              "if-5-7-false-2"
+            ]
+          }
+        ],
+        "coverageStatus": "covered",
+        "coverageBranchId": "0",
+        "coverageType": "if",
+        "columnMatchDistance": 0,
+        "coverageOutcomes": [
+          {
+            "index": 0,
+            "count": 1,
+            "covered": true,
+            "location": {
+              "start": {
+                "line": 2,
+                "column": 44
+              },
+              "end": {
+                "line": 4,
+                "column": 3
+              }
+            }
+          },
+          {
+            "index": 1,
+            "count": 1,
+            "covered": true,
+            "location": {
+              "start": {
+                "line": 5,
+                "column": 2
+              },
+              "end": {
+                "line": 5,
+                "column": 22
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "coverageBranchEntries": [
+      {
+        "id": "0",
+        "type": "if",
+        "loc": {
+          "start": {
+            "line": 5,
+            "column": 6
+          },
+          "end": {
+            "line": 7,
+            "column": 3
+          }
+        },
+        "locations": [
+          {
+            "start": {
+              "line": 2,
+              "column": 44
+            },
+            "end": {
+              "line": 4,
+              "column": 3
+            }
+          },
+          {
+            "start": {
+              "line": 5,
+              "column": 2
+            },
+            "end": {
+              "line": 5,
+              "column": 22
+            }
+          }
+        ],
+        "counts": [
+          1,
+          1
+        ]
+      }
+    ],
+    "uncoveredBranchEntries": [],
+    "mcdc": {
+      "generatedIndependencePairs": 0,
+      "inputPairVerification": "no-mcdc-pairs-generated",
+      "note": "Istanbul/Jest branch counters do not prove unique-cause MC/DC. The generated Jest adapter re-evaluates the expanded decision and atomic-condition expressions against concrete scenario arguments where callback context can be resolved. This verifies the generated input model, not a trace of the actual runtime values inside the function; unsupported outer lexical bindings are reported as not-evaluable."
+    },
+    "notes": [
+      "Coverage is aggregated across all generated scenarios, not isolated per scenario.",
+      "Static branch-to-Istanbul mapping uses source line, branch kind and nearest starting column; review columnMatchDistance where mappings are ambiguous.",
+      "Array callback predicates may be represented as binary-expression coverage entries rather than regular if branches."
+    ],
+    "jest": {
+      "exitCode": 0,
+      "signal": null,
+      "launchError": null,
+      "stdoutTail": "",
+      "stderrTail": ""
+    },
+    "execution": {
+      "generatedCases": 3,
+      "testResults": {
+        "success": true,
+        "numTotalTests": 3,
+        "numPassedTests": 3,
+        "numFailedTests": 0,
+        "numPendingTests": 0,
+        "setupHookCalls": 0,
+        "cases": [
+          {
+            "id": "coverage-case-1",
+            "status": "passed",
+            "failureMessages": [],
+            "references": [
+              {
+                "type": "branch",
+                "functionName": "iterativeCoverageTarget",
+                "scenarioId": "if-5-7-true-1",
+                "branchId": "if-5-7",
+                "outcome": true
+              }
+            ]
+          },
+          {
+            "id": "coverage-case-2",
+            "status": "passed",
+            "failureMessages": [],
+            "references": [
+              {
+                "type": "branch",
+                "functionName": "iterativeCoverageTarget",
+                "scenarioId": "if-5-7-false-1",
+                "branchId": "if-5-7",
+                "outcome": false
+              }
+            ]
+          },
+          {
+            "id": "coverage-case-3",
+            "status": "passed",
+            "failureMessages": [],
+            "references": [
+              {
+                "type": "branch",
+                "functionName": "iterativeCoverageTarget",
+                "scenarioId": "if-5-7-false-2",
+                "branchId": "if-5-7",
+                "outcome": false
+              }
+            ]
+          }
+        ]
+      },
+      "mcdcPairs": [],
+      "mcdcPairsInputVerified": 0,
+      "mcdcPairsWithBothScenariosPassed": 0,
+      "mcdcInputChecks": []
+    },
+    "coverageFile": "/mnt/data/work-v013/branch-scenarios-generator/examples/coverage-feedback-iterative.example.coverage-final.json",
+    "iterative": {
+      "enabled": true,
+      "strategy": "targeted-static-branch-expansion",
+      "maxIterations": 3,
+      "coverageGoalPct": 100,
+      "initialMaxScenarios": 1,
+      "finalMaxScenarios": 2,
+      "totalAdditionalScenarios": 1,
+      "iterations": [
+        {
+          "iteration": 1,
+          "status": "passed",
+          "generatedScenarioCount": 2,
+          "addedScenarioCount": 0,
+          "executedScenarioCount": 2,
+          "jestTests": {
+            "total": 2,
+            "passed": 2,
+            "failed": 0
+          },
+          "branchCoverage": {
+            "covered": 1,
+            "total": 2,
+            "pct": 50
+          },
+          "staticTargets": {
+            "covered": 0,
+            "partiallyCovered": 1,
+            "uncovered": 0,
+            "unmapped": 0
+          }
+        },
+        {
+          "iteration": 2,
+          "status": "passed",
+          "generatedScenarioCount": 3,
+          "addedScenarioCount": 1,
+          "executedScenarioCount": 3,
+          "jestTests": {
+            "total": 3,
+            "passed": 3,
+            "failed": 0
+          },
+          "branchCoverage": {
+            "covered": 2,
+            "total": 2,
+            "pct": 100
+          },
+          "staticTargets": {
+            "covered": 1,
+            "partiallyCovered": 0,
+            "uncovered": 0,
+            "unmapped": 0
+          }
+        }
+      ],
+      "stopReason": "coverage-goal-reached",
+      "goalReached": true,
+      "note": "Each pass expands solver alternatives only for static branch outcomes still uncovered according to the preceding Istanbul report. The full accumulated scenario set is re-executed on every pass. This is bounded candidate expansion, not unrestricted symbolic execution."
+    }
+  }
+}

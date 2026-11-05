@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://branch-scenarios-generator.local/schemas/analysis-report.schema.json",
+  "title": "Branch Scenarios Generator Analysis Report",
+  "type": "object",
+  "required": [
+    "reportType",
+    "schemaVersion",
+    "reportId",
+    "generatedAt",
+    "generator",
+    "environment",
+    "project",
+    "run",
+    "summary",
+    "functions",
+    "callGraph",
+    "execution",
+    "externalExecution",
+    "diagnostics",
+    "privacy",
+    "assistantHandoff"
+  ],
+  "properties": {
+    "reportType": {
+      "const": "branch-scenarios-analysis-report"
+    },
+    "schemaVersion": {
+      "type": "string"
+    },
+    "reportId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "generator": {
+      "type": "object",
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "environment": {
+      "type": "object",
+      "required": [
+        "node",
+        "platform",
+        "architecture",
+        "typescript"
+      ],
+      "properties": {
+        "node": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "string"
+        },
+        "architecture": {
+          "type": "string"
+        },
+        "typescript": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "project": {
+      "type": "object",
+      "required": [
+        "root",
+        "sourceFileCount",
+        "files",
+        "imports",
+        "functionIndex",
+        "source",
+        "fingerprint"
+      ],
+      "properties": {
+        "fingerprint": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "fileDigests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "file",
+              "sha256",
+              "bytes",
+              "lineCount"
+            ]
+          }
+        },
+        "fileDigestsTruncated": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "run": {
+      "type": "object",
+      "required": [
+        "valueMode"
+      ],
+      "properties": {
+        "valueMode": {
+          "enum": [
+            "shape",
+            "hash",
+            "include"
+          ]
+        }
+      }
+    },
+    "summary": {
+      "type": "object"
+    },
+    "functions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "summary",
+          "scenarios",
+          "scenarioCount"
+        ]
+      }
+    },
+    "callGraph": {
+      "type": "object"
+    },
+    "execution": {
+      "type": "object",
+      "required": [
+        "status"
+      ]
+    },
+    "externalExecution": {
+      "type": "object",
+      "required": [
+        "status",
+        "failingTests",
+        "notes",
+        "fillInWhenRunningTestsManually"
+      ],
+      "properties": {
+        "executionForm": {
+          "type": "object",
+          "required": [
+            "formType",
+            "schemaVersion",
+            "status",
+            "file"
+          ],
+          "properties": {
+            "formType": {
+              "const": "branch-scenarios-execution-results-form"
+            },
+            "schemaVersion": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "file": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "diagnostics": {
+      "type": "object"
+    },
+    "privacy": {
+      "type": "object",
+      "required": [
+        "valueMode",
+        "valuesIncluded",
+        "absolutePathsIncluded"
+      ]
+    },
+    "assistantHandoff": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}
