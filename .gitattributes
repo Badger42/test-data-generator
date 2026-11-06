@@ -1,3 +1,4 @@
 * text=auto eol=lf
 
 # Keep source positions and frozen AST offsets stable on Windows.
+# Validate the current PR head in the platform matrix.
