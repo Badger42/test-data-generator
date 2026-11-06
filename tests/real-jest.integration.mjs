@@ -165,7 +165,8 @@ globalThis.__BSG_SETUP_MOCK__ = jest.fn(() => 'preserved');
   ], { cwd: tempDir, encoding: 'utf8', env: { ...process.env } });
   assert.equal(cjsRun.status, 0, `Real Jest CJS/Babel/setup-mock integration failed:
 ${cjsRun.stdout}
-${cjsRun.stderr}`);
+${cjsRun.stderr}
+Coverage diagnostics: ${readCoverageFailureDiagnostics(cjsOutput)}`);
   const cjsReport = JSON.parse(fs.readFileSync(cjsOutput, 'utf8'));
   assert.equal(cjsReport.coverageFeedback.status, 'passed');
   assert.ok(cjsReport.coverageFeedback.totals.branches.total > 0, 'Babel coverage provider should report CJS branches');
