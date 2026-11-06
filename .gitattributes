@@ -2,3 +2,4 @@
 
 # Keep source positions and frozen AST offsets stable on Windows.
 # Validate the current PR head in the platform matrix.
+# Verify timeout and cross-platform Jest discovery fixes.
