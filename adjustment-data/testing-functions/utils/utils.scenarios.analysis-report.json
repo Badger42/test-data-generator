@@ -1,0 +1,3194 @@
+{
+  "reportType": "branch-scenarios-analysis-report",
+  "schemaVersion": "1.0.0",
+  "reportId": "9b6fa63f0cd7365467bfff8d",
+  "generatedAt": "2026-11-06T13:46:18.062Z",
+  "generator": {
+    "name": "branch-scenarios-generator",
+    "version": "1.0.0-rc.8"
+  },
+  "environment": {
+    "node": "v24.20.0",
+    "platform": "linux",
+    "architecture": "x64",
+    "typescript": "5.8.3"
+  },
+  "project": {
+    "root": "adjustment-data/testing-functions/utils/utils.js",
+    "config": {
+      "detected": false,
+      "file": null
+    },
+    "sourceFileCount": 1,
+    "fingerprint": "a722b718771025d072afcb877115c26a1fddf3417058d1faa823bf5fb863c8f4",
+    "fileDigests": [
+      {
+        "file": "adjustment-data/testing-functions/utils/utils.js",
+        "sha256": "1c5d53e1891f9de3cb1cdde20ac91cd57b4fb378367642ea03b5307954972ecf",
+        "bytes": 832,
+        "lineCount": 36
+      }
+    ],
+    "fileDigestsTruncated": 0,
+    "files": [
+      "adjustment-data/testing-functions/utils/utils.js"
+    ],
+    "filesTruncated": 0,
+    "imports": {
+      "total": 1,
+      "resolved": 1,
+      "project": 0,
+      "external": 1,
+      "unresolved": 0,
+      "edges": [
+        {
+          "from": "adjustment-data/testing-functions/utils/utils.js",
+          "specifier": "../../common/values",
+          "to": "<external-module>",
+          "resolved": true,
+          "resolution": "external-module",
+          "kind": "import"
+        }
+      ]
+    },
+    "functionIndex": {
+      "total": 4,
+      "exported": 4,
+      "files": 1,
+      "functions": [
+        {
+          "functionId": "adjustment-data/testing-functions/utils/utils.js::sumCurrency@60",
+          "symbolId": "adjustment-data/testing-functions/utils/utils.js#76:sumCurrency",
+          "name": "sumCurrency",
+          "file": "adjustment-data/testing-functions/utils/utils.js",
+          "line": 3,
+          "column": 1,
+          "exported": true
+        },
+        {
+          "functionId": "adjustment-data/testing-functions/utils/utils.js::getSomeTypeCount@350",
+          "symbolId": "adjustment-data/testing-functions/utils/utils.js#366:getSomeTypeCount",
+          "name": "getSomeTypeCount",
+          "file": "adjustment-data/testing-functions/utils/utils.js",
+          "line": 14,
+          "column": 1,
+          "exported": true
+        },
+        {
+          "functionId": "adjustment-data/testing-functions/utils/utils.js::plusSymbol@551",
+          "symbolId": "adjustment-data/testing-functions/utils/utils.js#567:plusSymbol",
+          "name": "plusSymbol",
+          "file": "adjustment-data/testing-functions/utils/utils.js",
+          "line": 22,
+          "column": 1,
+          "exported": true
+        },
+        {
+          "functionId": "adjustment-data/testing-functions/utils/utils.js::hasCyrillicLetters@729",
+          "symbolId": "adjustment-data/testing-functions/utils/utils.js#745:hasCyrillicLetters",
+          "name": "hasCyrillicLetters",
+          "file": "adjustment-data/testing-functions/utils/utils.js",
+          "line": 32,
+          "column": 1,
+          "exported": true
+        }
+      ],
+      "truncated": 0,
+      "diagnostics": []
+    },
+    "typescriptDiagnostics": [],
+    "compilerOptions": {
+      "target": 9,
+      "module": 199,
+      "moduleResolution": 99,
+      "strict": false,
+      "strictNullChecks": true,
+      "allowJs": true,
+      "checkJs": true,
+      "jsx": 1
+    },
+    "source": {
+      "file": "adjustment-data/testing-functions/utils/utils.js",
+      "language": "javascript",
+      "sha256": "1c5d53e1891f9de3cb1cdde20ac91cd57b4fb378367642ea03b5307954972ecf",
+      "projectFingerprint": "a722b718771025d072afcb877115c26a1fddf3417058d1faa823bf5fb863c8f4",
+      "bytes": 832,
+      "lineCount": 36
+    }
+  },
+  "run": {
+    "generatedAt": "2026-11-06T13:46:18.035Z",
+    "functionFilter": null,
+    "allFunctions": true,
+    "maxScenarios": 40,
+    "constraintEngine": "hybrid",
+    "constraintDiagnostics": false,
+    "mcdc": true,
+    "includeEvidence": true,
+    "coverageFeedback": true,
+    "coverageGoal": 100,
+    "coverageIterations": 3,
+    "coverageProvider": "v8",
+    "minimalSuite": false,
+    "testBatching": {
+      "enabled": true,
+      "minSize": 2,
+      "maxSize": 100
+    },
+    "valueMode": "shape"
+  },
+  "summary": {
+    "functions": 4,
+    "scenarios": 7,
+    "branchOutcomes": 7,
+    "unsupportedBranchTargets": 2,
+    "warnings": 5,
+    "mcdcPairs": 2,
+    "mockActions": 0,
+    "constraint": {
+      "irAttempts": 17,
+      "irSolved": 12,
+      "legacyFallback": 5,
+      "fallbackReasons": {
+        "MC/DC decision contains an unsupported IR atom": 1,
+        "Expression contains an unsupported IR atom": 4
+      }
+    }
+  },
+  "functions": [
+    {
+      "functionId": "adjustment-data/testing-functions/utils/utils.js::sumCurrency@60",
+      "name": "sumCurrency",
+      "file": "adjustment-data/testing-functions/utils/utils.js",
+      "sourceLocation": null,
+      "summary": {
+        "branchOutcomesFound": 3,
+        "scenariosGenerated": 3,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 0,
+        "mcdcConditionsAnalyzed": 0,
+        "mcdcIndependencePairsFound": 0,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "inferredProperties": [
+        {
+          "path": "args",
+          "inferredType": "array",
+          "confidence": "declared",
+          "evidenceCount": 2
+        }
+      ],
+      "dataFlow": {
+        "schemaVersion": "1.0",
+        "properties": [
+          {
+            "path": "parameter:args",
+            "kind": "array",
+            "confidence": "declared",
+            "optional": false,
+            "nullable": false,
+            "evidenceCount": 3
+          }
+        ],
+        "aliases": {
+          "total": 0,
+          "byRelation": {},
+          "items": []
+        },
+        "cfg": {
+          "nodeCount": 3,
+          "edgeCount": 2,
+          "loops": 0,
+          "nodes": [
+            {
+              "id": "entry:synthetic:1",
+              "kind": "entry",
+              "sourceSpan": null
+            },
+            {
+              "id": "exit:synthetic:2",
+              "kind": "exit",
+              "sourceSpan": null
+            },
+            {
+              "id": "return:101:3",
+              "kind": "return",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 101,
+                "endOffset": 346,
+                "startLine": 4,
+                "startColumn": 3,
+                "endLine": 11,
+                "endColumn": 9
+              }
+            }
+          ],
+          "edges": [
+            {
+              "from": "entry:synthetic:1",
+              "to": "return:101:3",
+              "kind": "normal",
+              "label": null
+            },
+            {
+              "from": "return:101:3",
+              "to": "exit:synthetic:2",
+              "kind": "return",
+              "label": null
+            }
+          ],
+          "diagnostics": []
+        },
+        "flow": {
+          "definitions": 1,
+          "uses": 1,
+          "phiCandidates": 0,
+          "diagnostics": []
+        },
+        "scalarSsa": {
+          "algorithm": "cytron-iterated-dominance-frontier-dominator-tree-renaming",
+          "definitions": 1,
+          "definitionDetails": [
+            {
+              "id": "91:args#0",
+              "symbolId": "91:args",
+              "name": "args",
+              "version": 0,
+              "kind": "parameter",
+              "nodeId": "entry:synthetic:1",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 88,
+                "endOffset": 95,
+                "startLine": 3,
+                "startColumn": 29,
+                "endLine": 3,
+                "endColumn": 36
+              },
+              "operands": []
+            }
+          ],
+          "phiNodes": 0,
+          "phiDetails": [],
+          "useBindings": 1,
+          "useDetails": [
+            {
+              "id": "use:return:101:3:91:args",
+              "nodeId": "return:101:3",
+              "symbolId": "91:args",
+              "name": "args",
+              "value": "91:args#0",
+              "resolution": "ssa-version",
+              "reachingDefinitionFacts": [
+                "def:entry:synthetic:1:91:args:0"
+              ]
+            }
+          ],
+          "unresolvedUses": 0,
+          "convergence": {
+            "dominatorTreeTraversal": true,
+            "allReachableNodesVisited": true
+          },
+          "diagnostics": []
+        },
+        "memorySsa": {
+          "algorithm": "field-sensitive-overlap-aware-cytron-memory-ssa",
+          "locations": 1,
+          "locationDetails": [
+            {
+              "id": "heap:91:args:[]",
+              "rootSymbolId": "91:args",
+              "rootName": "args",
+              "path": [],
+              "definitionCount": 0,
+              "readCount": 1
+            }
+          ],
+          "reads": 1,
+          "writes": 0,
+          "accesses": [
+            {
+              "id": "heap-read:0",
+              "kind": "read",
+              "location": "heap:91:args:[]",
+              "path": [],
+              "certainty": "observed-read",
+              "pointerResolution": null,
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 108,
+                "endOffset": 119,
+                "startLine": 4,
+                "startColumn": 10,
+                "endLine": 4,
+                "endColumn": 21
+              }
+            }
+          ],
+          "definitions": 1,
+          "definitionDetails": [
+            {
+              "id": "heap:91:args:[]#0",
+              "location": null,
+              "version": 0,
+              "nodeId": "entry:synthetic:1",
+              "kind": "initial-memory-state",
+              "sourceSpan": null
+            }
+          ],
+          "phiNodes": 0,
+          "phiDetails": [],
+          "aliasSummary": {
+            "aliasPairs": 0,
+            "propagatedWrites": 0,
+            "allocationSiteAccesses": 0,
+            "algorithm": "bounded-andersen-inclusion-points-to"
+          },
+          "diagnostics": [],
+          "limits": {
+            "pathSensitivity": "static-field-paths-only",
+            "aliasing": "intraprocedural-alias-facts plus bounded points-to; may-alias effects use weak updates",
+            "overlappingPaths": "ancestor-descendant writes invalidate observed overlapping paths",
+            "dynamicIndexes": "wildcard weak updates",
+            "unknownCalls": "possible effects only where mutation analysis emits an effect",
+            "objectShape": "field-sensitive locations; aggregate object identity is not fully versioned"
+          }
+        },
+        "pointsTo": {
+          "algorithm": "bounded-andersen-inclusion-points-to",
+          "allocationSites": 1,
+          "symbols": 1,
+          "targetRelations": 1,
+          "unknownSymbols": 1,
+          "unknownHeapFields": 0,
+          "aliasPairs": [],
+          "pointsToMap": {
+            "91:args": [
+              "external:91:args"
+            ]
+          },
+          "heapFields": {},
+          "constraints": {
+            "copies": 0,
+            "loads": 0,
+            "stores": 0
+          },
+          "convergence": {
+            "converged": true,
+            "passes": 1,
+            "maxPasses": 8
+          },
+          "diagnostics": [],
+          "limits": {
+            "flowSensitivity": "flow-insensitive-inclusion-constraints",
+            "contextSensitivity": "intraprocedural",
+            "unknownCalls": "not-assigned-fabricated-targets",
+            "externalParameters": "distinct-regions-with-explicit-may-alias",
+            "heapFields": "static-member-or-wildcard-with-top-widening"
+          }
+        },
+        "interprocedural": {
+          "algorithm": null,
+          "projectFunctionSummaries": 4,
+          "callSites": 1,
+          "calls": [
+            {
+              "callId": "call:108",
+              "callee": "args.reduce",
+              "resolution": "external-or-unresolved",
+              "targetFunctionId": null,
+              "knownPure": false,
+              "argumentDependencies": [
+                [
+                  "current",
+                  "Object",
+                  "prev"
+                ],
+                []
+              ],
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 108,
+                "endOffset": 346,
+                "startLine": 4,
+                "startColumn": 10,
+                "endLine": 11,
+                "endColumn": 9
+              }
+            }
+          ],
+          "summaries": [
+            {
+              "functionId": "adjustment-data/testing-functions/utils/utils.js::sumCurrency@60",
+              "symbolId": "adjustment-data/testing-functions/utils/utils.js#76:sumCurrency",
+              "name": "sumCurrency",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 60,
+                "endOffset": 348,
+                "startLine": 3,
+                "startColumn": 1,
+                "endLine": 12,
+                "endColumn": 2
+              },
+              "returnType": "any",
+              "purity": "unknown",
+              "confidence": "medium",
+              "inlineable": false,
+              "calls": 1,
+              "returnFacts": 1,
+              "effects": 0
+            },
+            {
+              "functionId": "adjustment-data/testing-functions/utils/utils.js::getSomeTypeCount@350",
+              "symbolId": "adjustment-data/testing-functions/utils/utils.js#366:getSomeTypeCount",
+              "name": "getSomeTypeCount",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 350,
+                "endOffset": 549,
+                "startLine": 14,
+                "startColumn": 1,
+                "endLine": 20,
+                "endColumn": 2
+              },
+              "returnType": "any",
+              "purity": "unknown",
+              "confidence": "medium",
+              "inlineable": false,
+              "calls": 1,
+              "returnFacts": 1,
+              "effects": 0
+            },
+            {
+              "functionId": "adjustment-data/testing-functions/utils/utils.js::plusSymbol@551",
+              "symbolId": "adjustment-data/testing-functions/utils/utils.js#567:plusSymbol",
+              "name": "plusSymbol",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 551,
+                "endOffset": 727,
+                "startLine": 22,
+                "startColumn": 1,
+                "endLine": 30,
+                "endColumn": 2
+              },
+              "returnType": "\"\" | \"+\"",
+              "purity": "impure",
+              "confidence": "medium",
+              "inlineable": false,
+              "calls": 2,
+              "returnFacts": 3,
+              "effects": 2
+            },
+            {
+              "functionId": "adjustment-data/testing-functions/utils/utils.js::hasCyrillicLetters@729",
+              "symbolId": "adjustment-data/testing-functions/utils/utils.js#745:hasCyrillicLetters",
+              "name": "hasCyrillicLetters",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 729,
+                "endOffset": 824,
+                "startLine": 32,
+                "startColumn": 1,
+                "endLine": 34,
+                "endColumn": 2
+              },
+              "returnType": "boolean",
+              "purity": "impure",
+              "confidence": "medium",
+              "inlineable": false,
+              "calls": 1,
+              "returnFacts": 1,
+              "effects": 1
+            }
+          ],
+          "rootEffects": [],
+          "contexts": {
+            "count": 0,
+            "maxDepthObserved": 0,
+            "effects": 0,
+            "unresolvedBindings": 0,
+            "diagnostics": []
+          },
+          "diagnostics": []
+        },
+        "arrayPipelines": [
+          {
+            "id": "array-pipeline-108-346",
+            "collection": "args",
+            "stages": [
+              {
+                "method": "reduce",
+                "kind": null
+              }
+            ],
+            "provenance": null,
+            "warningCount": 0,
+            "warnings": []
+          }
+        ],
+        "loopFlow": {
+          "loops": 0,
+          "summaries": [],
+          "reduceFlows": 1
+        },
+        "warnings": []
+      },
+      "constraintStats": {
+        "mode": "hybrid",
+        "irAttempts": 0,
+        "irSolved": 0,
+        "irSolutionCount": 0,
+        "irTruncated": 0,
+        "mcdcIrSolved": 0,
+        "legacyFallback": 0,
+        "fallbackReasons": {}
+      },
+      "unsupportedBranches": [],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 0,
+        "conditionsAnalyzed": 0,
+        "independencePairsFound": 0,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": []
+      },
+      "scenarios": [
+        {
+          "id": "loop-4-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-4-10",
+            "kind": "loop",
+            "outcome": null,
+            "line": 4,
+            "column": 10,
+            "coverageOutcomeIndex": null,
+            "runtimeDecisionId": null
+          },
+          "arguments": [
+            {
+              "type": "array",
+              "length": 0,
+              "sample": []
+            }
+          ],
+          "mocks": [],
+          "assumptions": [
+            "args"
+          ],
+          "unsupported": [],
+          "evidence": {
+            "total": 0,
+            "byStatus": {},
+            "items": [],
+            "truncated": 0
+          }
+        },
+        {
+          "id": "loop-4-10-one-callback-1",
+          "target": {
+            "branchId": "loop-4-10",
+            "kind": "loop",
+            "outcome": null,
+            "line": 4,
+            "column": 10,
+            "coverageOutcomeIndex": null,
+            "runtimeDecisionId": null
+          },
+          "arguments": [
+            {
+              "type": "array",
+              "length": 1,
+              "sample": [
+                {
+                  "type": "object",
+                  "keys": [],
+                  "fields": {}
+                }
+              ]
+            }
+          ],
+          "mocks": [],
+          "assumptions": [
+            "args"
+          ],
+          "unsupported": [],
+          "evidence": {
+            "total": 0,
+            "byStatus": {},
+            "items": [],
+            "truncated": 0
+          }
+        },
+        {
+          "id": "loop-4-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-4-10",
+            "kind": "loop",
+            "outcome": null,
+            "line": 4,
+            "column": 10,
+            "coverageOutcomeIndex": null,
+            "runtimeDecisionId": null
+          },
+          "arguments": [
+            {
+              "type": "array",
+              "length": 2,
+              "sample": [
+                {
+                  "type": "object",
+                  "keys": [],
+                  "fields": {}
+                },
+                {
+                  "type": "object",
+                  "keys": [],
+                  "fields": {}
+                }
+              ]
+            }
+          ],
+          "mocks": [],
+          "assumptions": [
+            "args"
+          ],
+          "unsupported": [],
+          "evidence": {
+            "total": 0,
+            "byStatus": {},
+            "items": [],
+            "truncated": 0
+          }
+        }
+      ],
+      "scenarioIndex": {
+        "ids": [
+          "loop-4-10-zero-callbacks-1",
+          "loop-4-10-one-callback-1",
+          "loop-4-10-multiple-callbacks-1"
+        ],
+        "count": 3
+      },
+      "scenarioCount": 3,
+      "scenariosTruncated": 0,
+      "arrayPipelines": [
+        {
+          "id": "array-pipeline-108-346",
+          "collection": "args",
+          "stages": [
+            {
+              "method": "reduce",
+              "kind": null
+            }
+          ],
+          "provenance": null,
+          "warningCount": 0,
+          "warnings": []
+        }
+      ],
+      "mockTemplates": [
+        {
+          "call": "args.reduce",
+          "suggestedValueCount": 1
+        }
+      ]
+    },
+    {
+      "functionId": "adjustment-data/testing-functions/utils/utils.js::getSomeTypeCount@350",
+      "name": "getSomeTypeCount",
+      "file": "adjustment-data/testing-functions/utils/utils.js",
+      "sourceLocation": null,
+      "summary": {
+        "branchOutcomesFound": 0,
+        "scenariosGenerated": 0,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 0,
+        "loopScenariosGenerated": 0,
+        "mcdcDecisionsAnalyzed": 0,
+        "mcdcConditionsAnalyzed": 0,
+        "mcdcIndependencePairsFound": 0,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "inferredProperties": [],
+      "dataFlow": {
+        "schemaVersion": "1.0",
+        "properties": [
+          {
+            "path": "local:countingTypes",
+            "kind": "unknown",
+            "confidence": "low",
+            "optional": false,
+            "nullable": false,
+            "evidenceCount": 1
+          },
+          {
+            "path": "local:specificPTypes",
+            "kind": "unknown",
+            "confidence": "low",
+            "optional": false,
+            "nullable": false,
+            "evidenceCount": 1
+          }
+        ],
+        "aliases": {
+          "total": 0,
+          "byRelation": {},
+          "items": []
+        },
+        "cfg": {
+          "nodeCount": 4,
+          "edgeCount": 3,
+          "loops": 0,
+          "nodes": [
+            {
+              "id": "entry:synthetic:1",
+              "kind": "entry",
+              "sourceSpan": null
+            },
+            {
+              "id": "exit:synthetic:2",
+              "kind": "exit",
+              "sourceSpan": null
+            },
+            {
+              "id": "declaration:392:3",
+              "kind": "declaration",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 392,
+                "endOffset": 524,
+                "startLine": 15,
+                "startColumn": 3,
+                "endLine": 18,
+                "endColumn": 8
+              }
+            },
+            {
+              "id": "return:527:4",
+              "kind": "return",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 527,
+                "endOffset": 547,
+                "startLine": 19,
+                "startColumn": 3,
+                "endLine": 19,
+                "endColumn": 23
+              }
+            }
+          ],
+          "edges": [
+            {
+              "from": "entry:synthetic:1",
+              "to": "declaration:392:3",
+              "kind": "normal",
+              "label": null
+            },
+            {
+              "from": "declaration:392:3",
+              "to": "return:527:4",
+              "kind": "normal",
+              "label": null
+            },
+            {
+              "from": "return:527:4",
+              "to": "exit:synthetic:2",
+              "kind": "return",
+              "label": null
+            }
+          ],
+          "diagnostics": []
+        },
+        "flow": {
+          "definitions": 2,
+          "uses": 2,
+          "phiCandidates": 0,
+          "diagnostics": []
+        },
+        "scalarSsa": {
+          "algorithm": "cytron-iterated-dominance-frontier-dominator-tree-renaming",
+          "definitions": 2,
+          "definitionDetails": [
+            {
+              "id": "383:obj#0",
+              "symbolId": "383:obj",
+              "name": "obj",
+              "version": 0,
+              "kind": "parameter",
+              "nodeId": "entry:synthetic:1",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 383,
+                "endOffset": 386,
+                "startLine": 14,
+                "startColumn": 34,
+                "endLine": 14,
+                "endColumn": 37
+              },
+              "operands": []
+            },
+            {
+              "id": "398:countingTypes#0",
+              "symbolId": "398:countingTypes",
+              "name": "countingTypes",
+              "version": 0,
+              "kind": "declaration",
+              "nodeId": "declaration:392:3",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 414,
+                "endOffset": 524,
+                "startLine": 15,
+                "startColumn": 25,
+                "endLine": 18,
+                "endColumn": 8
+              },
+              "operands": []
+            }
+          ],
+          "phiNodes": 0,
+          "phiDetails": [],
+          "useBindings": 2,
+          "useDetails": [
+            {
+              "id": "use:declaration:392:3:8:specificPTypes",
+              "nodeId": "declaration:392:3",
+              "symbolId": "8:specificPTypes",
+              "name": "specificPTypes",
+              "value": null,
+              "resolution": "unresolved-before-definition",
+              "reachingDefinitionFacts": []
+            },
+            {
+              "id": "use:return:527:4:398:countingTypes",
+              "nodeId": "return:527:4",
+              "symbolId": "398:countingTypes",
+              "name": "countingTypes",
+              "value": "398:countingTypes#0",
+              "resolution": "ssa-version",
+              "reachingDefinitionFacts": [
+                "def:declaration:392:3:398:countingTypes:1"
+              ]
+            }
+          ],
+          "unresolvedUses": 1,
+          "convergence": {
+            "dominatorTreeTraversal": true,
+            "allReachableNodesVisited": true
+          },
+          "diagnostics": [
+            {
+              "code": "SSA_UNRESOLVED_USES",
+              "severity": "warning",
+              "message": "1 use binding(s) have no reaching SSA version."
+            }
+          ]
+        },
+        "memorySsa": {
+          "algorithm": "field-sensitive-overlap-aware-cytron-memory-ssa",
+          "locations": 1,
+          "locationDetails": [
+            {
+              "id": "heap:8:specificPTypes:[]",
+              "rootSymbolId": "8:specificPTypes",
+              "rootName": "specificPTypes",
+              "path": [],
+              "definitionCount": 0,
+              "readCount": 1
+            }
+          ],
+          "reads": 1,
+          "writes": 0,
+          "accesses": [
+            {
+              "id": "heap-read:0",
+              "kind": "read",
+              "location": "heap:8:specificPTypes:[]",
+              "path": [],
+              "certainty": "observed-read",
+              "pointerResolution": null,
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 414,
+                "endOffset": 435,
+                "startLine": 15,
+                "startColumn": 25,
+                "endLine": 15,
+                "endColumn": 46
+              }
+            }
+          ],
+          "definitions": 1,
+          "definitionDetails": [
+            {
+              "id": "heap:8:specificPTypes:[]#0",
+              "location": null,
+              "version": 0,
+              "nodeId": "entry:synthetic:1",
+              "kind": "initial-memory-state",
+              "sourceSpan": null
+            }
+          ],
+          "phiNodes": 0,
+          "phiDetails": [],
+          "aliasSummary": {
+            "aliasPairs": 0,
+            "propagatedWrites": 0,
+            "allocationSiteAccesses": 0,
+            "algorithm": "bounded-andersen-inclusion-points-to"
+          },
+          "diagnostics": [],
+          "limits": {
+            "pathSensitivity": "static-field-paths-only",
+            "aliasing": "intraprocedural-alias-facts plus bounded points-to; may-alias effects use weak updates",
+            "overlappingPaths": "ancestor-descendant writes invalidate observed overlapping paths",
+            "dynamicIndexes": "wildcard weak updates",
+            "unknownCalls": "possible effects only where mutation analysis emits an effect",
+            "objectShape": "field-sensitive locations; aggregate object identity is not fully versioned"
+          }
+        },
+        "pointsTo": {
+          "algorithm": "bounded-andersen-inclusion-points-to",
+          "allocationSites": 0,
+          "symbols": 0,
+          "targetRelations": 0,
+          "unknownSymbols": 1,
+          "unknownHeapFields": 0,
+          "aliasPairs": [],
+          "pointsToMap": {},
+          "heapFields": {},
+          "constraints": {
+            "copies": 0,
+            "loads": 0,
+            "stores": 0
+          },
+          "convergence": {
+            "converged": true,
+            "passes": 1,
+            "maxPasses": 8
+          },
+          "diagnostics": [],
+          "limits": {
+            "flowSensitivity": "flow-insensitive-inclusion-constraints",
+            "contextSensitivity": "intraprocedural",
+            "unknownCalls": "not-assigned-fabricated-targets",
+            "externalParameters": "distinct-regions-with-explicit-may-alias",
+            "heapFields": "static-member-or-wildcard-with-top-widening"
+          }
+        },
+        "interprocedural": {
+          "algorithm": null,
+          "projectFunctionSummaries": 4,
+          "callSites": 1,
+          "calls": [
+            {
+              "callId": "call:414",
+              "callee": "specificPTypes.reduce",
+              "resolution": "external-or-unresolved",
+              "targetFunctionId": null,
+              "knownPure": false,
+              "argumentDependencies": [
+                [
+                  "a",
+                  "foundType",
+                  "obj",
+                  "p",
+                  "pTypes"
+                ],
+                []
+              ],
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 414,
+                "endOffset": 524,
+                "startLine": 15,
+                "startColumn": 25,
+                "endLine": 18,
+                "endColumn": 8
+              }
+            }
+          ],
+          "summaries": [
+            {
+              "functionId": "adjustment-data/testing-functions/utils/utils.js::sumCurrency@60",
+              "symbolId": "adjustment-data/testing-functions/utils/utils.js#76:sumCurrency",
+              "name": "sumCurrency",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 60,
+                "endOffset": 348,
+                "startLine": 3,
+                "startColumn": 1,
+                "endLine": 12,
+                "endColumn": 2
+              },
+              "returnType": "any",
+              "purity": "unknown",
+              "confidence": "medium",
+              "inlineable": false,
+              "calls": 1,
+              "returnFacts": 1,
+              "effects": 0
+            },
+            {
+              "functionId": "adjustment-data/testing-functions/utils/utils.js::getSomeTypeCount@350",
+              "symbolId": "adjustment-data/testing-functions/utils/utils.js#366:getSomeTypeCount",
+              "name": "getSomeTypeCount",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 350,
+                "endOffset": 549,
+                "startLine": 14,
+                "startColumn": 1,
+                "endLine": 20,
+                "endColumn": 2
+              },
+              "returnType": "any",
+              "purity": "unknown",
+              "confidence": "medium",
+              "inlineable": false,
+              "calls": 1,
+              "returnFacts": 1,
+              "effects": 0
+            },
+            {
+              "functionId": "adjustment-data/testing-functions/utils/utils.js::plusSymbol@551",
+              "symbolId": "adjustment-data/testing-functions/utils/utils.js#567:plusSymbol",
+              "name": "plusSymbol",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 551,
+                "endOffset": 727,
+                "startLine": 22,
+                "startColumn": 1,
+                "endLine": 30,
+                "endColumn": 2
+              },
+              "returnType": "\"\" | \"+\"",
+              "purity": "impure",
+              "confidence": "medium",
+              "inlineable": false,
+              "calls": 2,
+              "returnFacts": 3,
+              "effects": 2
+            },
+            {
+              "functionId": "adjustment-data/testing-functions/utils/utils.js::hasCyrillicLetters@729",
+              "symbolId": "adjustment-data/testing-functions/utils/utils.js#745:hasCyrillicLetters",
+              "name": "hasCyrillicLetters",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 729,
+                "endOffset": 824,
+                "startLine": 32,
+                "startColumn": 1,
+                "endLine": 34,
+                "endColumn": 2
+              },
+              "returnType": "boolean",
+              "purity": "impure",
+              "confidence": "medium",
+              "inlineable": false,
+              "calls": 1,
+              "returnFacts": 1,
+              "effects": 1
+            }
+          ],
+          "rootEffects": [],
+          "contexts": {
+            "count": 0,
+            "maxDepthObserved": 0,
+            "effects": 0,
+            "unresolvedBindings": 0,
+            "diagnostics": []
+          },
+          "diagnostics": []
+        },
+        "arrayPipelines": [],
+        "loopFlow": {
+          "loops": 0,
+          "summaries": [],
+          "reduceFlows": 1
+        },
+        "warnings": [
+          {
+            "code": "SSA_UNRESOLVED_USES",
+            "severity": "warning",
+            "message": "1 use binding(s) have no reaching SSA version.",
+            "sourceSpan": null
+          }
+        ]
+      },
+      "constraintStats": {
+        "mode": "hybrid",
+        "irAttempts": 0,
+        "irSolved": 0,
+        "irSolutionCount": 0,
+        "irTruncated": 0,
+        "mcdcIrSolved": 0,
+        "legacyFallback": 0,
+        "fallbackReasons": {}
+      },
+      "unsupportedBranches": [],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 0,
+        "conditionsAnalyzed": 0,
+        "independencePairsFound": 0,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": []
+      },
+      "scenarios": [],
+      "scenarioIndex": {
+        "ids": [],
+        "count": 0
+      },
+      "scenarioCount": 0,
+      "scenariosTruncated": 0,
+      "arrayPipelines": [],
+      "mockTemplates": []
+    },
+    {
+      "functionId": "adjustment-data/testing-functions/utils/utils.js::plusSymbol@551",
+      "name": "plusSymbol",
+      "file": "adjustment-data/testing-functions/utils/utils.js",
+      "sourceLocation": null,
+      "summary": {
+        "branchOutcomesFound": 2,
+        "scenariosGenerated": 2,
+        "branchesWithUnsupportedExpressions": 2,
+        "loopsAnalyzed": 0,
+        "loopScenariosGenerated": 0,
+        "mcdcDecisionsAnalyzed": 2,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 1,
+        "mcdcConditionsWithoutPair": 1
+      },
+      "inferredProperties": [
+        {
+          "path": "phone",
+          "inferredType": "string",
+          "confidence": "medium",
+          "evidenceCount": 2
+        }
+      ],
+      "dataFlow": {
+        "schemaVersion": "1.0",
+        "properties": [
+          {
+            "path": "parameter:phone",
+            "kind": "string",
+            "confidence": "low",
+            "optional": false,
+            "nullable": false,
+            "evidenceCount": 3
+          }
+        ],
+        "aliases": {
+          "total": 0,
+          "byRelation": {},
+          "items": []
+        },
+        "cfg": {
+          "nodeCount": 16,
+          "edgeCount": 16,
+          "loops": 0,
+          "nodes": [
+            {
+              "id": "entry:synthetic:1",
+              "kind": "entry",
+              "sourceSpan": null
+            },
+            {
+              "id": "exit:synthetic:2",
+              "kind": "exit",
+              "sourceSpan": null
+            },
+            {
+              "id": "if-condition:589:3",
+              "kind": "if-condition",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 589,
+                "endOffset": 617,
+                "startLine": 23,
+                "startColumn": 3,
+                "endLine": 23,
+                "endColumn": 31
+              }
+            },
+            {
+              "id": "if-join:589:4",
+              "kind": "if-join",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 589,
+                "endOffset": 617,
+                "startLine": 23,
+                "startColumn": 3,
+                "endLine": 23,
+                "endColumn": 31
+              }
+            },
+            {
+              "id": "if-then-entry:608:5",
+              "kind": "if-then-entry",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 608,
+                "endOffset": 617,
+                "startLine": 23,
+                "startColumn": 22,
+                "endLine": 23,
+                "endColumn": 31
+              }
+            },
+            {
+              "id": "expression-condition:593:6",
+              "kind": "expression-condition",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 593,
+                "endOffset": 606,
+                "startLine": 23,
+                "startColumn": 7,
+                "endLine": 23,
+                "endColumn": 20
+              }
+            },
+            {
+              "id": "return:608:7",
+              "kind": "return",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 608,
+                "endOffset": 617,
+                "startLine": 23,
+                "startColumn": 22,
+                "endLine": 23,
+                "endColumn": 31
+              }
+            },
+            {
+              "id": "expression:621:8",
+              "kind": "expression",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 621,
+                "endOffset": 656,
+                "startLine": 25,
+                "startColumn": 3,
+                "endLine": 25,
+                "endColumn": 38
+              }
+            },
+            {
+              "id": "if-condition:659:9",
+              "kind": "if-condition",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 659,
+                "endOffset": 712,
+                "startLine": 26,
+                "startColumn": 3,
+                "endLine": 28,
+                "endColumn": 4
+              }
+            },
+            {
+              "id": "if-join:659:10",
+              "kind": "if-join",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 659,
+                "endOffset": 712,
+                "startLine": 26,
+                "startColumn": 3,
+                "endLine": 28,
+                "endColumn": 4
+              }
+            },
+            {
+              "id": "if-then-entry:693:11",
+              "kind": "if-then-entry",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 693,
+                "endOffset": 712,
+                "startLine": 26,
+                "startColumn": 37,
+                "endLine": 28,
+                "endColumn": 4
+              }
+            },
+            {
+              "id": "expression-condition:663:12",
+              "kind": "expression-condition",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 663,
+                "endOffset": 691,
+                "startLine": 26,
+                "startColumn": 7,
+                "endLine": 26,
+                "endColumn": 35
+              }
+            },
+            {
+              "id": "block-entry:693:13",
+              "kind": "block-entry",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 693,
+                "endOffset": 712,
+                "startLine": 26,
+                "startColumn": 37,
+                "endLine": 28,
+                "endColumn": 4
+              }
+            },
+            {
+              "id": "return:699:14",
+              "kind": "return",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 699,
+                "endOffset": 708,
+                "startLine": 27,
+                "startColumn": 5,
+                "endLine": 27,
+                "endColumn": 14
+              }
+            },
+            {
+              "id": "block-exit:693:15",
+              "kind": "block-exit",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 693,
+                "endOffset": 712,
+                "startLine": 26,
+                "startColumn": 37,
+                "endLine": 28,
+                "endColumn": 4
+              }
+            },
+            {
+              "id": "return:715:16",
+              "kind": "return",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 715,
+                "endOffset": 725,
+                "startLine": 29,
+                "startColumn": 3,
+                "endLine": 29,
+                "endColumn": 13
+              }
+            }
+          ],
+          "edges": [
+            {
+              "from": "entry:synthetic:1",
+              "to": "if-condition:589:3",
+              "kind": "normal",
+              "label": null
+            },
+            {
+              "from": "expression-condition:593:6",
+              "to": "if-then-entry:608:5",
+              "kind": "true",
+              "label": null
+            },
+            {
+              "from": "expression-condition:593:6",
+              "to": "if-join:589:4",
+              "kind": "false",
+              "label": null
+            },
+            {
+              "from": "if-condition:589:3",
+              "to": "expression-condition:593:6",
+              "kind": "evaluate",
+              "label": null
+            },
+            {
+              "from": "if-then-entry:608:5",
+              "to": "return:608:7",
+              "kind": "normal",
+              "label": null
+            },
+            {
+              "from": "return:608:7",
+              "to": "exit:synthetic:2",
+              "kind": "return",
+              "label": null
+            },
+            {
+              "from": "if-join:589:4",
+              "to": "expression:621:8",
+              "kind": "normal",
+              "label": null
+            },
+            {
+              "from": "expression:621:8",
+              "to": "if-condition:659:9",
+              "kind": "normal",
+              "label": null
+            },
+            {
+              "from": "expression-condition:663:12",
+              "to": "if-then-entry:693:11",
+              "kind": "true",
+              "label": null
+            },
+            {
+              "from": "expression-condition:663:12",
+              "to": "if-join:659:10",
+              "kind": "false",
+              "label": null
+            },
+            {
+              "from": "if-condition:659:9",
+              "to": "expression-condition:663:12",
+              "kind": "evaluate",
+              "label": null
+            },
+            {
+              "from": "if-then-entry:693:11",
+              "to": "block-entry:693:13",
+              "kind": "normal",
+              "label": null
+            },
+            {
+              "from": "block-entry:693:13",
+              "to": "return:699:14",
+              "kind": "normal",
+              "label": null
+            },
+            {
+              "from": "return:699:14",
+              "to": "exit:synthetic:2",
+              "kind": "return",
+              "label": null
+            },
+            {
+              "from": "if-join:659:10",
+              "to": "return:715:16",
+              "kind": "normal",
+              "label": null
+            },
+            {
+              "from": "return:715:16",
+              "to": "exit:synthetic:2",
+              "kind": "return",
+              "label": null
+            }
+          ],
+          "diagnostics": []
+        },
+        "flow": {
+          "definitions": 2,
+          "uses": 3,
+          "phiCandidates": 1,
+          "diagnostics": []
+        },
+        "scalarSsa": {
+          "algorithm": "cytron-iterated-dominance-frontier-dominator-tree-renaming",
+          "definitions": 2,
+          "definitionDetails": [
+            {
+              "id": "578:phone#0",
+              "symbolId": "578:phone",
+              "name": "phone",
+              "version": 0,
+              "kind": "parameter",
+              "nodeId": "entry:synthetic:1",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 578,
+                "endOffset": 583,
+                "startLine": 22,
+                "startColumn": 28,
+                "endLine": 22,
+                "endColumn": 33
+              },
+              "operands": []
+            },
+            {
+              "id": "578:phone#1",
+              "symbolId": "578:phone",
+              "name": "phone",
+              "version": 1,
+              "kind": "assignment",
+              "nodeId": "expression:621:8",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 629,
+                "endOffset": 656,
+                "startLine": 25,
+                "startColumn": 11,
+                "endLine": 25,
+                "endColumn": 38
+              },
+              "operands": [
+                {
+                  "symbolId": "578:phone",
+                  "value": "578:phone#0"
+                }
+              ]
+            }
+          ],
+          "phiNodes": 0,
+          "phiDetails": [],
+          "useBindings": 3,
+          "useDetails": [
+            {
+              "id": "use:expression-condition:593:6:578:phone",
+              "nodeId": "expression-condition:593:6",
+              "symbolId": "578:phone",
+              "name": "phone",
+              "value": "578:phone#0",
+              "resolution": "ssa-version",
+              "reachingDefinitionFacts": [
+                "def:entry:synthetic:1:578:phone:0"
+              ]
+            },
+            {
+              "id": "use:expression:621:8:578:phone",
+              "nodeId": "expression:621:8",
+              "symbolId": "578:phone",
+              "name": "phone",
+              "value": "578:phone#0",
+              "resolution": "ssa-version",
+              "reachingDefinitionFacts": [
+                "def:entry:synthetic:1:578:phone:0"
+              ]
+            },
+            {
+              "id": "use:expression-condition:663:12:578:phone",
+              "nodeId": "expression-condition:663:12",
+              "symbolId": "578:phone",
+              "name": "phone",
+              "value": "578:phone#1",
+              "resolution": "ssa-version",
+              "reachingDefinitionFacts": [
+                "def:expression:621:8:578:phone:1"
+              ]
+            }
+          ],
+          "unresolvedUses": 0,
+          "convergence": {
+            "dominatorTreeTraversal": true,
+            "allReachableNodesVisited": true
+          },
+          "diagnostics": []
+        },
+        "memorySsa": {
+          "algorithm": "field-sensitive-overlap-aware-cytron-memory-ssa",
+          "locations": 1,
+          "locationDetails": [
+            {
+              "id": "heap:578:phone:[]",
+              "rootSymbolId": "578:phone",
+              "rootName": "phone",
+              "path": [],
+              "definitionCount": 2,
+              "readCount": 2
+            }
+          ],
+          "reads": 2,
+          "writes": 2,
+          "accesses": [
+            {
+              "id": "heap-read:0",
+              "kind": "read",
+              "location": "heap:578:phone:[]",
+              "path": [],
+              "certainty": "observed-read",
+              "pointerResolution": null,
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 629,
+                "endOffset": 642,
+                "startLine": 25,
+                "startColumn": 11,
+                "endLine": 25,
+                "endColumn": 24
+              }
+            },
+            {
+              "id": "heap-read:1",
+              "kind": "read",
+              "location": "heap:578:phone:[]",
+              "path": [],
+              "certainty": "observed-read",
+              "pointerResolution": null,
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 663,
+                "endOffset": 674,
+                "startLine": 26,
+                "startColumn": 7,
+                "endLine": 26,
+                "endColumn": 18
+              }
+            },
+            {
+              "id": "mut:578:phone:629",
+              "kind": "write",
+              "location": "heap:578:phone:[]",
+              "path": [],
+              "certainty": "possible",
+              "pointerResolution": null,
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 629,
+                "endOffset": 656,
+                "startLine": 25,
+                "startColumn": 11,
+                "endLine": 25,
+                "endColumn": 38
+              }
+            },
+            {
+              "id": "mut:578:phone:663",
+              "kind": "write",
+              "location": "heap:578:phone:[]",
+              "path": [],
+              "certainty": "possible",
+              "pointerResolution": null,
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 663,
+                "endOffset": 691,
+                "startLine": 26,
+                "startColumn": 7,
+                "endLine": 26,
+                "endColumn": 35
+              }
+            }
+          ],
+          "definitions": 3,
+          "definitionDetails": [
+            {
+              "id": "heap:578:phone:[]#1",
+              "location": null,
+              "version": 1,
+              "nodeId": "entry:synthetic:1",
+              "kind": "initial-memory-state",
+              "sourceSpan": null
+            },
+            {
+              "id": "heap:578:phone:[]#2",
+              "location": null,
+              "version": 2,
+              "nodeId": "expression:621:8",
+              "kind": "heap-may-write",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 629,
+                "endOffset": 656,
+                "startLine": 25,
+                "startColumn": 11,
+                "endLine": 25,
+                "endColumn": 38
+              }
+            },
+            {
+              "id": "heap:578:phone:[]#3",
+              "location": null,
+              "version": 3,
+              "nodeId": "expression-condition:663:12",
+              "kind": "heap-may-write",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 663,
+                "endOffset": 691,
+                "startLine": 26,
+                "startColumn": 7,
+                "endLine": 26,
+                "endColumn": 35
+              }
+            }
+          ],
+          "phiNodes": 1,
+          "phiDetails": [
+            {
+              "id": "phi:heap:578:phone:[]#0",
+              "symbolId": "heap:578:phone:[]",
+              "name": "phone.",
+              "version": 0,
+              "output": "heap:578:phone:[]#0",
+              "nodeId": "exit:synthetic:2",
+              "inputs": [
+                {
+                  "predecessor": "return:608:7",
+                  "value": "heap:578:phone:[]#1"
+                },
+                {
+                  "predecessor": "return:699:14",
+                  "value": "heap:578:phone:[]#3"
+                },
+                {
+                  "predecessor": "return:715:16",
+                  "value": "heap:578:phone:[]#3"
+                }
+              ],
+              "sourceSpan": null,
+              "kind": "branch-merge",
+              "complete": true
+            }
+          ],
+          "aliasSummary": {
+            "aliasPairs": 0,
+            "propagatedWrites": 0,
+            "allocationSiteAccesses": 0,
+            "algorithm": "bounded-andersen-inclusion-points-to"
+          },
+          "diagnostics": [],
+          "limits": {
+            "pathSensitivity": "static-field-paths-only",
+            "aliasing": "intraprocedural-alias-facts plus bounded points-to; may-alias effects use weak updates",
+            "overlappingPaths": "ancestor-descendant writes invalidate observed overlapping paths",
+            "dynamicIndexes": "wildcard weak updates",
+            "unknownCalls": "possible effects only where mutation analysis emits an effect",
+            "objectShape": "field-sensitive locations; aggregate object identity is not fully versioned"
+          }
+        },
+        "pointsTo": {
+          "algorithm": "bounded-andersen-inclusion-points-to",
+          "allocationSites": 0,
+          "symbols": 0,
+          "targetRelations": 0,
+          "unknownSymbols": 1,
+          "unknownHeapFields": 0,
+          "aliasPairs": [],
+          "pointsToMap": {},
+          "heapFields": {},
+          "constraints": {
+            "copies": 0,
+            "loads": 0,
+            "stores": 0
+          },
+          "convergence": {
+            "converged": true,
+            "passes": 1,
+            "maxPasses": 8
+          },
+          "diagnostics": [],
+          "limits": {
+            "flowSensitivity": "flow-insensitive-inclusion-constraints",
+            "contextSensitivity": "intraprocedural",
+            "unknownCalls": "not-assigned-fabricated-targets",
+            "externalParameters": "distinct-regions-with-explicit-may-alias",
+            "heapFields": "static-member-or-wildcard-with-top-widening"
+          }
+        },
+        "interprocedural": {
+          "algorithm": null,
+          "projectFunctionSummaries": 4,
+          "callSites": 2,
+          "calls": [
+            {
+              "callId": "call:629",
+              "callee": "phone.replace",
+              "resolution": "external-or-unresolved",
+              "targetFunctionId": null,
+              "knownPure": false,
+              "argumentDependencies": [
+                [],
+                []
+              ],
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 629,
+                "endOffset": 656,
+                "startLine": 25,
+                "startColumn": 11,
+                "endLine": 25,
+                "endColumn": 38
+              }
+            },
+            {
+              "callId": "call:663",
+              "callee": "phone.match",
+              "resolution": "external-or-unresolved",
+              "targetFunctionId": null,
+              "knownPure": false,
+              "argumentDependencies": [
+                []
+              ],
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 663,
+                "endOffset": 691,
+                "startLine": 26,
+                "startColumn": 7,
+                "endLine": 26,
+                "endColumn": 35
+              }
+            }
+          ],
+          "summaries": [
+            {
+              "functionId": "adjustment-data/testing-functions/utils/utils.js::sumCurrency@60",
+              "symbolId": "adjustment-data/testing-functions/utils/utils.js#76:sumCurrency",
+              "name": "sumCurrency",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 60,
+                "endOffset": 348,
+                "startLine": 3,
+                "startColumn": 1,
+                "endLine": 12,
+                "endColumn": 2
+              },
+              "returnType": "any",
+              "purity": "unknown",
+              "confidence": "medium",
+              "inlineable": false,
+              "calls": 1,
+              "returnFacts": 1,
+              "effects": 0
+            },
+            {
+              "functionId": "adjustment-data/testing-functions/utils/utils.js::getSomeTypeCount@350",
+              "symbolId": "adjustment-data/testing-functions/utils/utils.js#366:getSomeTypeCount",
+              "name": "getSomeTypeCount",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 350,
+                "endOffset": 549,
+                "startLine": 14,
+                "startColumn": 1,
+                "endLine": 20,
+                "endColumn": 2
+              },
+              "returnType": "any",
+              "purity": "unknown",
+              "confidence": "medium",
+              "inlineable": false,
+              "calls": 1,
+              "returnFacts": 1,
+              "effects": 0
+            },
+            {
+              "functionId": "adjustment-data/testing-functions/utils/utils.js::plusSymbol@551",
+              "symbolId": "adjustment-data/testing-functions/utils/utils.js#567:plusSymbol",
+              "name": "plusSymbol",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 551,
+                "endOffset": 727,
+                "startLine": 22,
+                "startColumn": 1,
+                "endLine": 30,
+                "endColumn": 2
+              },
+              "returnType": "\"\" | \"+\"",
+              "purity": "impure",
+              "confidence": "medium",
+              "inlineable": false,
+              "calls": 2,
+              "returnFacts": 3,
+              "effects": 2
+            },
+            {
+              "functionId": "adjustment-data/testing-functions/utils/utils.js::hasCyrillicLetters@729",
+              "symbolId": "adjustment-data/testing-functions/utils/utils.js#745:hasCyrillicLetters",
+              "name": "hasCyrillicLetters",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 729,
+                "endOffset": 824,
+                "startLine": 32,
+                "startColumn": 1,
+                "endLine": 34,
+                "endColumn": 2
+              },
+              "returnType": "boolean",
+              "purity": "impure",
+              "confidence": "medium",
+              "inlineable": false,
+              "calls": 1,
+              "returnFacts": 1,
+              "effects": 1
+            }
+          ],
+          "rootEffects": [
+            {
+              "kind": "unknown-method-effect",
+              "path": [
+                "phone"
+              ],
+              "certainty": "possible",
+              "propagation": "direct-root",
+              "contextId": null
+            },
+            {
+              "kind": "unknown-method-effect",
+              "path": [
+                "phone"
+              ],
+              "certainty": "possible",
+              "propagation": "direct-root",
+              "contextId": null
+            }
+          ],
+          "contexts": {
+            "count": 0,
+            "maxDepthObserved": 0,
+            "effects": 0,
+            "unresolvedBindings": 0,
+            "diagnostics": []
+          },
+          "diagnostics": []
+        },
+        "arrayPipelines": [],
+        "loopFlow": {
+          "loops": 0,
+          "summaries": [],
+          "reduceFlows": 0
+        },
+        "warnings": [
+          {
+            "code": "UNREACHABLE_CFG_NODES",
+            "severity": "info",
+            "message": null,
+            "sourceSpan": null
+          },
+          {
+            "code": "POSSIBLE_MUTATION",
+            "severity": "info",
+            "message": "unknown-method-effect may affect phone.",
+            "sourceSpan": {
+              "file": "adjustment-data/testing-functions/utils/utils.js",
+              "startOffset": 629,
+              "endOffset": 656,
+              "startLine": 25,
+              "startColumn": 11,
+              "endLine": 25,
+              "endColumn": 38
+            }
+          },
+          {
+            "code": "POSSIBLE_MUTATION",
+            "severity": "info",
+            "message": "unknown-method-effect may affect phone.",
+            "sourceSpan": {
+              "file": "adjustment-data/testing-functions/utils/utils.js",
+              "startOffset": 663,
+              "endOffset": 691,
+              "startLine": 26,
+              "startColumn": 7,
+              "endLine": 26,
+              "endColumn": 35
+            }
+          }
+        ]
+      },
+      "constraintStats": {
+        "mode": "hybrid",
+        "irAttempts": 11,
+        "irSolved": 6,
+        "irSolutionCount": 6,
+        "irTruncated": 0,
+        "mcdcIrSolved": 2,
+        "legacyFallback": 5,
+        "fallbackReasons": {
+          "MC/DC decision contains an unsupported IR atom": 1,
+          "Expression contains an unsupported IR atom": 4
+        }
+      },
+      "unsupportedBranches": [
+        {
+          "branchId": "if-26-7",
+          "outcome": true,
+          "reason": "Unsupported condition expression: phone.match(/^(8)[\\d]{10}$/)",
+          "sourceSpan": null
+        },
+        {
+          "branchId": "if-26-7",
+          "outcome": false,
+          "reason": "Unsupported condition expression: phone.match(/^(8)[\\d]{10}$/)",
+          "sourceSpan": null
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 2,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 1,
+        "conditionsWithoutIndependencePair": [
+          {
+            "decisionId": "mcdc-if-26-7",
+            "conditionId": "C1",
+            "expression": "phone.match(/^(8)[\\d]{10}$/)",
+            "reason": "The logical independence pair exists, but no consistent input assignments were found across the supported callback indexes."
+          }
+        ],
+        "decisions": [
+          {
+            "decisionId": "mcdc-if-23-7",
+            "sourceSpan": null,
+            "conditions": [
+              {
+                "conditionId": "C1",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-23-7-C1-pair-1",
+                    "status": "static-candidate"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "decisionId": "mcdc-if-26-7",
+            "sourceSpan": null,
+            "conditions": [
+              {
+                "conditionId": "C1",
+                "independencePairs": []
+              }
+            ]
+          }
+        ]
+      },
+      "scenarios": [
+        {
+          "id": "if-23-7-true-1",
+          "target": {
+            "branchId": "if-23-7",
+            "kind": "if",
+            "outcome": true,
+            "line": 23,
+            "column": 7,
+            "coverageOutcomeIndex": 0,
+            "runtimeDecisionId": "mcdc-if-23-7"
+          },
+          "arguments": [
+            {
+              "type": "null"
+            }
+          ],
+          "mocks": [],
+          "assumptions": [
+            "phone"
+          ],
+          "unsupported": [],
+          "evidence": {
+            "total": 3,
+            "byStatus": {
+              "ambiguous": 2,
+              "candidate": 1
+            },
+            "items": [
+              {
+                "source": "static-analysis",
+                "status": "ambiguous",
+                "confidence": 0.3,
+                "code": null,
+                "message": "Assignment phone is supported by property/type evidence (string, low).",
+                "sourceSpan": null
+              },
+              {
+                "source": "static-analysis",
+                "status": "ambiguous",
+                "confidence": 0.5,
+                "code": null,
+                "message": "Assignment phone is connected to 2 interprocedural effect(s).",
+                "sourceSpan": null
+              },
+              {
+                "source": "static-analysis",
+                "status": "candidate",
+                "confidence": 0.9,
+                "code": null,
+                "message": "1 SSA use binding(s) are associated with this target; 0 unresolved.",
+                "sourceSpan": {
+                  "file": null,
+                  "startOffset": 593,
+                  "endOffset": 606,
+                  "startLine": null,
+                  "startColumn": null,
+                  "endLine": 23,
+                  "endColumn": 20
+                }
+              }
+            ],
+            "truncated": 0
+          }
+        },
+        {
+          "id": "if-23-7-false-1",
+          "target": {
+            "branchId": "if-23-7",
+            "kind": "if",
+            "outcome": false,
+            "line": 23,
+            "column": 7,
+            "coverageOutcomeIndex": 1,
+            "runtimeDecisionId": "mcdc-if-23-7"
+          },
+          "arguments": [
+            {
+              "type": "string",
+              "length": 0
+            }
+          ],
+          "mocks": [],
+          "assumptions": [
+            "phone"
+          ],
+          "unsupported": [],
+          "evidence": {
+            "total": 3,
+            "byStatus": {
+              "ambiguous": 2,
+              "candidate": 1
+            },
+            "items": [
+              {
+                "source": "static-analysis",
+                "status": "ambiguous",
+                "confidence": 0.3,
+                "code": null,
+                "message": "Assignment phone is supported by property/type evidence (string, low).",
+                "sourceSpan": null
+              },
+              {
+                "source": "static-analysis",
+                "status": "ambiguous",
+                "confidence": 0.5,
+                "code": null,
+                "message": "Assignment phone is connected to 2 interprocedural effect(s).",
+                "sourceSpan": null
+              },
+              {
+                "source": "static-analysis",
+                "status": "candidate",
+                "confidence": 0.9,
+                "code": null,
+                "message": "1 SSA use binding(s) are associated with this target; 0 unresolved.",
+                "sourceSpan": {
+                  "file": null,
+                  "startOffset": 593,
+                  "endOffset": 606,
+                  "startLine": null,
+                  "startColumn": null,
+                  "endLine": 23,
+                  "endColumn": 20
+                }
+              }
+            ],
+            "truncated": 0
+          }
+        }
+      ],
+      "scenarioIndex": {
+        "ids": [
+          "if-23-7-true-1",
+          "if-23-7-false-1"
+        ],
+        "count": 2
+      },
+      "scenarioCount": 2,
+      "scenariosTruncated": 0,
+      "arrayPipelines": [],
+      "mockTemplates": []
+    },
+    {
+      "functionId": "adjustment-data/testing-functions/utils/utils.js::hasCyrillicLetters@729",
+      "name": "hasCyrillicLetters",
+      "file": "adjustment-data/testing-functions/utils/utils.js",
+      "sourceLocation": null,
+      "summary": {
+        "branchOutcomesFound": 2,
+        "scenariosGenerated": 2,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 0,
+        "loopScenariosGenerated": 0,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 1,
+        "mcdcIndependencePairsFound": 1,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "inferredProperties": [
+        {
+          "path": "value",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidenceCount": 1
+        }
+      ],
+      "dataFlow": {
+        "schemaVersion": "1.0",
+        "properties": [
+          {
+            "path": "parameter:value",
+            "kind": "boolean",
+            "confidence": "low",
+            "optional": false,
+            "nullable": false,
+            "evidenceCount": 2
+          }
+        ],
+        "aliases": {
+          "total": 0,
+          "byRelation": {},
+          "items": []
+        },
+        "cfg": {
+          "nodeCount": 3,
+          "edgeCount": 2,
+          "loops": 0,
+          "nodes": [
+            {
+              "id": "entry:synthetic:1",
+              "kind": "entry",
+              "sourceSpan": null
+            },
+            {
+              "id": "exit:synthetic:2",
+              "kind": "exit",
+              "sourceSpan": null
+            },
+            {
+              "id": "return:775:3",
+              "kind": "return",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 775,
+                "endOffset": 822,
+                "startLine": 33,
+                "startColumn": 3,
+                "endLine": 33,
+                "endColumn": 50
+              }
+            }
+          ],
+          "edges": [
+            {
+              "from": "entry:synthetic:1",
+              "to": "return:775:3",
+              "kind": "normal",
+              "label": null
+            },
+            {
+              "from": "return:775:3",
+              "to": "exit:synthetic:2",
+              "kind": "return",
+              "label": null
+            }
+          ],
+          "diagnostics": []
+        },
+        "flow": {
+          "definitions": 1,
+          "uses": 1,
+          "phiCandidates": 0,
+          "diagnostics": []
+        },
+        "scalarSsa": {
+          "algorithm": "cytron-iterated-dominance-frontier-dominator-tree-renaming",
+          "definitions": 1,
+          "definitionDetails": [
+            {
+              "id": "764:value#0",
+              "symbolId": "764:value",
+              "name": "value",
+              "version": 0,
+              "kind": "parameter",
+              "nodeId": "entry:synthetic:1",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 764,
+                "endOffset": 769,
+                "startLine": 32,
+                "startColumn": 36,
+                "endLine": 32,
+                "endColumn": 41
+              },
+              "operands": []
+            }
+          ],
+          "phiNodes": 0,
+          "phiDetails": [],
+          "useBindings": 1,
+          "useDetails": [
+            {
+              "id": "use:return:775:3:764:value",
+              "nodeId": "return:775:3",
+              "symbolId": "764:value",
+              "name": "value",
+              "value": "764:value#0",
+              "resolution": "ssa-version",
+              "reachingDefinitionFacts": [
+                "def:entry:synthetic:1:764:value:0"
+              ]
+            }
+          ],
+          "unresolvedUses": 0,
+          "convergence": {
+            "dominatorTreeTraversal": true,
+            "allReachableNodesVisited": true
+          },
+          "diagnostics": []
+        },
+        "memorySsa": {
+          "algorithm": "field-sensitive-overlap-aware-cytron-memory-ssa",
+          "locations": 1,
+          "locationDetails": [
+            {
+              "id": "heap:764:value:[]",
+              "rootSymbolId": "764:value",
+              "rootName": "value",
+              "path": [],
+              "definitionCount": 1,
+              "readCount": 0
+            }
+          ],
+          "reads": 0,
+          "writes": 1,
+          "accesses": [
+            {
+              "id": "mut:764:value:790",
+              "kind": "write",
+              "location": "heap:764:value:[]",
+              "path": [],
+              "certainty": "possible",
+              "pointerResolution": null,
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 790,
+                "endOffset": 814,
+                "startLine": 33,
+                "startColumn": 18,
+                "endLine": 33,
+                "endColumn": 42
+              }
+            }
+          ],
+          "definitions": 2,
+          "definitionDetails": [
+            {
+              "id": "heap:764:value:[]#0",
+              "location": null,
+              "version": 0,
+              "nodeId": "entry:synthetic:1",
+              "kind": "initial-memory-state",
+              "sourceSpan": null
+            },
+            {
+              "id": "heap:764:value:[]#1",
+              "location": null,
+              "version": 1,
+              "nodeId": "return:775:3",
+              "kind": "heap-may-write",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 790,
+                "endOffset": 814,
+                "startLine": 33,
+                "startColumn": 18,
+                "endLine": 33,
+                "endColumn": 42
+              }
+            }
+          ],
+          "phiNodes": 0,
+          "phiDetails": [],
+          "aliasSummary": {
+            "aliasPairs": 0,
+            "propagatedWrites": 0,
+            "allocationSiteAccesses": 0,
+            "algorithm": "bounded-andersen-inclusion-points-to"
+          },
+          "diagnostics": [],
+          "limits": {
+            "pathSensitivity": "static-field-paths-only",
+            "aliasing": "intraprocedural-alias-facts plus bounded points-to; may-alias effects use weak updates",
+            "overlappingPaths": "ancestor-descendant writes invalidate observed overlapping paths",
+            "dynamicIndexes": "wildcard weak updates",
+            "unknownCalls": "possible effects only where mutation analysis emits an effect",
+            "objectShape": "field-sensitive locations; aggregate object identity is not fully versioned"
+          }
+        },
+        "pointsTo": {
+          "algorithm": "bounded-andersen-inclusion-points-to",
+          "allocationSites": 0,
+          "symbols": 0,
+          "targetRelations": 0,
+          "unknownSymbols": 0,
+          "unknownHeapFields": 0,
+          "aliasPairs": [],
+          "pointsToMap": {},
+          "heapFields": {},
+          "constraints": {
+            "copies": 0,
+            "loads": 0,
+            "stores": 0
+          },
+          "convergence": {
+            "converged": true,
+            "passes": 1,
+            "maxPasses": 8
+          },
+          "diagnostics": [],
+          "limits": {
+            "flowSensitivity": "flow-insensitive-inclusion-constraints",
+            "contextSensitivity": "intraprocedural",
+            "unknownCalls": "not-assigned-fabricated-targets",
+            "externalParameters": "distinct-regions-with-explicit-may-alias",
+            "heapFields": "static-member-or-wildcard-with-top-widening"
+          }
+        },
+        "interprocedural": {
+          "algorithm": null,
+          "projectFunctionSummaries": 4,
+          "callSites": 1,
+          "calls": [
+            {
+              "callId": "call:790",
+              "callee": "/[А-Яа-яЁё]/.test",
+              "resolution": "external-or-unresolved",
+              "targetFunctionId": null,
+              "knownPure": false,
+              "argumentDependencies": [
+                [
+                  "value"
+                ]
+              ],
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 790,
+                "endOffset": 814,
+                "startLine": 33,
+                "startColumn": 18,
+                "endLine": 33,
+                "endColumn": 42
+              }
+            }
+          ],
+          "summaries": [
+            {
+              "functionId": "adjustment-data/testing-functions/utils/utils.js::sumCurrency@60",
+              "symbolId": "adjustment-data/testing-functions/utils/utils.js#76:sumCurrency",
+              "name": "sumCurrency",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 60,
+                "endOffset": 348,
+                "startLine": 3,
+                "startColumn": 1,
+                "endLine": 12,
+                "endColumn": 2
+              },
+              "returnType": "any",
+              "purity": "unknown",
+              "confidence": "medium",
+              "inlineable": false,
+              "calls": 1,
+              "returnFacts": 1,
+              "effects": 0
+            },
+            {
+              "functionId": "adjustment-data/testing-functions/utils/utils.js::getSomeTypeCount@350",
+              "symbolId": "adjustment-data/testing-functions/utils/utils.js#366:getSomeTypeCount",
+              "name": "getSomeTypeCount",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 350,
+                "endOffset": 549,
+                "startLine": 14,
+                "startColumn": 1,
+                "endLine": 20,
+                "endColumn": 2
+              },
+              "returnType": "any",
+              "purity": "unknown",
+              "confidence": "medium",
+              "inlineable": false,
+              "calls": 1,
+              "returnFacts": 1,
+              "effects": 0
+            },
+            {
+              "functionId": "adjustment-data/testing-functions/utils/utils.js::plusSymbol@551",
+              "symbolId": "adjustment-data/testing-functions/utils/utils.js#567:plusSymbol",
+              "name": "plusSymbol",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 551,
+                "endOffset": 727,
+                "startLine": 22,
+                "startColumn": 1,
+                "endLine": 30,
+                "endColumn": 2
+              },
+              "returnType": "\"\" | \"+\"",
+              "purity": "impure",
+              "confidence": "medium",
+              "inlineable": false,
+              "calls": 2,
+              "returnFacts": 3,
+              "effects": 2
+            },
+            {
+              "functionId": "adjustment-data/testing-functions/utils/utils.js::hasCyrillicLetters@729",
+              "symbolId": "adjustment-data/testing-functions/utils/utils.js#745:hasCyrillicLetters",
+              "name": "hasCyrillicLetters",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/utils/utils.js",
+                "startOffset": 729,
+                "endOffset": 824,
+                "startLine": 32,
+                "startColumn": 1,
+                "endLine": 34,
+                "endColumn": 2
+              },
+              "returnType": "boolean",
+              "purity": "impure",
+              "confidence": "medium",
+              "inlineable": false,
+              "calls": 1,
+              "returnFacts": 1,
+              "effects": 1
+            }
+          ],
+          "rootEffects": [
+            {
+              "kind": "escaped-to-call",
+              "path": [
+                "value"
+              ],
+              "certainty": "possible",
+              "propagation": "direct-root",
+              "contextId": null
+            }
+          ],
+          "contexts": {
+            "count": 0,
+            "maxDepthObserved": 0,
+            "effects": 0,
+            "unresolvedBindings": 0,
+            "diagnostics": []
+          },
+          "diagnostics": []
+        },
+        "arrayPipelines": [],
+        "loopFlow": {
+          "loops": 0,
+          "summaries": [],
+          "reduceFlows": 0
+        },
+        "warnings": [
+          {
+            "code": "POSSIBLE_MUTATION",
+            "severity": "info",
+            "message": "escaped-to-call may affect value.",
+            "sourceSpan": {
+              "file": "adjustment-data/testing-functions/utils/utils.js",
+              "startOffset": 790,
+              "endOffset": 814,
+              "startLine": 33,
+              "startColumn": 18,
+              "endLine": 33,
+              "endColumn": 42
+            }
+          }
+        ]
+      },
+      "constraintStats": {
+        "mode": "hybrid",
+        "irAttempts": 6,
+        "irSolved": 6,
+        "irSolutionCount": 6,
+        "irTruncated": 0,
+        "mcdcIrSolved": 2,
+        "legacyFallback": 0,
+        "fallbackReasons": {}
+      },
+      "unsupportedBranches": [],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 1,
+        "independencePairsFound": 1,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-ternary-33-10",
+            "sourceSpan": null,
+            "conditions": [
+              {
+                "conditionId": "C1",
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-ternary-33-10-C1-pair-1",
+                    "status": "static-candidate"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "scenarios": [
+        {
+          "id": "ternary-33-10-true-1",
+          "target": {
+            "branchId": "ternary-33-10",
+            "kind": "ternary",
+            "outcome": true,
+            "line": 33,
+            "column": 10,
+            "coverageOutcomeIndex": 0,
+            "runtimeDecisionId": "mcdc-ternary-33-10"
+          },
+          "arguments": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "mocks": [],
+          "assumptions": [
+            "value"
+          ],
+          "unsupported": [],
+          "evidence": {
+            "total": 3,
+            "byStatus": {
+              "ambiguous": 2,
+              "candidate": 1
+            },
+            "items": [
+              {
+                "source": "static-analysis",
+                "status": "ambiguous",
+                "confidence": 0.3,
+                "code": null,
+                "message": "Assignment value is supported by property/type evidence (boolean, low).",
+                "sourceSpan": null
+              },
+              {
+                "source": "static-analysis",
+                "status": "ambiguous",
+                "confidence": 0.5,
+                "code": null,
+                "message": "Assignment value is connected to 1 interprocedural effect(s).",
+                "sourceSpan": null
+              },
+              {
+                "source": "static-analysis",
+                "status": "candidate",
+                "confidence": 0.9,
+                "code": null,
+                "message": "1 SSA use binding(s) are associated with this target; 0 unresolved.",
+                "sourceSpan": {
+                  "file": null,
+                  "startOffset": 782,
+                  "endOffset": 787,
+                  "startLine": null,
+                  "startColumn": null,
+                  "endLine": 33,
+                  "endColumn": 15
+                }
+              }
+            ],
+            "truncated": 0
+          }
+        },
+        {
+          "id": "ternary-33-10-false-1",
+          "target": {
+            "branchId": "ternary-33-10",
+            "kind": "ternary",
+            "outcome": false,
+            "line": 33,
+            "column": 10,
+            "coverageOutcomeIndex": 1,
+            "runtimeDecisionId": "mcdc-ternary-33-10"
+          },
+          "arguments": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "mocks": [],
+          "assumptions": [
+            "value"
+          ],
+          "unsupported": [],
+          "evidence": {
+            "total": 3,
+            "byStatus": {
+              "ambiguous": 2,
+              "candidate": 1
+            },
+            "items": [
+              {
+                "source": "static-analysis",
+                "status": "ambiguous",
+                "confidence": 0.3,
+                "code": null,
+                "message": "Assignment value is supported by property/type evidence (boolean, low).",
+                "sourceSpan": null
+              },
+              {
+                "source": "static-analysis",
+                "status": "ambiguous",
+                "confidence": 0.5,
+                "code": null,
+                "message": "Assignment value is connected to 1 interprocedural effect(s).",
+                "sourceSpan": null
+              },
+              {
+                "source": "static-analysis",
+                "status": "candidate",
+                "confidence": 0.9,
+                "code": null,
+                "message": "1 SSA use binding(s) are associated with this target; 0 unresolved.",
+                "sourceSpan": {
+                  "file": null,
+                  "startOffset": 782,
+                  "endOffset": 787,
+                  "startLine": null,
+                  "startColumn": null,
+                  "endLine": 33,
+                  "endColumn": 15
+                }
+              }
+            ],
+            "truncated": 0
+          }
+        }
+      ],
+      "scenarioIndex": {
+        "ids": [
+          "ternary-33-10-true-1",
+          "ternary-33-10-false-1"
+        ],
+        "count": 2
+      },
+      "scenarioCount": 2,
+      "scenariosTruncated": 0,
+      "arrayPipelines": [],
+      "mockTemplates": [
+        {
+          "call": "/[А-Яа-яЁё]/.test",
+          "suggestedValueCount": 2
+        }
+      ]
+    }
+  ],
+  "callGraph": {
+    "edgeCount": 10,
+    "edges": [
+      {
+        "callerFunctionId": "adjustment-data/testing-functions/utils/utils.js::sumCurrency@60",
+        "callerName": "sumCurrency",
+        "callId": "call:adjustment-data/testing-functions/utils/utils.js:108",
+        "callee": "args.reduce",
+        "targetFunctionId": null,
+        "resolution": "external-or-unresolved",
+        "knownPure": false,
+        "argumentDependencies": [
+          [
+            "current",
+            "Object",
+            "prev"
+          ],
+          []
+        ],
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/utils/utils.js",
+          "startOffset": 108,
+          "endOffset": 346,
+          "startLine": 4,
+          "startColumn": 10,
+          "endLine": 11,
+          "endColumn": 9
+        }
+      },
+      {
+        "callerFunctionId": "adjustment-data/testing-functions/utils/utils.js::getSomeTypeCount@350",
+        "callerName": "getSomeTypeCount",
+        "callId": "call:adjustment-data/testing-functions/utils/utils.js:414",
+        "callee": "specificPTypes.reduce",
+        "targetFunctionId": null,
+        "resolution": "external-or-unresolved",
+        "knownPure": false,
+        "argumentDependencies": [
+          [
+            "a",
+            "foundType",
+            "obj",
+            "p",
+            "pTypes"
+          ],
+          []
+        ],
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/utils/utils.js",
+          "startOffset": 414,
+          "endOffset": 524,
+          "startLine": 15,
+          "startColumn": 25,
+          "endLine": 18,
+          "endColumn": 8
+        }
+      },
+      {
+        "callerFunctionId": "adjustment-data/testing-functions/utils/utils.js::plusSymbol@551",
+        "callerName": "plusSymbol",
+        "callId": "call:adjustment-data/testing-functions/utils/utils.js:629",
+        "callee": "phone.replace",
+        "targetFunctionId": null,
+        "resolution": "external-or-unresolved",
+        "knownPure": false,
+        "argumentDependencies": [
+          [],
+          []
+        ],
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/utils/utils.js",
+          "startOffset": 629,
+          "endOffset": 656,
+          "startLine": 25,
+          "startColumn": 11,
+          "endLine": 25,
+          "endColumn": 38
+        }
+      },
+      {
+        "callerFunctionId": "adjustment-data/testing-functions/utils/utils.js::plusSymbol@551",
+        "callerName": "plusSymbol",
+        "callId": "call:adjustment-data/testing-functions/utils/utils.js:663",
+        "callee": "phone.match",
+        "targetFunctionId": null,
+        "resolution": "external-or-unresolved",
+        "knownPure": false,
+        "argumentDependencies": [
+          []
+        ],
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/utils/utils.js",
+          "startOffset": 663,
+          "endOffset": 691,
+          "startLine": 26,
+          "startColumn": 7,
+          "endLine": 26,
+          "endColumn": 35
+        }
+      },
+      {
+        "callerFunctionId": "adjustment-data/testing-functions/utils/utils.js::hasCyrillicLetters@729",
+        "callerName": "hasCyrillicLetters",
+        "callId": "call:adjustment-data/testing-functions/utils/utils.js:790",
+        "callee": "/[А-Яа-яЁё]/.test",
+        "targetFunctionId": null,
+        "resolution": "external-or-unresolved",
+        "knownPure": false,
+        "argumentDependencies": [
+          [
+            "value"
+          ]
+        ],
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/utils/utils.js",
+          "startOffset": 790,
+          "endOffset": 814,
+          "startLine": 33,
+          "startColumn": 18,
+          "endLine": 33,
+          "endColumn": 42
+        }
+      },
+      {
+        "callerFunctionId": "adjustment-data/testing-functions/utils/utils.js::sumCurrency@60",
+        "callId": "call:108",
+        "callee": "args.reduce",
+        "targetFunctionId": null,
+        "resolution": "external-or-unresolved",
+        "knownPure": false,
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/utils/utils.js",
+          "startOffset": 108,
+          "endOffset": 346,
+          "startLine": 4,
+          "startColumn": 10,
+          "endLine": 11,
+          "endColumn": 9
+        }
+      },
+      {
+        "callerFunctionId": "adjustment-data/testing-functions/utils/utils.js::getSomeTypeCount@350",
+        "callId": "call:414",
+        "callee": "specificPTypes.reduce",
+        "targetFunctionId": null,
+        "resolution": "external-or-unresolved",
+        "knownPure": false,
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/utils/utils.js",
+          "startOffset": 414,
+          "endOffset": 524,
+          "startLine": 15,
+          "startColumn": 25,
+          "endLine": 18,
+          "endColumn": 8
+        }
+      },
+      {
+        "callerFunctionId": "adjustment-data/testing-functions/utils/utils.js::plusSymbol@551",
+        "callId": "call:629",
+        "callee": "phone.replace",
+        "targetFunctionId": null,
+        "resolution": "external-or-unresolved",
+        "knownPure": false,
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/utils/utils.js",
+          "startOffset": 629,
+          "endOffset": 656,
+          "startLine": 25,
+          "startColumn": 11,
+          "endLine": 25,
+          "endColumn": 38
+        }
+      },
+      {
+        "callerFunctionId": "adjustment-data/testing-functions/utils/utils.js::plusSymbol@551",
+        "callId": "call:663",
+        "callee": "phone.match",
+        "targetFunctionId": null,
+        "resolution": "external-or-unresolved",
+        "knownPure": false,
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/utils/utils.js",
+          "startOffset": 663,
+          "endOffset": 691,
+          "startLine": 26,
+          "startColumn": 7,
+          "endLine": 26,
+          "endColumn": 35
+        }
+      },
+      {
+        "callerFunctionId": "adjustment-data/testing-functions/utils/utils.js::hasCyrillicLetters@729",
+        "callId": "call:790",
+        "callee": "/[А-Яа-яЁё]/.test",
+        "targetFunctionId": null,
+        "resolution": "external-or-unresolved",
+        "knownPure": false,
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/utils/utils.js",
+          "startOffset": 790,
+          "endOffset": 814,
+          "startLine": 33,
+          "startColumn": 18,
+          "endLine": 33,
+          "endColumn": 42
+        }
+      }
+    ],
+    "truncated": 0
+  },
+  "execution": {
+    "status": "ambiguous-export",
+    "provider": null,
+    "totals": null,
+    "branchCoverage": null,
+    "executedScenarioCount": null,
+    "testResults": null,
+    "testBatching": null,
+    "scenarioCoverage": null,
+    "mcdcPairs": [],
+    "mcdc": null,
+    "staticBranchTargets": [],
+    "uncoveredBranchEntries": [],
+    "iterative": {
+      "enabled": true,
+      "strategy": "targeted-static-branch-expansion",
+      "maxIterations": 3,
+      "iterations": [
+        {
+          "iteration": 1,
+          "status": "ambiguous-export",
+          "generatedScenarioCount": 7,
+          "addedScenarioCount": 0,
+          "executedScenarioCount": null,
+          "jestTests": null,
+          "branchCoverage": null,
+          "staticTargets": null
+        }
+      ],
+      "totalAdditionalScenarios": 0,
+      "stopReason": "jest-ambiguous-export",
+      "goalReached": false
+    },
+    "minimalTestSet": null,
+    "errors": [
+      "Coverage feedback currently executes one analyzed function at a time. Specify --function <name>; --export selects its module export path."
+    ],
+    "jest": null
+  },
+  "externalExecution": {
+    "status": "attempted-no-test-results",
+    "runner": null,
+    "executedAt": null,
+    "startedAt": null,
+    "completedAt": null,
+    "durationMs": null,
+    "testCommand": null,
+    "environment": null,
+    "testResults": null,
+    "coverage": null,
+    "failingTests": [],
+    "notes": [],
+    "executionForm": {
+      "formType": "branch-scenarios-execution-results-form",
+      "schemaVersion": "1.0.0",
+      "status": "ready-to-fill",
+      "file": "utils.scenarios.analysis-run-form.json"
+    },
+    "fillInWhenRunningTestsManually": [
+      "runner",
+      "startedAt",
+      "completedAt",
+      "durationMs",
+      "testCommand",
+      "testResults",
+      "coverage",
+      "failingTests",
+      "notes"
+    ]
+  },
+  "diagnostics": {
+    "project": [],
+    "functions": [
+      {
+        "functionId": "adjustment-data/testing-functions/utils/utils.js::getSomeTypeCount@350",
+        "code": "SSA_UNRESOLVED_USES",
+        "severity": "warning",
+        "message": "1 use binding(s) have no reaching SSA version.",
+        "sourceSpan": null
+      },
+      {
+        "functionId": "adjustment-data/testing-functions/utils/utils.js::plusSymbol@551",
+        "code": "UNREACHABLE_CFG_NODES",
+        "severity": "info",
+        "message": null,
+        "sourceSpan": null
+      },
+      {
+        "functionId": "adjustment-data/testing-functions/utils/utils.js::plusSymbol@551",
+        "code": "POSSIBLE_MUTATION",
+        "severity": "info",
+        "message": "unknown-method-effect may affect phone.",
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/utils/utils.js",
+          "startOffset": 629,
+          "endOffset": 656,
+          "startLine": 25,
+          "startColumn": 11,
+          "endLine": 25,
+          "endColumn": 38
+        }
+      },
+      {
+        "functionId": "adjustment-data/testing-functions/utils/utils.js::plusSymbol@551",
+        "code": "POSSIBLE_MUTATION",
+        "severity": "info",
+        "message": "unknown-method-effect may affect phone.",
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/utils/utils.js",
+          "startOffset": 663,
+          "endOffset": 691,
+          "startLine": 26,
+          "startColumn": 7,
+          "endLine": 26,
+          "endColumn": 35
+        }
+      },
+      {
+        "functionId": "adjustment-data/testing-functions/utils/utils.js::plusSymbol@551",
+        "severity": "warning",
+        "code": "UNSUPPORTED_BRANCH",
+        "branchId": "if-26-7",
+        "outcome": true,
+        "reason": "Unsupported condition expression: phone.match(/^(8)[\\d]{10}$/)",
+        "sourceSpan": null
+      },
+      {
+        "functionId": "adjustment-data/testing-functions/utils/utils.js::plusSymbol@551",
+        "severity": "warning",
+        "code": "UNSUPPORTED_BRANCH",
+        "branchId": "if-26-7",
+        "outcome": false,
+        "reason": "Unsupported condition expression: phone.match(/^(8)[\\d]{10}$/)",
+        "sourceSpan": null
+      },
+      {
+        "functionId": "adjustment-data/testing-functions/utils/utils.js::plusSymbol@551",
+        "severity": "info",
+        "code": "CONSTRAINT_FALLBACK",
+        "reason": "MC/DC decision contains an unsupported IR atom",
+        "count": 1
+      },
+      {
+        "functionId": "adjustment-data/testing-functions/utils/utils.js::plusSymbol@551",
+        "severity": "info",
+        "code": "CONSTRAINT_FALLBACK",
+        "reason": "Expression contains an unsupported IR atom",
+        "count": 4
+      },
+      {
+        "functionId": "adjustment-data/testing-functions/utils/utils.js::hasCyrillicLetters@729",
+        "code": "POSSIBLE_MUTATION",
+        "severity": "info",
+        "message": "escaped-to-call may affect value.",
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/utils/utils.js",
+          "startOffset": 790,
+          "endOffset": 814,
+          "startLine": 33,
+          "startColumn": 18,
+          "endLine": 33,
+          "endColumn": 42
+        }
+      }
+    ]
+  },
+  "privacy": {
+    "valueMode": "shape",
+    "valuesIncluded": false,
+    "sourceCodeIncluded": false,
+    "sourceExpressionsIncluded": false,
+    "absolutePathsIncluded": false,
+    "note": "Scenario values are represented by shape metadata; absolute paths and source file contents are omitted."
+  },
+  "assistantHandoff": {
+    "purpose": "Use this report to diagnose unsupported analysis, incorrect scenarios, mock classification, Data Flow/Points-to/SSA propagation, per-scenario coverage and test failures.",
+    "recommendedAttachments": [
+      "this analysis report",
+      "the smallest relevant source files with secrets removed",
+      "the exact command used to generate/run tests",
+      "Jest config/setup when coverage or mocks behave unexpectedly",
+      "the filled execution results form"
+    ],
+    "reviewQuestions": [
+      "Which generated scenarios are incorrect or redundant?",
+      "Are project-local calls incorrectly mocked or external dependencies left unmocked?",
+      "Are Points-to, Memory SSA, interprocedural summaries and array provenance consistent with source behavior?",
+      "Which branches remain unsupported or uncovered, and why?",
+      "Do test.each batches preserve independent mock state?"
+    ]
+  }
+}

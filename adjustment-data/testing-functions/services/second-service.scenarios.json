@@ -1,0 +1,519 @@
+{
+  "generator": {
+    "name": "branch-scenarios-generator",
+    "version": "1.0.0-rc.8"
+  },
+  "source": "adjustment-data/testing-functions/services/second-service.js",
+  "sourceLanguage": "javascript",
+  "generatedAt": "2026-11-06T13:49:27.824Z",
+  "limitations": [
+    "Static MVP: generated scenarios are candidates; run the function and verify actual branch coverage with Jest/Istanbul.",
+    "MC/DC mode uses unique-cause independence: for each atomic condition, a pair must differ only in that condition while the full decision changes. This is static candidate generation; execute and verify the pairs in the target runtime.",
+    "JavaScript is supported via the TypeScript parser with allowJs. Without JSDoc, property types are inferred from comparisons, truthiness checks, switch cases, nested accesses and .length; inferredProperties reports confidence and evidence.",
+    "Supported conditions: direct parameter paths, literals, truthiness, !, &&, ||, equality, numeric comparisons, and simple numeric comparisons between two input paths. Unknown truthy/falsy properties use boolean representatives unless nested access implies an object/array.",
+    "Supported control flow: if/else, switch with literal cases, ternary expressions, for/for...of/for...in/while/do...while loops, plus break/continue path termination inside loops and switch clauses.",
+    "Loop scenarios: for...of and for...in generate zero-, one- and multiple-iteration collection shapes; loop-body aliases are mapped to a representative first item. Classic for loops support literal counter initializers and simple increment/decrement steps; while/do...while support simple property constraints and local numeric counter cases.",
+    "Loop analysis is an approximation: common break/continue transfers stop analysis of the current path; break inside switch exits the switch, while continue propagates to the enclosing loop. Labelled transfers, full iteration-state propagation and switch fallthrough are not modeled. Mutations to iterated collections, custom iterators, async iterator side effects, and complex counter updates are unsupported.",
+    "Array callback support: forEach/map/flatMap/some/every/filter/find/findIndex/findLast/findLastIndex/sort/toSorted and reduce with inline callbacks and collections resolved to function input paths. Predicate callbacks support concise expressions and block callbacks with a single return; safe top-level const aliases are expanded before MC/DC analysis. Block callbacks with explicit if decisions also expand safe const aliases in their conditions. For predicates that use the callback index parameter, unique-cause MC/DC searches representative callback indexes 0 and 1 and can emit a cross-index independence pair; pair scenarios carry the actual iterationIndex. Only immutable const declarations with side-effect-free initializers are inlined; let/var, destructuring, reassignment, helper calls, getters and mutation-dependent values are not symbolically expanded. Direct find()/findLast() checks and comparisons with null/undefined are supported, as are findIndex()/findLastIndex() comparisons against numeric literals. sort()/toSorted() comparator callbacks use two distinct representative source elements; flat() propagates nested element paths through literal depths 0–3. some/every have representative match/no-match scenarios. flatMap chains support a direct array-property projection (for example group => group.passengers). flat() chains support default and literal depths 0–3. sort()/toSorted() comparator branches are analyzed with a two-element collection. reduce analyzes callback indexes through 2 with an initial value and through 3 without one, replaying up to two prior callback invocations over bounded candidate items. This is concrete interpretation, not general symbolic execution; unsupported reducer statements are not replaced with a fabricated initial accumulator state.",
+    "Array pipeline data-flow (v0.15.0): each function reports arrayPipelines summaries with stage order, source/output aliases, object projections, upstream filter constraints and comparator-order assumptions. Branch scenarios carry arrayPipelineTrace and MC/DC callback contexts carry pipeline metadata. The analyzer materializes representative outputs for all source elements needed by downstream callbacks, including comparator pairs. This is a bounded representative mapping: flatMap uses one representative child per source item; flat() uses the first nested child per item; recognized sort comparators preserve mapping by constructing an input already in comparator order, not by simulating arbitrary sort permutations. Inspect arrayPipelines[].warnings and assumptions, and execute generated scenarios.",
+    "Undefined values are encoded as {\"$undefined\":true}; omit the corresponding argument/property or hydrate this marker before calling the function.",
+    "Per-scenario static Data Flow evidence is included only with --include-evidence; static evidence is candidate support, never runtime verification.",
+    "Mock templates are type-derived suggestions. For Jest coverage feedback, configure project mocks in --jest-setup; the setup can read globalThis.__BRANCH_SCENARIO__ and globalThis.__BRANCH_SCENARIO_MOCKS__ or define globalThis.__BRANCH_SCENARIO_APPLY_MOCKS__.",
+    "Iterative Jest coverage feedback executes the accumulated scenario suite, reads Istanbul coverage-final.json, and performs bounded candidate expansion for uncovered static branch outcomes (up to --coverage-iterations passes). Branch counters are aggregated for the source file; they do not independently prove MC/DC atom values. Branch-to-Istanbul mapping is heuristic and unmapped targets may remain unresolved. --coverage-from loads an existing report without iterative execution."
+  ],
+  "functions": [
+    {
+      "name": "hasCorrectAddress",
+      "parameters": [
+        {
+          "name": "addresses",
+          "type": "any",
+          "supported": true
+        },
+        {
+          "name": "countryMap",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "addresses",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidence": [
+            "Used with array method map()",
+            "Inferred from nested property access: addresses.0.postalCode"
+          ]
+        },
+        {
+          "path": "addresses.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidence": [
+            "Inferred from nested property access: addresses.0.postalCode"
+          ]
+        },
+        {
+          "path": "addresses.0.postalCode",
+          "inferredType": "unknown",
+          "confidence": "low",
+          "evidence": [
+            "Property is accessed but no primitive type constraint was found"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 3,
+        "scenariosGenerated": 3,
+        "branchesWithUnsupportedExpressions": 1,
+        "loopsAnalyzed": 2,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 0,
+        "mcdcConditionsAnalyzed": 0,
+        "mcdcIndependencePairsFound": 0,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-11-33-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-11-33",
+            "kind": "loop",
+            "loopType": "array-map",
+            "line": 11,
+            "column": 33,
+            "startOffset": 303,
+            "endOffset": 335,
+            "endLine": 11,
+            "endColumn": 65,
+            "sourceText": "addresses.map(x => x.postalCode)",
+            "condition": "addresses.map(x => x.postalCode)",
+            "outcome": "zero-callbacks",
+            "phase": "before-first-callback",
+            "collection": "addresses",
+            "callbackMethod": "map"
+          },
+          "arguments": [
+            [],
+            null
+          ],
+          "assumptions": [
+            "addresses"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-11-33-one-callback-1",
+          "target": {
+            "branchId": "loop-11-33",
+            "kind": "loop",
+            "loopType": "array-map",
+            "line": 11,
+            "column": 33,
+            "startOffset": 303,
+            "endOffset": 335,
+            "endLine": 11,
+            "endColumn": 65,
+            "sourceText": "addresses.map(x => x.postalCode)",
+            "condition": "addresses.map(x => x.postalCode)",
+            "outcome": "one-callback",
+            "phase": "first-callback",
+            "collection": "addresses",
+            "callbackMethod": "map"
+          },
+          "arguments": [
+            [
+              {}
+            ],
+            null
+          ],
+          "assumptions": [
+            "addresses"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-11-33-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-11-33",
+            "kind": "loop",
+            "loopType": "array-map",
+            "line": 11,
+            "column": 33,
+            "startOffset": 303,
+            "endOffset": 335,
+            "endLine": 11,
+            "endColumn": 65,
+            "sourceText": "addresses.map(x => x.postalCode)",
+            "condition": "addresses.map(x => x.postalCode)",
+            "outcome": "multiple-callbacks",
+            "phase": "repeated-callback",
+            "collection": "addresses",
+            "callbackMethod": "map"
+          },
+          "arguments": [
+            [
+              {},
+              {}
+            ],
+            null
+          ],
+          "assumptions": [
+            "addresses"
+          ],
+          "unsupported": []
+        }
+      ],
+      "arrayPipelines": [
+        {
+          "id": "array-pipeline-303-335",
+          "sourceLocation": {
+            "line": 11,
+            "column": 33
+          },
+          "sourceExpression": "addresses.map(x => x.postalCode)",
+          "collection": "addresses",
+          "representativeIndex": 0,
+          "resultKind": "array",
+          "stages": [
+            {
+              "index": 0,
+              "method": "map",
+              "role": "callback-operation",
+              "input": "addresses[0]",
+              "output": "array",
+              "callback": "x.postalCode",
+              "callbackParameters": [
+                "x"
+              ],
+              "representativeIndex": 0,
+              "cardinality": "method-defined"
+            }
+          ],
+          "elementAlias": {
+            "kind": "path",
+            "path": [
+              "addresses",
+              "0"
+            ]
+          },
+          "requiredSourceIndexes": [
+            0
+          ],
+          "assumptions": [],
+          "warnings": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 0,
+        "conditionsAnalyzed": 0,
+        "independencePairsFound": 0,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": []
+      },
+      "mockTemplates": [
+        {
+          "call": "[...new Set(addresses.map(x => x.postalCode))].sort",
+          "returnType": "any[]",
+          "suggestedResolvedValues": [
+            []
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        },
+        {
+          "call": "blocks.push",
+          "returnType": "number",
+          "suggestedResolvedValues": [
+            1
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        },
+        {
+          "call": "blocks.includes",
+          "returnType": "boolean",
+          "suggestedResolvedValues": [
+            false,
+            true
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [
+        {
+          "branchId": "loop-14-5",
+          "outcome": "iteration",
+          "reason": "Cannot resolve for-of iterable to a function input property."
+        }
+      ],
+      "sourceLocation": {
+        "line": 10,
+        "column": 3
+      }
+    }
+  ],
+  "coverageFeedback": {
+    "version": 1,
+    "status": "coverage-file-not-found",
+    "runner": "/home/antonsemenkov/.nvm/versions/node/v24.20.0/bin/node",
+    "sourceFile": "/home/antonsemenkov/projects/test-data-generator/adjustment-data/testing-functions/services/second-service.js",
+    "executedScenarioCount": 0,
+    "mcdc": {
+      "generatedIndependencePairs": 0,
+      "inputPairVerification": "unknown",
+      "note": "Jest coverage does not itself measure atomic-condition independence. MC/DC pairs must be executed separately; this report only records their generated count.",
+      "runtimeInstrumentation": {
+        "enabled": false,
+        "instrumentedSource": null,
+        "instrumentedSourceCleanup": "not-created",
+        "decisionsDiscovered": 0,
+        "decisionsInstrumented": 0,
+        "conditionsDiscovered": 0,
+        "conditionsInstrumented": 0,
+        "skipped": [],
+        "recordedDecisionExecutions": 0,
+        "verifiedIndependencePairs": 0,
+        "shortCircuitInferencePairs": 0,
+        "coveragePathRemapped": false,
+        "coveragePathRemappedFrom": null,
+        "semantics": "The target source is instrumented at each analyzed decision and atomic-condition expression. Instrumentation records actual evaluated atom values and the actual decision outcome during target-function execution. Short-circuited fixed conditions are reported separately as inferred from the concrete-input check; the target condition whose independent effect is being measured must be observed at runtime on both sides. A pair is fully runtime-instrumented only when every atom is observed on both sides."
+      },
+      "verificationScope": {
+        "generatedPairs": 0,
+        "runtimeVerifiedPairs": 0,
+        "fullyInstrumentedPairs": 0,
+        "shortCircuitInferencePairs": 0,
+        "notRuntimeVerifiedPairs": 0,
+        "note": "A pair is runtime-verified only when both scenarios pass, the actual instrumented decision outcome matches, the target atom is observed with its expected value on both sides, all observed atoms match, and any short-circuited fixed atoms are independently confirmed by the concrete input check."
+      }
+    },
+    "error": "No coverage entry matched the exact source path /home/antonsemenkov/projects/test-data-generator/adjustment-data/testing-functions/services/second-service.js. Check collectCoverageFrom and coveragePathIgnorePatterns.",
+    "jest": {
+      "cwd": "/home/antonsemenkov/projects/test-data-generator",
+      "exitCode": 1,
+      "signal": null,
+      "launchError": null,
+      "timeoutMs": 120000,
+      "timedOut": false,
+      "stdoutTail": "",
+      "stderrTail": "(node:22956) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\nFAIL adjustment-data/testing-functions/services/branch-scenarios-feedback-OZdEDY/branch-scenarios-feedback.test.cjs\n  ✕ [Branch Scenario] 0001 coverage-case-1 [scenario:coverage-case-1] (2 ms)\n  ✕ [Branch Scenario] 0002 coverage-case-2 [scenario:coverage-case-2]\n  ✕ [Branch Scenario] 0003 coverage-case-3 [scenario:coverage-case-3]\n\n  ● [Branch Scenario] 0001 coverage-case-1 [scenario:coverage-case-1]\n\n    Cannot find module 'lodash/isEmpty' from 'adjustment-data/testing-functions/services/first-service.js'\n\n      364 |   const namespace = isCommonJs\n      365 |     ? require(require('node:url').fileURLToPath(sourceUrl))\n    > 366 |     : await import(SOURCE_URL);\n          |       ^\n      367 |   targetFunction = resolveExport(namespace, EXPORT_PATH);\n      368 |   if (typeof targetFunction !== 'function') {\n      369 |     throw new Error('Cannot resolve an exported function. Expected export path: ' +\n\n      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/index.js:1031:11)\n      at Object.<anonymous> (adjustment-data/testing-functions/services/branch-scenarios-feedback-OZdEDY/branch-scenarios-feedback.test.cjs:366:7)\n\n  ● [Branch Scenario] 0002 coverage-case-2 [scenario:coverage-case-2]\n\n    Cannot find module 'lodash/isEmpty' from 'adjustment-data/testing-functions/services/first-service.js'\n\n      364 |   const namespace = isCommonJs\n      365 |     ? require(require('node:url').fileURLToPath(sourceUrl))\n    > 366 |     : await import(SOURCE_URL);\n          |       ^\n      367 |   targetFunction = resolveExport(namespace, EXPORT_PATH);\n      368 |   if (typeof targetFunction !== 'function') {\n      369 |     throw new Error('Cannot resolve an exported function. Expected export path: ' +\n\n      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/index.js:1031:11)\n      at Object.<anonymous> (adjustment-data/testing-functions/services/branch-scenarios-feedback-OZdEDY/branch-scenarios-feedback.test.cjs:366:7)\n\n  ● [Branch Scenario] 0003 coverage-case-3 [scenario:coverage-case-3]\n\n    Cannot find module 'lodash/isEmpty' from 'adjustment-data/testing-functions/services/first-service.js'\n\n      364 |   const namespace = isCommonJs\n      365 |     ? require(require('node:url').fileURLToPath(sourceUrl))\n    > 366 |     : await import(SOURCE_URL);\n          |       ^\n      367 |   targetFunction = resolveExport(namespace, EXPORT_PATH);\n      368 |   if (typeof targetFunction !== 'function') {\n      369 |     throw new Error('Cannot resolve an exported function. Expected export path: ' +\n\n      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/index.js:1031:11)\n      at Object.<anonymous> (adjustment-data/testing-functions/services/branch-scenarios-feedback-OZdEDY/branch-scenarios-feedback.test.cjs:366:7)\n\nTest Suites: 1 failed, 1 total\nTests:       3 failed, 3 total\nSnapshots:   0 total\nTime:        1.307 s\nRan all test suites within paths \"/home/antonsemenkov/projects/test-data-generator/adjustment-data/testing-functions/services/branch-scenarios-feedback-OZdEDY/branch-scenarios-feedback.test.cjs\".\nTest results written to: adjustment-data/testing-functions/services/branch-scenarios-feedback-OZdEDY/jest-results.json\n"
+    },
+    "execution": {
+      "generatedCases": 3,
+      "testBatching": {
+        "strategy": "test.each",
+        "inputCases": 3,
+        "batchedCases": 3,
+        "individualCases": 0,
+        "batchCount": 1,
+        "averageBatchSize": 3,
+        "batches": [
+          {
+            "id": "test-batch-0001",
+            "scenarioIds": [
+              "coverage-case-1",
+              "coverage-case-2",
+              "coverage-case-3"
+            ],
+            "size": 3,
+            "signature": {
+              "version": 1,
+              "target": "hasCorrectAddress",
+              "exportPath": "",
+              "setupProfile": "",
+              "environment": "",
+              "lifecycle": "isolated-test",
+              "runtime": "jest-coverage-feedback",
+              "mockMethods": []
+            }
+          }
+        ],
+        "individual": [],
+        "diagnostics": []
+      },
+      "testResults": {
+        "success": false,
+        "numTotalTests": 3,
+        "numPassedTests": 0,
+        "numFailedTests": 3,
+        "numPendingTests": 0,
+        "cases": [
+          {
+            "id": "coverage-case-1",
+            "status": "failed",
+            "failureMessages": [
+              "Error: Cannot find module 'lodash/isEmpty' from 'adjustment-data/testing-functions/services/first-service.js'\n    at Resolver._throwModNotFoundError (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-resolve/build/index.js:1031:11)\n    at Resolver.resolveModule (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-resolve/build/index.js:987:10)\n    at Resolution.resolveCached (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:3584:36)\n    at Resolution.resolveEsm (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:3463:17)\n    at EsmLoader.resolveSpecifierForSyncGraph (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:1389:38)\n    at EsmLoader.buildSyncSourceEntry (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:1755:29)\n    at EsmLoader.walkGraphSync (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:1106:26)\n    at EsmLoader.tryLoadGraphSync (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:873:19)\n    at EsmLoader.loadEsmModule (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:1817:27)\n    at EsmLoader.resolveModule (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:1965:19)\n    at importModuleDynamicallyWrapper (node:internal/vm/module:525:15)\n    at Object.<anonymous> (/home/antonsemenkov/projects/test-data-generator/adjustment-data/testing-functions/services/branch-scenarios-feedback-OZdEDY/branch-scenarios-feedback.test.cjs:366:7)"
+            ],
+            "references": [
+              {
+                "type": "branch",
+                "functionName": "hasCorrectAddress",
+                "scenarioId": "loop-11-33-zero-callbacks-1",
+                "branchId": "loop-11-33",
+                "outcome": "zero-callbacks"
+              }
+            ]
+          },
+          {
+            "id": "coverage-case-2",
+            "status": "failed",
+            "failureMessages": [
+              "Error: Cannot find module 'lodash/isEmpty' from 'adjustment-data/testing-functions/services/first-service.js'\n    at Resolver._throwModNotFoundError (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-resolve/build/index.js:1031:11)\n    at Resolver.resolveModule (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-resolve/build/index.js:987:10)\n    at Resolution.resolveCached (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:3584:36)\n    at Resolution.resolveEsm (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:3463:17)\n    at EsmLoader.resolveSpecifierForSyncGraph (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:1389:38)\n    at EsmLoader.buildSyncSourceEntry (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:1755:29)\n    at EsmLoader.walkGraphSync (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:1106:26)\n    at EsmLoader.tryLoadGraphSync (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:873:19)\n    at EsmLoader.loadEsmModule (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:1817:27)\n    at EsmLoader.resolveModule (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:1965:19)\n    at importModuleDynamicallyWrapper (node:internal/vm/module:525:15)\n    at Object.<anonymous> (/home/antonsemenkov/projects/test-data-generator/adjustment-data/testing-functions/services/branch-scenarios-feedback-OZdEDY/branch-scenarios-feedback.test.cjs:366:7)"
+            ],
+            "references": [
+              {
+                "type": "branch",
+                "functionName": "hasCorrectAddress",
+                "scenarioId": "loop-11-33-one-callback-1",
+                "branchId": "loop-11-33",
+                "outcome": "one-callback"
+              }
+            ]
+          },
+          {
+            "id": "coverage-case-3",
+            "status": "failed",
+            "failureMessages": [
+              "Error: Cannot find module 'lodash/isEmpty' from 'adjustment-data/testing-functions/services/first-service.js'\n    at Resolver._throwModNotFoundError (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-resolve/build/index.js:1031:11)\n    at Resolver.resolveModule (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-resolve/build/index.js:987:10)\n    at Resolution.resolveCached (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:3584:36)\n    at Resolution.resolveEsm (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:3463:17)\n    at EsmLoader.resolveSpecifierForSyncGraph (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:1389:38)\n    at EsmLoader.buildSyncSourceEntry (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:1755:29)\n    at EsmLoader.walkGraphSync (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:1106:26)\n    at EsmLoader.tryLoadGraphSync (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:873:19)\n    at EsmLoader.loadEsmModule (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:1817:27)\n    at EsmLoader.resolveModule (/home/antonsemenkov/projects/test-data-generator/node_modules/jest-runtime/build/index.js:1965:19)\n    at importModuleDynamicallyWrapper (node:internal/vm/module:525:15)\n    at Object.<anonymous> (/home/antonsemenkov/projects/test-data-generator/adjustment-data/testing-functions/services/branch-scenarios-feedback-OZdEDY/branch-scenarios-feedback.test.cjs:366:7)"
+            ],
+            "references": [
+              {
+                "type": "branch",
+                "functionName": "hasCorrectAddress",
+                "scenarioId": "loop-11-33-multiple-callbacks-1",
+                "branchId": "loop-11-33",
+                "outcome": "multiple-callbacks"
+              }
+            ]
+          }
+        ]
+      },
+      "mcdcPairs": [],
+      "mcdcPairsInputVerified": 0,
+      "mcdcPairsRuntimeVerified": 0,
+      "mcdcPairsFullyRuntimeInstrumented": 0,
+      "mcdcPairsWithBothScenariosPassed": 0,
+      "mcdcInputChecks": [],
+      "mcdcRuntimeChecks": [],
+      "mcdcRuntimeTraces": [],
+      "scenarioCoverage": {
+        "version": 1,
+        "method": "runtime-decision-traces",
+        "totalCases": 3,
+        "passedCases": 0,
+        "casesWithBranchAttribution": 0,
+        "cases": [
+          {
+            "caseId": "coverage-case-1",
+            "testName": "[Branch Scenario] 0001 coverage-case-1",
+            "status": "failed",
+            "arguments": [
+              [],
+              null
+            ],
+            "mocks": [],
+            "references": [
+              {
+                "type": "branch",
+                "functionName": "hasCorrectAddress",
+                "scenarioId": "loop-11-33-zero-callbacks-1",
+                "branchId": "loop-11-33",
+                "outcome": "zero-callbacks"
+              }
+            ],
+            "decisionExecutions": [],
+            "coveredBranchOutcomes": [],
+            "mcdcPairSides": []
+          },
+          {
+            "caseId": "coverage-case-2",
+            "testName": "[Branch Scenario] 0002 coverage-case-2",
+            "status": "failed",
+            "arguments": [
+              [
+                {}
+              ],
+              null
+            ],
+            "mocks": [],
+            "references": [
+              {
+                "type": "branch",
+                "functionName": "hasCorrectAddress",
+                "scenarioId": "loop-11-33-one-callback-1",
+                "branchId": "loop-11-33",
+                "outcome": "one-callback"
+              }
+            ],
+            "decisionExecutions": [],
+            "coveredBranchOutcomes": [],
+            "mcdcPairSides": []
+          },
+          {
+            "caseId": "coverage-case-3",
+            "testName": "[Branch Scenario] 0003 coverage-case-3",
+            "status": "failed",
+            "arguments": [
+              [
+                {},
+                {}
+              ],
+              null
+            ],
+            "mocks": [],
+            "references": [
+              {
+                "type": "branch",
+                "functionName": "hasCorrectAddress",
+                "scenarioId": "loop-11-33-multiple-callbacks-1",
+                "branchId": "loop-11-33",
+                "outcome": "multiple-callbacks"
+              }
+            ],
+            "decisionExecutions": [],
+            "coveredBranchOutcomes": [],
+            "mcdcPairSides": []
+          }
+        ],
+        "notes": [
+          "A branch outcome is attributed to a case only when a matching source-level runtime decision trace was recorded during that case.",
+          "Istanbul counters remain aggregated for the complete Jest run; this attribution is based on scenario-tagged runtime decision traces, not isolated Istanbul counters.",
+          "Targets without an instrumented runtimeDecisionId (for example switch dispatch in this release) cannot receive runtime attribution."
+        ]
+      }
+    },
+    "coverageFile": "/home/antonsemenkov/projects/test-data-generator/adjustment-data/testing-functions/services/second-service.scenarios.coverage-final.json",
+    "iterative": {
+      "enabled": true,
+      "strategy": "targeted-static-branch-expansion",
+      "maxIterations": 3,
+      "coverageGoalPct": 100,
+      "initialMaxScenarios": 40,
+      "finalMaxScenarios": 40,
+      "totalAdditionalScenarios": 0,
+      "iterations": [
+        {
+          "iteration": 1,
+          "status": "coverage-file-not-found",
+          "generatedScenarioCount": 3,
+          "addedScenarioCount": 0,
+          "executedScenarioCount": 3,
+          "jestTests": {
+            "total": 3,
+            "passed": 0,
+            "failed": 3
+          },
+          "branchCoverage": null,
+          "staticTargets": null
+        }
+      ],
+      "stopReason": "jest-coverage-file-not-found",
+      "aggregateGoalReached": false,
+      "staticBranchOutcomesVerified": false,
+      "unverifiableStaticTargets": [],
+      "goalReached": false,
+      "note": "Aggregate Istanbul percentages and semantic static branch outcomes are reported independently. V8 condition-range counters cannot prove individual if true/false outcomes. Each pass re-executes the accumulated scenario set; this is bounded candidate expansion, not unrestricted symbolic execution."
+    }
+  }
+}

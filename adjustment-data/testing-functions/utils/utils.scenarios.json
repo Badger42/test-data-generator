@@ -1,0 +1,774 @@
+{
+  "generator": {
+    "name": "branch-scenarios-generator",
+    "version": "1.0.0-rc.8"
+  },
+  "source": "adjustment-data/testing-functions/utils/utils.js",
+  "sourceLanguage": "javascript",
+  "generatedAt": "2026-11-06T13:46:18.035Z",
+  "limitations": [
+    "Static MVP: generated scenarios are candidates; run the function and verify actual branch coverage with Jest/Istanbul.",
+    "MC/DC mode uses unique-cause independence: for each atomic condition, a pair must differ only in that condition while the full decision changes. This is static candidate generation; execute and verify the pairs in the target runtime.",
+    "JavaScript is supported via the TypeScript parser with allowJs. Without JSDoc, property types are inferred from comparisons, truthiness checks, switch cases, nested accesses and .length; inferredProperties reports confidence and evidence.",
+    "Supported conditions: direct parameter paths, literals, truthiness, !, &&, ||, equality, numeric comparisons, and simple numeric comparisons between two input paths. Unknown truthy/falsy properties use boolean representatives unless nested access implies an object/array.",
+    "Supported control flow: if/else, switch with literal cases, ternary expressions, for/for...of/for...in/while/do...while loops, plus break/continue path termination inside loops and switch clauses.",
+    "Loop scenarios: for...of and for...in generate zero-, one- and multiple-iteration collection shapes; loop-body aliases are mapped to a representative first item. Classic for loops support literal counter initializers and simple increment/decrement steps; while/do...while support simple property constraints and local numeric counter cases.",
+    "Loop analysis is an approximation: common break/continue transfers stop analysis of the current path; break inside switch exits the switch, while continue propagates to the enclosing loop. Labelled transfers, full iteration-state propagation and switch fallthrough are not modeled. Mutations to iterated collections, custom iterators, async iterator side effects, and complex counter updates are unsupported.",
+    "Array callback support: forEach/map/flatMap/some/every/filter/find/findIndex/findLast/findLastIndex/sort/toSorted and reduce with inline callbacks and collections resolved to function input paths. Predicate callbacks support concise expressions and block callbacks with a single return; safe top-level const aliases are expanded before MC/DC analysis. Block callbacks with explicit if decisions also expand safe const aliases in their conditions. For predicates that use the callback index parameter, unique-cause MC/DC searches representative callback indexes 0 and 1 and can emit a cross-index independence pair; pair scenarios carry the actual iterationIndex. Only immutable const declarations with side-effect-free initializers are inlined; let/var, destructuring, reassignment, helper calls, getters and mutation-dependent values are not symbolically expanded. Direct find()/findLast() checks and comparisons with null/undefined are supported, as are findIndex()/findLastIndex() comparisons against numeric literals. sort()/toSorted() comparator callbacks use two distinct representative source elements; flat() propagates nested element paths through literal depths 0–3. some/every have representative match/no-match scenarios. flatMap chains support a direct array-property projection (for example group => group.passengers). flat() chains support default and literal depths 0–3. sort()/toSorted() comparator branches are analyzed with a two-element collection. reduce analyzes callback indexes through 2 with an initial value and through 3 without one, replaying up to two prior callback invocations over bounded candidate items. This is concrete interpretation, not general symbolic execution; unsupported reducer statements are not replaced with a fabricated initial accumulator state.",
+    "Array pipeline data-flow (v0.15.0): each function reports arrayPipelines summaries with stage order, source/output aliases, object projections, upstream filter constraints and comparator-order assumptions. Branch scenarios carry arrayPipelineTrace and MC/DC callback contexts carry pipeline metadata. The analyzer materializes representative outputs for all source elements needed by downstream callbacks, including comparator pairs. This is a bounded representative mapping: flatMap uses one representative child per source item; flat() uses the first nested child per item; recognized sort comparators preserve mapping by constructing an input already in comparator order, not by simulating arbitrary sort permutations. Inspect arrayPipelines[].warnings and assumptions, and execute generated scenarios.",
+    "Undefined values are encoded as {\"$undefined\":true}; omit the corresponding argument/property or hydrate this marker before calling the function.",
+    "Per-scenario static Data Flow evidence is included only with --include-evidence; static evidence is candidate support, never runtime verification.",
+    "Mock templates are type-derived suggestions. For Jest coverage feedback, configure project mocks in --jest-setup; the setup can read globalThis.__BRANCH_SCENARIO__ and globalThis.__BRANCH_SCENARIO_MOCKS__ or define globalThis.__BRANCH_SCENARIO_APPLY_MOCKS__.",
+    "Iterative Jest coverage feedback executes the accumulated scenario suite, reads Istanbul coverage-final.json, and performs bounded candidate expansion for uncovered static branch outcomes (up to --coverage-iterations passes). Branch counters are aggregated for the source file; they do not independently prove MC/DC atom values. Branch-to-Istanbul mapping is heuristic and unmapped targets may remain unresolved. --coverage-from loads an existing report without iterative execution."
+  ],
+  "functions": [
+    {
+      "name": "sumCurrency",
+      "parameters": [
+        {
+          "name": "args",
+          "type": "any[]",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "args",
+          "inferredType": "array",
+          "confidence": "declared",
+          "evidence": [
+            "Used with array method reduce()",
+            "Confirmed by TypeScript/JSDoc type: any[]"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 3,
+        "scenariosGenerated": 3,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 1,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 0,
+        "mcdcConditionsAnalyzed": 0,
+        "mcdcIndependencePairsFound": 0,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "loop-4-10-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-4-10",
+            "kind": "loop",
+            "loopType": "array-reduce",
+            "line": 4,
+            "column": 10,
+            "startOffset": 108,
+            "endOffset": 346,
+            "endLine": 11,
+            "endColumn": 9,
+            "sourceText": "args.reduce((prev, current) => {\n    Object.entries(current)\n      .map(([currency, val]) => ({currency, val}))\n      .forEach(prop => {\n        prev[prop.currency] = (prev[prop.currency] || 0) + prop.val\n      })\n    return prev\n  }, {})",
+            "condition": "args.reduce((prev, current) => {\n    Object.entries(current)\n      .map(([currency, val]) => ({currency, val}))\n      .forEach(prop => {\n        prev[prop.currency] = (prev[prop.currency] || 0) + prop.val\n      })\n    return prev\n  }, {})",
+            "outcome": "zero-callbacks",
+            "phase": "initial-value-only",
+            "collection": "args",
+            "callbackMethod": "reduce"
+          },
+          "arguments": [
+            []
+          ],
+          "assumptions": [
+            "args"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-4-10-one-callback-1",
+          "target": {
+            "branchId": "loop-4-10",
+            "kind": "loop",
+            "loopType": "array-reduce",
+            "line": 4,
+            "column": 10,
+            "startOffset": 108,
+            "endOffset": 346,
+            "endLine": 11,
+            "endColumn": 9,
+            "sourceText": "args.reduce((prev, current) => {\n    Object.entries(current)\n      .map(([currency, val]) => ({currency, val}))\n      .forEach(prop => {\n        prev[prop.currency] = (prev[prop.currency] || 0) + prop.val\n      })\n    return prev\n  }, {})",
+            "condition": "args.reduce((prev, current) => {\n    Object.entries(current)\n      .map(([currency, val]) => ({currency, val}))\n      .forEach(prop => {\n        prev[prop.currency] = (prev[prop.currency] || 0) + prop.val\n      })\n    return prev\n  }, {})",
+            "outcome": "one-callback",
+            "phase": "first-reduction",
+            "collection": "args",
+            "callbackMethod": "reduce"
+          },
+          "arguments": [
+            [
+              {}
+            ]
+          ],
+          "assumptions": [
+            "args"
+          ],
+          "unsupported": []
+        },
+        {
+          "id": "loop-4-10-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-4-10",
+            "kind": "loop",
+            "loopType": "array-reduce",
+            "line": 4,
+            "column": 10,
+            "startOffset": 108,
+            "endOffset": 346,
+            "endLine": 11,
+            "endColumn": 9,
+            "sourceText": "args.reduce((prev, current) => {\n    Object.entries(current)\n      .map(([currency, val]) => ({currency, val}))\n      .forEach(prop => {\n        prev[prop.currency] = (prev[prop.currency] || 0) + prop.val\n      })\n    return prev\n  }, {})",
+            "condition": "args.reduce((prev, current) => {\n    Object.entries(current)\n      .map(([currency, val]) => ({currency, val}))\n      .forEach(prop => {\n        prev[prop.currency] = (prev[prop.currency] || 0) + prop.val\n      })\n    return prev\n  }, {})",
+            "outcome": "multiple-callbacks",
+            "phase": "repeated-reduction",
+            "collection": "args",
+            "callbackMethod": "reduce"
+          },
+          "arguments": [
+            [
+              {},
+              {}
+            ]
+          ],
+          "assumptions": [
+            "args"
+          ],
+          "unsupported": []
+        }
+      ],
+      "arrayPipelines": [
+        {
+          "id": "array-pipeline-108-346",
+          "sourceLocation": {
+            "line": 4,
+            "column": 10
+          },
+          "sourceExpression": "args.reduce((prev, current) => {\n    Object.entries(current)\n      .map(([currency, val]) => ({currency, val}))\n      .forEach(prop => {\n        prev[prop.currency] = (prev[prop.currency] || 0) + prop.val\n      })\n    return prev\n  }, {})",
+          "collection": "args",
+          "representativeIndex": 0,
+          "resultKind": "accumulator",
+          "stages": [
+            {
+              "index": 0,
+              "method": "reduce",
+              "role": "callback-operation",
+              "input": "args[0]",
+              "output": "accumulator",
+              "callback": "prev",
+              "callbackParameters": [
+                "prev",
+                "current"
+              ],
+              "representativeIndex": 0,
+              "cardinality": "one-value"
+            }
+          ],
+          "elementAlias": {
+            "kind": "path",
+            "path": [
+              "args",
+              "0"
+            ]
+          },
+          "requiredSourceIndexes": [
+            0
+          ],
+          "assumptions": [],
+          "warnings": []
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 0,
+        "conditionsAnalyzed": 0,
+        "independencePairsFound": 0,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": []
+      },
+      "mockTemplates": [
+        {
+          "call": "args.reduce",
+          "returnType": "any",
+          "suggestedResolvedValues": [
+            null
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 3,
+        "column": 1
+      }
+    },
+    {
+      "name": "getSomeTypeCount",
+      "parameters": [
+        {
+          "name": "obj",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [],
+      "summary": {
+        "branchOutcomesFound": 0,
+        "scenariosGenerated": 0,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 0,
+        "loopScenariosGenerated": 0,
+        "mcdcDecisionsAnalyzed": 0,
+        "mcdcConditionsAnalyzed": 0,
+        "mcdcIndependencePairsFound": 0,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 0,
+        "conditionsAnalyzed": 0,
+        "independencePairsFound": 0,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": []
+      },
+      "mockTemplates": [],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 14,
+        "column": 1
+      }
+    },
+    {
+      "name": "plusSymbol",
+      "parameters": [
+        {
+          "name": "phone",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "phone",
+          "inferredType": "string",
+          "confidence": "medium",
+          "evidence": [
+            "Used with string method replace()",
+            "Used with string method match()"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 2,
+        "scenariosGenerated": 2,
+        "branchesWithUnsupportedExpressions": 2,
+        "loopsAnalyzed": 0,
+        "loopScenariosGenerated": 0,
+        "mcdcDecisionsAnalyzed": 2,
+        "mcdcConditionsAnalyzed": 2,
+        "mcdcIndependencePairsFound": 1,
+        "mcdcConditionsWithoutPair": 1
+      },
+      "scenarios": [
+        {
+          "id": "if-23-7-true-1",
+          "target": {
+            "branchId": "if-23-7",
+            "kind": "if",
+            "line": 23,
+            "column": 7,
+            "startOffset": 593,
+            "endOffset": 606,
+            "endLine": 23,
+            "endColumn": 20,
+            "sourceText": "phone == null",
+            "coverageOutcomeIndex": 0,
+            "condition": "phone == null",
+            "outcome": true,
+            "coverageAnchor": "if-statement",
+            "coverageLine": 23,
+            "coverageColumn": 3,
+            "coverageStartOffset": 589,
+            "coverageEndOffset": 617,
+            "runtimeDecisionId": "mcdc-if-23-7"
+          },
+          "arguments": [
+            null
+          ],
+          "assumptions": [
+            "phone"
+          ],
+          "unsupported": [],
+          "evidence": [
+            {
+              "source": "static-analysis",
+              "status": "ambiguous",
+              "confidence": 0.3,
+              "message": "Assignment phone is supported by property/type evidence (string, low)."
+            },
+            {
+              "source": "static-analysis",
+              "status": "ambiguous",
+              "confidence": 0.5,
+              "message": "Assignment phone is connected to 2 interprocedural effect(s)."
+            },
+            {
+              "source": "static-analysis",
+              "status": "candidate",
+              "confidence": 0.9,
+              "sourceSpan": {
+                "startOffset": 593,
+                "endOffset": 606,
+                "endLine": 23,
+                "endColumn": 20,
+                "sourceText": "phone == null"
+              },
+              "message": "1 SSA use binding(s) are associated with this target; 0 unresolved."
+            }
+          ]
+        },
+        {
+          "id": "if-23-7-false-1",
+          "target": {
+            "branchId": "if-23-7",
+            "kind": "if",
+            "line": 23,
+            "column": 7,
+            "startOffset": 593,
+            "endOffset": 606,
+            "endLine": 23,
+            "endColumn": 20,
+            "sourceText": "phone == null",
+            "coverageOutcomeIndex": 1,
+            "condition": "phone == null",
+            "outcome": false,
+            "coverageAnchor": "if-statement",
+            "coverageLine": 23,
+            "coverageColumn": 3,
+            "coverageStartOffset": 589,
+            "coverageEndOffset": 617,
+            "runtimeDecisionId": "mcdc-if-23-7"
+          },
+          "arguments": [
+            ""
+          ],
+          "assumptions": [
+            "phone"
+          ],
+          "unsupported": [],
+          "evidence": [
+            {
+              "source": "static-analysis",
+              "status": "ambiguous",
+              "confidence": 0.3,
+              "message": "Assignment phone is supported by property/type evidence (string, low)."
+            },
+            {
+              "source": "static-analysis",
+              "status": "ambiguous",
+              "confidence": 0.5,
+              "message": "Assignment phone is connected to 2 interprocedural effect(s)."
+            },
+            {
+              "source": "static-analysis",
+              "status": "candidate",
+              "confidence": 0.9,
+              "sourceSpan": {
+                "startOffset": 593,
+                "endOffset": 606,
+                "endLine": 23,
+                "endColumn": 20,
+                "sourceText": "phone == null"
+              },
+              "message": "1 SSA use binding(s) are associated with this target; 0 unresolved."
+            }
+          ]
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 2,
+        "conditionsAnalyzed": 2,
+        "independencePairsFound": 1,
+        "conditionsWithoutIndependencePair": [
+          {
+            "decisionId": "mcdc-if-26-7",
+            "conditionId": "C1",
+            "expression": "phone.match(/^(8)[\\d]{10}$/)",
+            "reason": "The logical independence pair exists, but no consistent input assignments were found across the supported callback indexes."
+          }
+        ],
+        "decisions": [
+          {
+            "decisionId": "mcdc-if-23-7",
+            "kind": "if",
+            "line": 23,
+            "column": 7,
+            "expression": "phone == null",
+            "runtimeExpressionRange": {
+              "startOffset": 593,
+              "endOffset": 606
+            },
+            "criterion": "unique-cause",
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "phone == null",
+                "runtimeExpressionRange": {
+                  "startOffset": 593,
+                  "endOffset": 606
+                },
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-if-23-7-C1-pair-1",
+                    "fixedConditions": {},
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-if-23-7-C1-pair-1-condition-false",
+                        "arguments": [
+                          ""
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "phone"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-if-23-7-C1-pair-1-condition-true",
+                        "arguments": [
+                          null
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "phone"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          },
+          {
+            "decisionId": "mcdc-if-26-7",
+            "kind": "if",
+            "line": 26,
+            "column": 7,
+            "expression": "phone.match(/^(8)[\\d]{10}$/)",
+            "runtimeExpressionRange": {
+              "startOffset": 663,
+              "endOffset": 691
+            },
+            "criterion": "unique-cause",
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "phone.match(/^(8)[\\d]{10}$/)",
+                "runtimeExpressionRange": {
+                  "startOffset": 663,
+                  "endOffset": 691
+                },
+                "independencePairs": [],
+                "status": "no-pair",
+                "reason": "The logical independence pair exists, but no consistent input assignments were found across the supported callback indexes."
+              }
+            ],
+            "analysisStatus": "partial"
+          }
+        ]
+      },
+      "mockTemplates": [],
+      "unsupportedBranches": [
+        {
+          "branchId": "if-26-7",
+          "outcome": true,
+          "reason": "Unsupported condition expression: phone.match(/^(8)[\\d]{10}$/)"
+        },
+        {
+          "branchId": "if-26-7",
+          "outcome": false,
+          "reason": "Unsupported condition expression: phone.match(/^(8)[\\d]{10}$/)"
+        }
+      ],
+      "sourceLocation": {
+        "line": 22,
+        "column": 1
+      }
+    },
+    {
+      "name": "hasCyrillicLetters",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "any",
+          "supported": true
+        }
+      ],
+      "inferredProperties": [
+        {
+          "path": "value",
+          "inferredType": "boolean",
+          "confidence": "heuristic",
+          "evidence": [
+            "Used directly as a truthy/falsy condition; boolean is a representative value"
+          ]
+        }
+      ],
+      "summary": {
+        "branchOutcomesFound": 2,
+        "scenariosGenerated": 2,
+        "branchesWithUnsupportedExpressions": 0,
+        "loopsAnalyzed": 0,
+        "loopScenariosGenerated": 0,
+        "mcdcDecisionsAnalyzed": 1,
+        "mcdcConditionsAnalyzed": 1,
+        "mcdcIndependencePairsFound": 1,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "scenarios": [
+        {
+          "id": "ternary-33-10-true-1",
+          "target": {
+            "branchId": "ternary-33-10",
+            "kind": "ternary",
+            "line": 33,
+            "column": 10,
+            "startOffset": 782,
+            "endOffset": 787,
+            "endLine": 33,
+            "endColumn": 15,
+            "sourceText": "value",
+            "coverageOutcomeIndex": 0,
+            "condition": "value",
+            "outcome": true,
+            "runtimeDecisionId": "mcdc-ternary-33-10"
+          },
+          "arguments": [
+            true
+          ],
+          "assumptions": [
+            "value"
+          ],
+          "unsupported": [],
+          "evidence": [
+            {
+              "source": "static-analysis",
+              "status": "ambiguous",
+              "confidence": 0.3,
+              "message": "Assignment value is supported by property/type evidence (boolean, low)."
+            },
+            {
+              "source": "static-analysis",
+              "status": "ambiguous",
+              "confidence": 0.5,
+              "message": "Assignment value is connected to 1 interprocedural effect(s)."
+            },
+            {
+              "source": "static-analysis",
+              "status": "candidate",
+              "confidence": 0.9,
+              "sourceSpan": {
+                "startOffset": 782,
+                "endOffset": 787,
+                "endLine": 33,
+                "endColumn": 15,
+                "sourceText": "value"
+              },
+              "message": "1 SSA use binding(s) are associated with this target; 0 unresolved."
+            }
+          ]
+        },
+        {
+          "id": "ternary-33-10-false-1",
+          "target": {
+            "branchId": "ternary-33-10",
+            "kind": "ternary",
+            "line": 33,
+            "column": 10,
+            "startOffset": 782,
+            "endOffset": 787,
+            "endLine": 33,
+            "endColumn": 15,
+            "sourceText": "value",
+            "coverageOutcomeIndex": 1,
+            "condition": "value",
+            "outcome": false,
+            "runtimeDecisionId": "mcdc-ternary-33-10"
+          },
+          "arguments": [
+            false
+          ],
+          "assumptions": [
+            "value"
+          ],
+          "unsupported": [],
+          "evidence": [
+            {
+              "source": "static-analysis",
+              "status": "ambiguous",
+              "confidence": 0.3,
+              "message": "Assignment value is supported by property/type evidence (boolean, low)."
+            },
+            {
+              "source": "static-analysis",
+              "status": "ambiguous",
+              "confidence": 0.5,
+              "message": "Assignment value is connected to 1 interprocedural effect(s)."
+            },
+            {
+              "source": "static-analysis",
+              "status": "candidate",
+              "confidence": 0.9,
+              "sourceSpan": {
+                "startOffset": 782,
+                "endOffset": 787,
+                "endLine": 33,
+                "endColumn": 15,
+                "sourceText": "value"
+              },
+              "message": "1 SSA use binding(s) are associated with this target; 0 unresolved."
+            }
+          ]
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 1,
+        "conditionsAnalyzed": 1,
+        "independencePairsFound": 1,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": [
+          {
+            "decisionId": "mcdc-ternary-33-10",
+            "kind": "ternary",
+            "line": 33,
+            "column": 10,
+            "expression": "value",
+            "runtimeExpressionRange": {
+              "startOffset": 782,
+              "endOffset": 787
+            },
+            "criterion": "unique-cause",
+            "conditions": [
+              {
+                "id": "C1",
+                "expression": "value",
+                "runtimeExpressionRange": {
+                  "startOffset": 782,
+                  "endOffset": 787
+                },
+                "independencePairs": [
+                  {
+                    "pairId": "mcdc-ternary-33-10-C1-pair-1",
+                    "fixedConditions": {},
+                    "changedCondition": "C1",
+                    "decisionOutcomes": {
+                      "conditionFalse": false,
+                      "conditionTrue": true
+                    },
+                    "scenarios": {
+                      "conditionFalse": {
+                        "id": "mcdc-ternary-33-10-C1-pair-1-condition-false",
+                        "arguments": [
+                          false
+                        ],
+                        "atomicConditionValues": {
+                          "C1": false
+                        },
+                        "decisionOutcome": false,
+                        "assumptions": [
+                          "value"
+                        ]
+                      },
+                      "conditionTrue": {
+                        "id": "mcdc-ternary-33-10-C1-pair-1-condition-true",
+                        "arguments": [
+                          true
+                        ],
+                        "atomicConditionValues": {
+                          "C1": true
+                        },
+                        "decisionOutcome": true,
+                        "assumptions": [
+                          "value"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": "covered"
+              }
+            ],
+            "analysisStatus": "complete"
+          }
+        ]
+      },
+      "mockTemplates": [
+        {
+          "call": "/[А-Яа-яЁё]/.test",
+          "returnType": "boolean",
+          "suggestedResolvedValues": [
+            false,
+            true
+          ],
+          "note": "Template only: associate the appropriate value with the branch scenario when configuring the Jest mock."
+        }
+      ],
+      "unsupportedBranches": [],
+      "sourceLocation": {
+        "line": 32,
+        "column": 1
+      }
+    }
+  ],
+  "coverageFeedback": {
+    "version": 1,
+    "status": "ambiguous-export",
+    "error": "Coverage feedback currently executes one analyzed function at a time. Specify --function <name>; --export selects its module export path.",
+    "iterative": {
+      "enabled": true,
+      "strategy": "targeted-static-branch-expansion",
+      "maxIterations": 3,
+      "coverageGoalPct": 100,
+      "initialMaxScenarios": 40,
+      "finalMaxScenarios": 40,
+      "totalAdditionalScenarios": 0,
+      "iterations": [
+        {
+          "iteration": 1,
+          "status": "ambiguous-export",
+          "generatedScenarioCount": 7,
+          "addedScenarioCount": 0,
+          "executedScenarioCount": null,
+          "jestTests": null,
+          "branchCoverage": null,
+          "staticTargets": null
+        }
+      ],
+      "stopReason": "jest-ambiguous-export",
+      "aggregateGoalReached": false,
+      "staticBranchOutcomesVerified": false,
+      "unverifiableStaticTargets": [],
+      "goalReached": false,
+      "note": "Aggregate Istanbul percentages and semantic static branch outcomes are reported independently. V8 condition-range counters cannot prove individual if true/false outcomes. Each pass re-executes the accumulated scenario set; this is bounded candidate expansion, not unrestricted symbolic execution."
+    }
+  }
+}

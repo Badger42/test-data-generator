@@ -1,0 +1,153 @@
+{
+  "formType": "branch-scenarios-execution-results-form",
+  "schemaVersion": "1.0.0",
+  "reportId": "e2a6919d2f32a3487f114587",
+  "generatedAt": "2026-11-06T13:49:30.024Z",
+  "generatorVersion": "1.0.0-rc.8",
+  "project": {
+    "source": "adjustment-data/testing-functions/services/second-service.js",
+    "sourceSha256": "cf7e612f6f010bc19940f5ea408745b5b455a9120555573bf04cf2937ea2ed0b",
+    "projectFingerprint": "b28c40a7eced72cffd8efef91f304cdf6dfa3adf877fedeb4a3070aff2c08884",
+    "sourceFileCount": 1
+  },
+  "instructions": [
+    "Run the generated tests in the target project, then fill execution, testResults, coverage, artifacts and notes.",
+    "Keep scenarioId unchanged; it links each result to the corresponding analysis scenario.",
+    "Use project-relative artifact paths. Do not paste absolute paths, secrets, tokens or production data.",
+    "For a failing test, include the assertion/error message and a short relevant stack. Redact real input values.",
+    "If a scenario was not executed, keep status as not-run; do not mark static evidence as runtime-verified.",
+    "Upload this completed form together with the matching *.analysis-report.json. The finalizer validates reportId before merging."
+  ],
+  "execution": {
+    "status": "captured-by-generator",
+    "runner": "/home/antonsemenkov/.nvm/versions/node/v24.20.0/bin/node",
+    "command": null,
+    "startedAt": null,
+    "completedAt": "2026-11-06T13:49:30.024Z",
+    "durationMs": null,
+    "environment": {
+      "node": null,
+      "jest": null,
+      "typescript": "5.8.3",
+      "platform": null,
+      "architecture": null,
+      "coverageProvider": null
+    }
+  },
+  "testResults": {
+    "total": 3,
+    "passed": 0,
+    "failed": 3,
+    "skipped": 0,
+    "plannedCases": 3,
+    "truncatedCases": 0,
+    "cases": [
+      {
+        "scenarioId": "loop-11-33-zero-callbacks-1",
+        "functionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "functionName": "hasCorrectAddress",
+        "branchId": "loop-11-33",
+        "outcome": null,
+        "testName": "hasCorrectAddress :: loop-11-33-zero-callbacks-1",
+        "batchId": null,
+        "status": "not-run",
+        "durationMs": null,
+        "failure": {
+          "name": null,
+          "message": null,
+          "stack": null
+        },
+        "notes": []
+      },
+      {
+        "scenarioId": "loop-11-33-one-callback-1",
+        "functionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "functionName": "hasCorrectAddress",
+        "branchId": "loop-11-33",
+        "outcome": null,
+        "testName": "hasCorrectAddress :: loop-11-33-one-callback-1",
+        "batchId": null,
+        "status": "not-run",
+        "durationMs": null,
+        "failure": {
+          "name": null,
+          "message": null,
+          "stack": null
+        },
+        "notes": []
+      },
+      {
+        "scenarioId": "loop-11-33-multiple-callbacks-1",
+        "functionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "functionName": "hasCorrectAddress",
+        "branchId": "loop-11-33",
+        "outcome": null,
+        "testName": "hasCorrectAddress :: loop-11-33-multiple-callbacks-1",
+        "batchId": null,
+        "status": "not-run",
+        "durationMs": null,
+        "failure": {
+          "name": null,
+          "message": null,
+          "stack": null
+        },
+        "notes": []
+      }
+    ],
+    "additionalTestsNotLinkedToScenarios": []
+  },
+  "coverage": {
+    "provider": null,
+    "reportPath": null,
+    "metrics": {
+      "statements": {
+        "covered": null,
+        "total": null,
+        "pct": null
+      },
+      "branches": {
+        "covered": null,
+        "total": null,
+        "pct": null
+      },
+      "functions": {
+        "covered": null,
+        "total": null,
+        "pct": null
+      },
+      "lines": {
+        "covered": null,
+        "total": null,
+        "pct": null
+      }
+    },
+    "uncovered": [],
+    "notes": []
+  },
+  "artifacts": {
+    "junitXml": null,
+    "jestJson": null,
+    "coverageFinalJson": null,
+    "consoleLog": null,
+    "custom": []
+  },
+  "notes": [],
+  "issues": [],
+  "completion": {
+    "ready": true,
+    "completed": false,
+    "statusValues": [
+      "passed",
+      "failed",
+      "skipped",
+      "pending",
+      "not-run"
+    ],
+    "requiredBeforeAnalysis": [
+      "execution.command",
+      "execution.environment.node",
+      "testResults.cases statuses",
+      "coverage.metrics when coverage was collected"
+    ]
+  }
+}

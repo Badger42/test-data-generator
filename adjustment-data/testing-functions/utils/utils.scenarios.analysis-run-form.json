@@ -1,0 +1,221 @@
+{
+  "formType": "branch-scenarios-execution-results-form",
+  "schemaVersion": "1.0.0",
+  "reportId": "9b6fa63f0cd7365467bfff8d",
+  "generatedAt": "2026-11-06T13:46:18.065Z",
+  "generatorVersion": "1.0.0-rc.8",
+  "project": {
+    "source": "adjustment-data/testing-functions/utils/utils.js",
+    "sourceSha256": "1c5d53e1891f9de3cb1cdde20ac91cd57b4fb378367642ea03b5307954972ecf",
+    "projectFingerprint": "a722b718771025d072afcb877115c26a1fddf3417058d1faa823bf5fb863c8f4",
+    "sourceFileCount": 1
+  },
+  "instructions": [
+    "Run the generated tests in the target project, then fill execution, testResults, coverage, artifacts and notes.",
+    "Keep scenarioId unchanged; it links each result to the corresponding analysis scenario.",
+    "Use project-relative artifact paths. Do not paste absolute paths, secrets, tokens or production data.",
+    "For a failing test, include the assertion/error message and a short relevant stack. Redact real input values.",
+    "If a scenario was not executed, keep status as not-run; do not mark static evidence as runtime-verified.",
+    "Upload this completed form together with the matching *.analysis-report.json. The finalizer validates reportId before merging."
+  ],
+  "execution": {
+    "status": "awaiting-manual-run",
+    "runner": "jest",
+    "command": null,
+    "startedAt": null,
+    "completedAt": null,
+    "durationMs": null,
+    "environment": {
+      "node": null,
+      "jest": null,
+      "typescript": "5.8.3",
+      "platform": null,
+      "architecture": null,
+      "coverageProvider": null
+    }
+  },
+  "testResults": {
+    "total": null,
+    "passed": null,
+    "failed": null,
+    "skipped": null,
+    "plannedCases": 7,
+    "truncatedCases": 0,
+    "cases": [
+      {
+        "scenarioId": "loop-4-10-zero-callbacks-1",
+        "functionId": "adjustment-data/testing-functions/utils/utils.js::sumCurrency@60",
+        "functionName": "sumCurrency",
+        "branchId": "loop-4-10",
+        "outcome": null,
+        "testName": "sumCurrency :: loop-4-10-zero-callbacks-1",
+        "batchId": null,
+        "status": "not-run",
+        "durationMs": null,
+        "failure": {
+          "name": null,
+          "message": null,
+          "stack": null
+        },
+        "notes": []
+      },
+      {
+        "scenarioId": "loop-4-10-one-callback-1",
+        "functionId": "adjustment-data/testing-functions/utils/utils.js::sumCurrency@60",
+        "functionName": "sumCurrency",
+        "branchId": "loop-4-10",
+        "outcome": null,
+        "testName": "sumCurrency :: loop-4-10-one-callback-1",
+        "batchId": null,
+        "status": "not-run",
+        "durationMs": null,
+        "failure": {
+          "name": null,
+          "message": null,
+          "stack": null
+        },
+        "notes": []
+      },
+      {
+        "scenarioId": "loop-4-10-multiple-callbacks-1",
+        "functionId": "adjustment-data/testing-functions/utils/utils.js::sumCurrency@60",
+        "functionName": "sumCurrency",
+        "branchId": "loop-4-10",
+        "outcome": null,
+        "testName": "sumCurrency :: loop-4-10-multiple-callbacks-1",
+        "batchId": null,
+        "status": "not-run",
+        "durationMs": null,
+        "failure": {
+          "name": null,
+          "message": null,
+          "stack": null
+        },
+        "notes": []
+      },
+      {
+        "scenarioId": "if-23-7-true-1",
+        "functionId": "adjustment-data/testing-functions/utils/utils.js::plusSymbol@551",
+        "functionName": "plusSymbol",
+        "branchId": "if-23-7",
+        "outcome": true,
+        "testName": "plusSymbol :: if-23-7-true-1",
+        "batchId": null,
+        "status": "not-run",
+        "durationMs": null,
+        "failure": {
+          "name": null,
+          "message": null,
+          "stack": null
+        },
+        "notes": []
+      },
+      {
+        "scenarioId": "if-23-7-false-1",
+        "functionId": "adjustment-data/testing-functions/utils/utils.js::plusSymbol@551",
+        "functionName": "plusSymbol",
+        "branchId": "if-23-7",
+        "outcome": false,
+        "testName": "plusSymbol :: if-23-7-false-1",
+        "batchId": null,
+        "status": "not-run",
+        "durationMs": null,
+        "failure": {
+          "name": null,
+          "message": null,
+          "stack": null
+        },
+        "notes": []
+      },
+      {
+        "scenarioId": "ternary-33-10-true-1",
+        "functionId": "adjustment-data/testing-functions/utils/utils.js::hasCyrillicLetters@729",
+        "functionName": "hasCyrillicLetters",
+        "branchId": "ternary-33-10",
+        "outcome": true,
+        "testName": "hasCyrillicLetters :: ternary-33-10-true-1",
+        "batchId": null,
+        "status": "not-run",
+        "durationMs": null,
+        "failure": {
+          "name": null,
+          "message": null,
+          "stack": null
+        },
+        "notes": []
+      },
+      {
+        "scenarioId": "ternary-33-10-false-1",
+        "functionId": "adjustment-data/testing-functions/utils/utils.js::hasCyrillicLetters@729",
+        "functionName": "hasCyrillicLetters",
+        "branchId": "ternary-33-10",
+        "outcome": false,
+        "testName": "hasCyrillicLetters :: ternary-33-10-false-1",
+        "batchId": null,
+        "status": "not-run",
+        "durationMs": null,
+        "failure": {
+          "name": null,
+          "message": null,
+          "stack": null
+        },
+        "notes": []
+      }
+    ],
+    "additionalTestsNotLinkedToScenarios": []
+  },
+  "coverage": {
+    "provider": null,
+    "reportPath": null,
+    "metrics": {
+      "statements": {
+        "covered": null,
+        "total": null,
+        "pct": null
+      },
+      "branches": {
+        "covered": null,
+        "total": null,
+        "pct": null
+      },
+      "functions": {
+        "covered": null,
+        "total": null,
+        "pct": null
+      },
+      "lines": {
+        "covered": null,
+        "total": null,
+        "pct": null
+      }
+    },
+    "uncovered": [],
+    "notes": []
+  },
+  "artifacts": {
+    "junitXml": null,
+    "jestJson": null,
+    "coverageFinalJson": null,
+    "consoleLog": null,
+    "custom": []
+  },
+  "notes": [],
+  "issues": [],
+  "completion": {
+    "ready": true,
+    "completed": false,
+    "statusValues": [
+      "passed",
+      "failed",
+      "skipped",
+      "pending",
+      "not-run"
+    ],
+    "requiredBeforeAnalysis": [
+      "execution.command",
+      "execution.environment.node",
+      "testResults.cases statuses",
+      "coverage.metrics when coverage was collected"
+    ]
+  }
+}

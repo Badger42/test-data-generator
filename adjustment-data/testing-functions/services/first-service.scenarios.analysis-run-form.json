@@ -1,0 +1,136 @@
+{
+  "formType": "branch-scenarios-execution-results-form",
+  "schemaVersion": "1.0.0",
+  "reportId": "0027703964e54df35c6bf1da",
+  "generatedAt": "2026-11-06T13:48:51.931Z",
+  "generatorVersion": "1.0.0-rc.8",
+  "project": {
+    "source": "adjustment-data/testing-functions/services/first-service.js",
+    "sourceSha256": "fabcb5b7fe4a0ca9163f68002a8924cf68b39bf9cac265476e6a303cc7772533",
+    "projectFingerprint": "514ce5de90f4c1e0a64e778865eae40ea986715b65b89b26459906cb08ffa26d",
+    "sourceFileCount": 1
+  },
+  "instructions": [
+    "Run the generated tests in the target project, then fill execution, testResults, coverage, artifacts and notes.",
+    "Keep scenarioId unchanged; it links each result to the corresponding analysis scenario.",
+    "Use project-relative artifact paths. Do not paste absolute paths, secrets, tokens or production data.",
+    "For a failing test, include the assertion/error message and a short relevant stack. Redact real input values.",
+    "If a scenario was not executed, keep status as not-run; do not mark static evidence as runtime-verified.",
+    "Upload this completed form together with the matching *.analysis-report.json. The finalizer validates reportId before merging."
+  ],
+  "execution": {
+    "status": "awaiting-manual-run",
+    "runner": "jest",
+    "command": null,
+    "startedAt": null,
+    "completedAt": null,
+    "durationMs": null,
+    "environment": {
+      "node": null,
+      "jest": null,
+      "typescript": "5.8.3",
+      "platform": null,
+      "architecture": null,
+      "coverageProvider": null
+    }
+  },
+  "testResults": {
+    "total": null,
+    "passed": null,
+    "failed": null,
+    "skipped": null,
+    "plannedCases": 2,
+    "truncatedCases": 0,
+    "cases": [
+      {
+        "scenarioId": "loop-14-12-zero-callbacks-1",
+        "functionId": "adjustment-data/testing-functions/services/first-service.js::hasCorrectAddress@345",
+        "functionName": "hasCorrectAddress",
+        "branchId": "loop-14-12",
+        "outcome": null,
+        "testName": "hasCorrectAddress :: loop-14-12-zero-callbacks-1",
+        "batchId": null,
+        "status": "not-run",
+        "durationMs": null,
+        "failure": {
+          "name": null,
+          "message": null,
+          "stack": null
+        },
+        "notes": []
+      },
+      {
+        "scenarioId": "array-predicate-17-14-false-iteration-0-1",
+        "functionId": "adjustment-data/testing-functions/services/first-service.js::hasCorrectAddress@345",
+        "functionName": "hasCorrectAddress",
+        "branchId": "array-predicate-17-14",
+        "outcome": false,
+        "testName": "hasCorrectAddress :: array-predicate-17-14-false-iteration-0-1",
+        "batchId": null,
+        "status": "not-run",
+        "durationMs": null,
+        "failure": {
+          "name": null,
+          "message": null,
+          "stack": null
+        },
+        "notes": []
+      }
+    ],
+    "additionalTestsNotLinkedToScenarios": []
+  },
+  "coverage": {
+    "provider": null,
+    "reportPath": null,
+    "metrics": {
+      "statements": {
+        "covered": null,
+        "total": null,
+        "pct": null
+      },
+      "branches": {
+        "covered": null,
+        "total": null,
+        "pct": null
+      },
+      "functions": {
+        "covered": null,
+        "total": null,
+        "pct": null
+      },
+      "lines": {
+        "covered": null,
+        "total": null,
+        "pct": null
+      }
+    },
+    "uncovered": [],
+    "notes": []
+  },
+  "artifacts": {
+    "junitXml": null,
+    "jestJson": null,
+    "coverageFinalJson": null,
+    "consoleLog": null,
+    "custom": []
+  },
+  "notes": [],
+  "issues": [],
+  "completion": {
+    "ready": true,
+    "completed": false,
+    "statusValues": [
+      "passed",
+      "failed",
+      "skipped",
+      "pending",
+      "not-run"
+    ],
+    "requiredBeforeAnalysis": [
+      "execution.command",
+      "execution.environment.node",
+      "testResults.cases statuses",
+      "coverage.metrics when coverage was collected"
+    ]
+  }
+}

@@ -1,0 +1,2576 @@
+{
+  "reportType": "branch-scenarios-analysis-report",
+  "schemaVersion": "1.0.0",
+  "reportId": "e2a6919d2f32a3487f114587",
+  "generatedAt": "2026-11-06T13:49:30.021Z",
+  "generator": {
+    "name": "branch-scenarios-generator",
+    "version": "1.0.0-rc.8"
+  },
+  "environment": {
+    "node": "v24.20.0",
+    "platform": "linux",
+    "architecture": "x64",
+    "typescript": "5.8.3"
+  },
+  "project": {
+    "root": "adjustment-data/testing-functions/services/second-service.js",
+    "config": {
+      "detected": false,
+      "file": null
+    },
+    "sourceFileCount": 1,
+    "fingerprint": "b28c40a7eced72cffd8efef91f304cdf6dfa3adf877fedeb4a3070aff2c08884",
+    "fileDigests": [
+      {
+        "file": "adjustment-data/testing-functions/services/second-service.js",
+        "sha256": "cf7e612f6f010bc19940f5ea408745b5b455a9120555573bf04cf2937ea2ed0b",
+        "bytes": 623,
+        "lineCount": 25
+      }
+    ],
+    "fileDigestsTruncated": 0,
+    "files": [
+      "adjustment-data/testing-functions/services/second-service.js"
+    ],
+    "filesTruncated": 0,
+    "imports": {
+      "total": 2,
+      "resolved": 2,
+      "project": 0,
+      "external": 2,
+      "unresolved": 0,
+      "edges": [
+        {
+          "from": "adjustment-data/testing-functions/services/second-service.js",
+          "specifier": "./first-service",
+          "to": "<external-module>",
+          "resolved": true,
+          "resolution": "external-module",
+          "kind": "import"
+        },
+        {
+          "from": "adjustment-data/testing-functions/services/second-service.js",
+          "specifier": "../../common/values",
+          "to": "<external-module>",
+          "resolved": true,
+          "resolution": "external-module",
+          "kind": "import"
+        }
+      ]
+    },
+    "functionIndex": {
+      "total": 1,
+      "exported": 0,
+      "files": 1,
+      "functions": [
+        {
+          "functionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+          "symbolId": "adjustment-data/testing-functions/services/second-service.js#227:hasCorrectAddress",
+          "name": "hasCorrectAddress",
+          "file": "adjustment-data/testing-functions/services/second-service.js",
+          "line": 10,
+          "column": 3,
+          "exported": false
+        }
+      ],
+      "truncated": 0,
+      "diagnostics": []
+    },
+    "typescriptDiagnostics": [],
+    "compilerOptions": {
+      "target": 9,
+      "module": 199,
+      "moduleResolution": 99,
+      "strict": false,
+      "strictNullChecks": true,
+      "allowJs": true,
+      "checkJs": true,
+      "jsx": 1
+    },
+    "source": {
+      "file": "adjustment-data/testing-functions/services/second-service.js",
+      "language": "javascript",
+      "sha256": "cf7e612f6f010bc19940f5ea408745b5b455a9120555573bf04cf2937ea2ed0b",
+      "projectFingerprint": "b28c40a7eced72cffd8efef91f304cdf6dfa3adf877fedeb4a3070aff2c08884",
+      "bytes": 623,
+      "lineCount": 25
+    }
+  },
+  "run": {
+    "generatedAt": "2026-11-06T13:49:27.824Z",
+    "functionFilter": null,
+    "allFunctions": true,
+    "maxScenarios": 40,
+    "constraintEngine": "hybrid",
+    "constraintDiagnostics": false,
+    "mcdc": true,
+    "includeEvidence": true,
+    "coverageFeedback": true,
+    "coverageGoal": 100,
+    "coverageIterations": 3,
+    "coverageProvider": "v8",
+    "minimalSuite": false,
+    "testBatching": {
+      "enabled": true,
+      "minSize": 2,
+      "maxSize": 100
+    },
+    "valueMode": "shape"
+  },
+  "summary": {
+    "functions": 1,
+    "scenarios": 3,
+    "branchOutcomes": 3,
+    "unsupportedBranchTargets": 1,
+    "warnings": 8,
+    "mcdcPairs": 0,
+    "mockActions": 0,
+    "constraint": {
+      "irAttempts": 0,
+      "irSolved": 0,
+      "legacyFallback": 0,
+      "fallbackReasons": {}
+    }
+  },
+  "functions": [
+    {
+      "functionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+      "name": "hasCorrectAddress",
+      "file": "adjustment-data/testing-functions/services/second-service.js",
+      "sourceLocation": null,
+      "summary": {
+        "branchOutcomesFound": 3,
+        "scenariosGenerated": 3,
+        "branchesWithUnsupportedExpressions": 1,
+        "loopsAnalyzed": 2,
+        "loopScenariosGenerated": 3,
+        "mcdcDecisionsAnalyzed": 0,
+        "mcdcConditionsAnalyzed": 0,
+        "mcdcIndependencePairsFound": 0,
+        "mcdcConditionsWithoutPair": 0
+      },
+      "inferredProperties": [
+        {
+          "path": "addresses",
+          "inferredType": "array",
+          "confidence": "medium",
+          "evidenceCount": 2
+        },
+        {
+          "path": "addresses.0",
+          "inferredType": "object",
+          "confidence": "medium",
+          "evidenceCount": 1
+        },
+        {
+          "path": "addresses.0.postalCode",
+          "inferredType": "unknown",
+          "confidence": "low",
+          "evidenceCount": 1
+        }
+      ],
+      "dataFlow": {
+        "schemaVersion": "1.0",
+        "properties": [
+          {
+            "path": "local:address",
+            "kind": "unknown",
+            "confidence": "low",
+            "optional": false,
+            "nullable": false,
+            "evidenceCount": 1
+          },
+          {
+            "path": "local:blocks",
+            "kind": "array",
+            "confidence": "declared",
+            "optional": false,
+            "nullable": false,
+            "evidenceCount": 1
+          },
+          {
+            "path": "local:countryCodes.Russia",
+            "kind": "unknown",
+            "confidence": "low",
+            "optional": false,
+            "nullable": false,
+            "evidenceCount": 1
+          },
+          {
+            "path": "local:FirstService",
+            "kind": "unknown",
+            "confidence": "low",
+            "optional": false,
+            "nullable": false,
+            "evidenceCount": 1
+          },
+          {
+            "path": "local:postalCode",
+            "kind": "unknown",
+            "confidence": "low",
+            "optional": false,
+            "nullable": false,
+            "evidenceCount": 1
+          },
+          {
+            "path": "local:postals",
+            "kind": "array",
+            "confidence": "declared",
+            "optional": false,
+            "nullable": false,
+            "evidenceCount": 1
+          },
+          {
+            "path": "local:Set",
+            "kind": "object",
+            "confidence": "declared",
+            "optional": false,
+            "nullable": false,
+            "evidenceCount": 1
+          },
+          {
+            "path": "parameter:addresses",
+            "kind": "array",
+            "confidence": "low",
+            "optional": false,
+            "nullable": false,
+            "evidenceCount": 3
+          },
+          {
+            "path": "parameter:countryMap",
+            "kind": "unknown",
+            "confidence": "low",
+            "optional": false,
+            "nullable": false,
+            "evidenceCount": 1
+          },
+          {
+            "path": "addresses.0",
+            "kind": "object",
+            "confidence": "low",
+            "optional": false,
+            "nullable": false,
+            "evidenceCount": 1
+          },
+          {
+            "path": "addresses.0.postalCode",
+            "kind": "unknown",
+            "confidence": "low",
+            "optional": false,
+            "nullable": false,
+            "evidenceCount": 1
+          }
+        ],
+        "aliases": {
+          "total": 0,
+          "byRelation": {},
+          "items": []
+        },
+        "cfg": {
+          "nodeCount": 13,
+          "edgeCount": 12,
+          "loops": 1,
+          "nodes": [
+            {
+              "id": "entry:synthetic:1",
+              "kind": "entry",
+              "sourceSpan": null
+            },
+            {
+              "id": "exit:synthetic:2",
+              "kind": "exit",
+              "sourceSpan": null
+            },
+            {
+              "id": "declaration:275:3",
+              "kind": "declaration",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 275,
+                "endOffset": 344,
+                "startLine": 11,
+                "startColumn": 5,
+                "endLine": 11,
+                "endColumn": 74
+              }
+            },
+            {
+              "id": "declaration:350:4",
+              "kind": "declaration",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 350,
+                "endOffset": 367,
+                "startLine": 12,
+                "startColumn": 5,
+                "endLine": 12,
+                "endColumn": 22
+              }
+            },
+            {
+              "id": "for-of-header:375:5",
+              "kind": "for-of-header",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 375,
+                "endOffset": 524,
+                "startLine": 14,
+                "startColumn": 5,
+                "endLine": 18,
+                "endColumn": 6
+              }
+            },
+            {
+              "id": "for-of-exit:375:6",
+              "kind": "for-of-exit",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 375,
+                "endOffset": 524,
+                "startLine": 14,
+                "startColumn": 5,
+                "endLine": 18,
+                "endColumn": 6
+              }
+            },
+            {
+              "id": "for-of-body-entry:409:7",
+              "kind": "for-of-body-entry",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 409,
+                "endOffset": 524,
+                "startLine": 14,
+                "startColumn": 39,
+                "endLine": 18,
+                "endColumn": 6
+              }
+            },
+            {
+              "id": "for-each-binding:380:8",
+              "kind": "for-each-binding",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 380,
+                "endOffset": 396,
+                "startLine": 14,
+                "startColumn": 10,
+                "endLine": 14,
+                "endColumn": 26
+              }
+            },
+            {
+              "id": "block-entry:409:9",
+              "kind": "block-entry",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 409,
+                "endOffset": 524,
+                "startLine": 14,
+                "startColumn": 39,
+                "endLine": 18,
+                "endColumn": 6
+              }
+            },
+            {
+              "id": "declaration:418:10",
+              "kind": "declaration",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 418,
+                "endOffset": 487,
+                "startLine": 15,
+                "startColumn": 7,
+                "endLine": 15,
+                "endColumn": 76
+              }
+            },
+            {
+              "id": "expression:497:11",
+              "kind": "expression",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 497,
+                "endOffset": 517,
+                "startLine": 17,
+                "startColumn": 7,
+                "endLine": 17,
+                "endColumn": 27
+              }
+            },
+            {
+              "id": "block-exit:409:12",
+              "kind": "block-exit",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 409,
+                "endOffset": 524,
+                "startLine": 14,
+                "startColumn": 39,
+                "endLine": 18,
+                "endColumn": 6
+              }
+            },
+            {
+              "id": "return:532:13",
+              "kind": "return",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 532,
+                "endOffset": 575,
+                "startLine": 20,
+                "startColumn": 5,
+                "endLine": 20,
+                "endColumn": 48
+              }
+            }
+          ],
+          "edges": [
+            {
+              "from": "entry:synthetic:1",
+              "to": "declaration:275:3",
+              "kind": "normal",
+              "label": null
+            },
+            {
+              "from": "declaration:275:3",
+              "to": "declaration:350:4",
+              "kind": "normal",
+              "label": null
+            },
+            {
+              "from": "declaration:350:4",
+              "to": "for-of-header:375:5",
+              "kind": "normal",
+              "label": null
+            },
+            {
+              "from": "for-of-header:375:5",
+              "to": "for-each-binding:380:8",
+              "kind": "iteration",
+              "label": null
+            },
+            {
+              "from": "for-of-header:375:5",
+              "to": "for-of-exit:375:6",
+              "kind": "exhausted",
+              "label": null
+            },
+            {
+              "from": "for-each-binding:380:8",
+              "to": "block-entry:409:9",
+              "kind": "normal",
+              "label": null
+            },
+            {
+              "from": "block-entry:409:9",
+              "to": "declaration:418:10",
+              "kind": "normal",
+              "label": null
+            },
+            {
+              "from": "declaration:418:10",
+              "to": "expression:497:11",
+              "kind": "normal",
+              "label": null
+            },
+            {
+              "from": "expression:497:11",
+              "to": "block-exit:409:12",
+              "kind": "normal",
+              "label": null
+            },
+            {
+              "from": "block-exit:409:12",
+              "to": "for-of-header:375:5",
+              "kind": "back",
+              "label": null
+            },
+            {
+              "from": "for-of-exit:375:6",
+              "to": "return:532:13",
+              "kind": "normal",
+              "label": null
+            },
+            {
+              "from": "return:532:13",
+              "to": "exit:synthetic:2",
+              "kind": "return",
+              "label": null
+            }
+          ],
+          "diagnostics": []
+        },
+        "flow": {
+          "definitions": 6,
+          "uses": 9,
+          "phiCandidates": 2,
+          "diagnostics": []
+        },
+        "scalarSsa": {
+          "algorithm": "cytron-iterated-dominance-frontier-dominator-tree-renaming",
+          "definitions": 6,
+          "definitionDetails": [
+            {
+              "id": "245:addresses#0",
+              "symbolId": "245:addresses",
+              "name": "addresses",
+              "version": 0,
+              "kind": "parameter",
+              "nodeId": "entry:synthetic:1",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 245,
+                "endOffset": 254,
+                "startLine": 10,
+                "startColumn": 21,
+                "endLine": 10,
+                "endColumn": 30
+              },
+              "operands": []
+            },
+            {
+              "id": "256:countryMap#0",
+              "symbolId": "256:countryMap",
+              "name": "countryMap",
+              "version": 0,
+              "kind": "parameter",
+              "nodeId": "entry:synthetic:1",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 256,
+                "endOffset": 266,
+                "startLine": 10,
+                "startColumn": 32,
+                "endLine": 10,
+                "endColumn": 42
+              },
+              "operands": []
+            },
+            {
+              "id": "281:postals#0",
+              "symbolId": "281:postals",
+              "name": "postals",
+              "version": 0,
+              "kind": "declaration",
+              "nodeId": "declaration:275:3",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 291,
+                "endOffset": 344,
+                "startLine": 11,
+                "startColumn": 21,
+                "endLine": 11,
+                "endColumn": 74
+              },
+              "operands": [
+                {
+                  "symbolId": "245:addresses",
+                  "value": "245:addresses#0"
+                }
+              ]
+            },
+            {
+              "id": "356:blocks#0",
+              "symbolId": "356:blocks",
+              "name": "blocks",
+              "version": 0,
+              "kind": "declaration",
+              "nodeId": "declaration:350:4",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 365,
+                "endOffset": 367,
+                "startLine": 12,
+                "startColumn": 20,
+                "endLine": 12,
+                "endColumn": 22
+              },
+              "operands": []
+            },
+            {
+              "id": "386:postalCode#0",
+              "symbolId": "386:postalCode",
+              "name": "postalCode",
+              "version": 0,
+              "kind": "declaration",
+              "nodeId": "for-each-binding:380:8",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 386,
+                "endOffset": 396,
+                "startLine": 14,
+                "startColumn": 16,
+                "endLine": 14,
+                "endColumn": 26
+              },
+              "operands": []
+            },
+            {
+              "id": "424:address#0",
+              "symbolId": "424:address",
+              "name": "address",
+              "version": 0,
+              "kind": "declaration",
+              "nodeId": "declaration:418:10",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 434,
+                "endOffset": 487,
+                "startLine": 15,
+                "startColumn": 23,
+                "endLine": 15,
+                "endColumn": 76
+              },
+              "operands": [
+                {
+                  "symbolId": "386:postalCode",
+                  "value": "386:postalCode#0"
+                },
+                {
+                  "symbolId": "256:countryMap",
+                  "value": "256:countryMap#0"
+                }
+              ]
+            }
+          ],
+          "phiNodes": 0,
+          "phiDetails": [],
+          "useBindings": 9,
+          "useDetails": [
+            {
+              "id": "use:declaration:275:3:4347:Set",
+              "nodeId": "declaration:275:3",
+              "symbolId": "4347:Set",
+              "name": "Set",
+              "value": null,
+              "resolution": "unresolved-before-definition",
+              "reachingDefinitionFacts": []
+            },
+            {
+              "id": "use:declaration:275:3:245:addresses",
+              "nodeId": "declaration:275:3",
+              "symbolId": "245:addresses",
+              "name": "addresses",
+              "value": "245:addresses#0",
+              "resolution": "ssa-version",
+              "reachingDefinitionFacts": [
+                "def:entry:synthetic:1:245:addresses:0"
+              ]
+            },
+            {
+              "id": "use:return:532:13:356:blocks",
+              "nodeId": "return:532:13",
+              "symbolId": "356:blocks",
+              "name": "blocks",
+              "value": "356:blocks#0",
+              "resolution": "ssa-version",
+              "reachingDefinitionFacts": [
+                "def:declaration:350:4:356:blocks:3"
+              ]
+            },
+            {
+              "id": "use:return:532:13:52:countryCodes",
+              "nodeId": "return:532:13",
+              "symbolId": "52:countryCodes",
+              "name": "countryCodes",
+              "value": null,
+              "resolution": "unresolved-before-definition",
+              "reachingDefinitionFacts": []
+            },
+            {
+              "id": "use:declaration:418:10:7:FirstService",
+              "nodeId": "declaration:418:10",
+              "symbolId": "7:FirstService",
+              "name": "FirstService",
+              "value": null,
+              "resolution": "unresolved-before-definition",
+              "reachingDefinitionFacts": []
+            },
+            {
+              "id": "use:declaration:418:10:386:postalCode",
+              "nodeId": "declaration:418:10",
+              "symbolId": "386:postalCode",
+              "name": "postalCode",
+              "value": "386:postalCode#0",
+              "resolution": "ssa-version",
+              "reachingDefinitionFacts": [
+                "def:for-each-binding:380:8:386:postalCode:4"
+              ]
+            },
+            {
+              "id": "use:declaration:418:10:256:countryMap",
+              "nodeId": "declaration:418:10",
+              "symbolId": "256:countryMap",
+              "name": "countryMap",
+              "value": "256:countryMap#0",
+              "resolution": "ssa-version",
+              "reachingDefinitionFacts": [
+                "def:entry:synthetic:1:256:countryMap:1"
+              ]
+            },
+            {
+              "id": "use:expression:497:11:356:blocks",
+              "nodeId": "expression:497:11",
+              "symbolId": "356:blocks",
+              "name": "blocks",
+              "value": "356:blocks#0",
+              "resolution": "ssa-version",
+              "reachingDefinitionFacts": [
+                "def:declaration:350:4:356:blocks:3"
+              ]
+            },
+            {
+              "id": "use:expression:497:11:424:address",
+              "nodeId": "expression:497:11",
+              "symbolId": "424:address",
+              "name": "address",
+              "value": "424:address#0",
+              "resolution": "ssa-version",
+              "reachingDefinitionFacts": [
+                "def:declaration:418:10:424:address:5"
+              ]
+            }
+          ],
+          "unresolvedUses": 3,
+          "convergence": {
+            "dominatorTreeTraversal": true,
+            "allReachableNodesVisited": true
+          },
+          "diagnostics": [
+            {
+              "code": "SSA_UNRESOLVED_USES",
+              "severity": "warning",
+              "message": "3 use binding(s) have no reaching SSA version."
+            }
+          ]
+        },
+        "memorySsa": {
+          "algorithm": "field-sensitive-overlap-aware-cytron-memory-ssa",
+          "locations": 7,
+          "locationDetails": [
+            {
+              "id": "heap:245:addresses:[]",
+              "rootSymbolId": "245:addresses",
+              "rootName": "addresses",
+              "path": [],
+              "definitionCount": 0,
+              "readCount": 1
+            },
+            {
+              "id": "heap:7:FirstService:[]",
+              "rootSymbolId": "7:FirstService",
+              "rootName": "FirstService",
+              "path": [],
+              "definitionCount": 1,
+              "readCount": 1
+            },
+            {
+              "id": "heap:356:blocks:[]",
+              "rootSymbolId": "356:blocks",
+              "rootName": "blocks",
+              "path": [],
+              "definitionCount": 2,
+              "readCount": 2
+            },
+            {
+              "id": "heap:52:countryCodes:[\"Russia\"]",
+              "rootSymbolId": "52:countryCodes",
+              "rootName": "countryCodes",
+              "path": [
+                "Russia"
+              ],
+              "definitionCount": 1,
+              "readCount": 1
+            },
+            {
+              "id": "heap:386:postalCode:[]",
+              "rootSymbolId": "386:postalCode",
+              "rootName": "postalCode",
+              "path": [],
+              "definitionCount": 1,
+              "readCount": 0
+            },
+            {
+              "id": "heap:256:countryMap:[]",
+              "rootSymbolId": "256:countryMap",
+              "rootName": "countryMap",
+              "path": [],
+              "definitionCount": 1,
+              "readCount": 0
+            },
+            {
+              "id": "heap:424:address:[]",
+              "rootSymbolId": "424:address",
+              "rootName": "address",
+              "path": [],
+              "definitionCount": 1,
+              "readCount": 0
+            }
+          ],
+          "reads": 5,
+          "writes": 7,
+          "accesses": [
+            {
+              "id": "heap-read:0",
+              "kind": "read",
+              "location": "heap:245:addresses:[]",
+              "path": [],
+              "certainty": "observed-read",
+              "pointerResolution": null,
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 303,
+                "endOffset": 316,
+                "startLine": 11,
+                "startColumn": 33,
+                "endLine": 11,
+                "endColumn": 46
+              }
+            },
+            {
+              "id": "heap-read:1",
+              "kind": "read",
+              "location": "heap:7:FirstService:[]",
+              "path": [],
+              "certainty": "observed-read",
+              "pointerResolution": null,
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 434,
+                "endOffset": 463,
+                "startLine": 15,
+                "startColumn": 23,
+                "endLine": 15,
+                "endColumn": 52
+              }
+            },
+            {
+              "id": "heap-read:2",
+              "kind": "read",
+              "location": "heap:356:blocks:[]",
+              "path": [],
+              "certainty": "observed-read",
+              "pointerResolution": null,
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 497,
+                "endOffset": 508,
+                "startLine": 17,
+                "startColumn": 7,
+                "endLine": 17,
+                "endColumn": 18
+              }
+            },
+            {
+              "id": "heap-read:3",
+              "kind": "read",
+              "location": "heap:356:blocks:[]",
+              "path": [],
+              "certainty": "observed-read",
+              "pointerResolution": null,
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 539,
+                "endOffset": 554,
+                "startLine": 20,
+                "startColumn": 12,
+                "endLine": 20,
+                "endColumn": 27
+              }
+            },
+            {
+              "id": "heap-read:4",
+              "kind": "read",
+              "location": "heap:52:countryCodes:[\"Russia\"]",
+              "path": [
+                "Russia"
+              ],
+              "certainty": "observed-read",
+              "pointerResolution": null,
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 555,
+                "endOffset": 574,
+                "startLine": 20,
+                "startColumn": 28,
+                "endLine": 20,
+                "endColumn": 47
+              }
+            },
+            {
+              "id": "mut:7:FirstService:434",
+              "kind": "write",
+              "location": "heap:7:FirstService:[]",
+              "path": [],
+              "certainty": "possible",
+              "pointerResolution": null,
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 434,
+                "endOffset": 487,
+                "startLine": 15,
+                "startColumn": 23,
+                "endLine": 15,
+                "endColumn": 76
+              }
+            },
+            {
+              "id": "mut:356:blocks:497",
+              "kind": "write",
+              "location": "heap:356:blocks:[]",
+              "path": [],
+              "certainty": "definite",
+              "pointerResolution": null,
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 497,
+                "endOffset": 517,
+                "startLine": 17,
+                "startColumn": 7,
+                "endLine": 17,
+                "endColumn": 27
+              }
+            },
+            {
+              "id": "mut:356:blocks:539",
+              "kind": "write",
+              "location": "heap:356:blocks:[]",
+              "path": [],
+              "certainty": "possible",
+              "pointerResolution": null,
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 539,
+                "endOffset": 575,
+                "startLine": 20,
+                "startColumn": 12,
+                "endLine": 20,
+                "endColumn": 48
+              }
+            },
+            {
+              "id": "mut:52:countryCodes:539",
+              "kind": "write",
+              "location": "heap:52:countryCodes:[\"Russia\"]",
+              "path": [
+                "Russia"
+              ],
+              "certainty": "possible",
+              "pointerResolution": null,
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 539,
+                "endOffset": 575,
+                "startLine": 20,
+                "startColumn": 12,
+                "endLine": 20,
+                "endColumn": 48
+              }
+            },
+            {
+              "id": "mut:386:postalCode:434",
+              "kind": "write",
+              "location": "heap:386:postalCode:[]",
+              "path": [],
+              "certainty": "possible",
+              "pointerResolution": null,
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 434,
+                "endOffset": 487,
+                "startLine": 15,
+                "startColumn": 23,
+                "endLine": 15,
+                "endColumn": 76
+              }
+            },
+            {
+              "id": "mut:256:countryMap:434",
+              "kind": "write",
+              "location": "heap:256:countryMap:[]",
+              "path": [],
+              "certainty": "possible",
+              "pointerResolution": null,
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 434,
+                "endOffset": 487,
+                "startLine": 15,
+                "startColumn": 23,
+                "endLine": 15,
+                "endColumn": 76
+              }
+            },
+            {
+              "id": "mut:424:address:497",
+              "kind": "write",
+              "location": "heap:424:address:[]",
+              "path": [],
+              "certainty": "possible",
+              "pointerResolution": null,
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 497,
+                "endOffset": 517,
+                "startLine": 17,
+                "startColumn": 7,
+                "endLine": 17,
+                "endColumn": 27
+              }
+            }
+          ],
+          "definitions": 14,
+          "definitionDetails": [
+            {
+              "id": "heap:245:addresses:[]#0",
+              "location": null,
+              "version": 0,
+              "nodeId": "entry:synthetic:1",
+              "kind": "initial-memory-state",
+              "sourceSpan": null
+            },
+            {
+              "id": "heap:256:countryMap:[]#1",
+              "location": null,
+              "version": 1,
+              "nodeId": "entry:synthetic:1",
+              "kind": "initial-memory-state",
+              "sourceSpan": null
+            },
+            {
+              "id": "heap:356:blocks:[]#1",
+              "location": null,
+              "version": 1,
+              "nodeId": "entry:synthetic:1",
+              "kind": "initial-memory-state",
+              "sourceSpan": null
+            },
+            {
+              "id": "heap:386:postalCode:[]#1",
+              "location": null,
+              "version": 1,
+              "nodeId": "entry:synthetic:1",
+              "kind": "initial-memory-state",
+              "sourceSpan": null
+            },
+            {
+              "id": "heap:424:address:[]#1",
+              "location": null,
+              "version": 1,
+              "nodeId": "entry:synthetic:1",
+              "kind": "initial-memory-state",
+              "sourceSpan": null
+            },
+            {
+              "id": "heap:52:countryCodes:[\"Russia\"]#0",
+              "location": null,
+              "version": 0,
+              "nodeId": "entry:synthetic:1",
+              "kind": "initial-memory-state",
+              "sourceSpan": null
+            },
+            {
+              "id": "heap:7:FirstService:[]#1",
+              "location": null,
+              "version": 1,
+              "nodeId": "entry:synthetic:1",
+              "kind": "initial-memory-state",
+              "sourceSpan": null
+            },
+            {
+              "id": "heap:356:blocks:[]#2",
+              "location": null,
+              "version": 2,
+              "nodeId": "return:532:13",
+              "kind": "heap-may-write",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 539,
+                "endOffset": 575,
+                "startLine": 20,
+                "startColumn": 12,
+                "endLine": 20,
+                "endColumn": 48
+              }
+            },
+            {
+              "id": "heap:52:countryCodes:[\"Russia\"]#1",
+              "location": null,
+              "version": 1,
+              "nodeId": "return:532:13",
+              "kind": "heap-may-write",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 539,
+                "endOffset": 575,
+                "startLine": 20,
+                "startColumn": 12,
+                "endLine": 20,
+                "endColumn": 48
+              }
+            },
+            {
+              "id": "heap:256:countryMap:[]#2",
+              "location": null,
+              "version": 2,
+              "nodeId": "declaration:418:10",
+              "kind": "heap-may-write",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 434,
+                "endOffset": 487,
+                "startLine": 15,
+                "startColumn": 23,
+                "endLine": 15,
+                "endColumn": 76
+              }
+            },
+            {
+              "id": "heap:386:postalCode:[]#2",
+              "location": null,
+              "version": 2,
+              "nodeId": "declaration:418:10",
+              "kind": "heap-may-write",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 434,
+                "endOffset": 487,
+                "startLine": 15,
+                "startColumn": 23,
+                "endLine": 15,
+                "endColumn": 76
+              }
+            },
+            {
+              "id": "heap:7:FirstService:[]#2",
+              "location": null,
+              "version": 2,
+              "nodeId": "declaration:418:10",
+              "kind": "heap-may-write",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 434,
+                "endOffset": 487,
+                "startLine": 15,
+                "startColumn": 23,
+                "endLine": 15,
+                "endColumn": 76
+              }
+            },
+            {
+              "id": "heap:356:blocks:[]#3",
+              "location": null,
+              "version": 3,
+              "nodeId": "expression:497:11",
+              "kind": "heap-write",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 497,
+                "endOffset": 517,
+                "startLine": 17,
+                "startColumn": 7,
+                "endLine": 17,
+                "endColumn": 27
+              }
+            },
+            {
+              "id": "heap:424:address:[]#2",
+              "location": null,
+              "version": 2,
+              "nodeId": "expression:497:11",
+              "kind": "heap-may-write",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 497,
+                "endOffset": 517,
+                "startLine": 17,
+                "startColumn": 7,
+                "endLine": 17,
+                "endColumn": 27
+              }
+            }
+          ],
+          "phiNodes": 5,
+          "phiDetails": [
+            {
+              "id": "phi:heap:256:countryMap:[]#0",
+              "symbolId": "heap:256:countryMap:[]",
+              "name": "countryMap.",
+              "version": 0,
+              "output": "heap:256:countryMap:[]#0",
+              "nodeId": "for-of-header:375:5",
+              "inputs": [
+                {
+                  "predecessor": "declaration:350:4",
+                  "value": "heap:256:countryMap:[]#1"
+                },
+                {
+                  "predecessor": "block-exit:409:12",
+                  "value": "heap:256:countryMap:[]#2"
+                }
+              ],
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 375,
+                "endOffset": 524,
+                "startLine": 14,
+                "startColumn": 5,
+                "endLine": 18,
+                "endColumn": 6
+              },
+              "kind": "loop-carried",
+              "complete": true
+            },
+            {
+              "id": "phi:heap:356:blocks:[]#0",
+              "symbolId": "heap:356:blocks:[]",
+              "name": "blocks.",
+              "version": 0,
+              "output": "heap:356:blocks:[]#0",
+              "nodeId": "for-of-header:375:5",
+              "inputs": [
+                {
+                  "predecessor": "declaration:350:4",
+                  "value": "heap:356:blocks:[]#1"
+                },
+                {
+                  "predecessor": "block-exit:409:12",
+                  "value": "heap:356:blocks:[]#3"
+                }
+              ],
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 375,
+                "endOffset": 524,
+                "startLine": 14,
+                "startColumn": 5,
+                "endLine": 18,
+                "endColumn": 6
+              },
+              "kind": "loop-carried",
+              "complete": true
+            },
+            {
+              "id": "phi:heap:386:postalCode:[]#0",
+              "symbolId": "heap:386:postalCode:[]",
+              "name": "postalCode.",
+              "version": 0,
+              "output": "heap:386:postalCode:[]#0",
+              "nodeId": "for-of-header:375:5",
+              "inputs": [
+                {
+                  "predecessor": "declaration:350:4",
+                  "value": "heap:386:postalCode:[]#1"
+                },
+                {
+                  "predecessor": "block-exit:409:12",
+                  "value": "heap:386:postalCode:[]#2"
+                }
+              ],
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 375,
+                "endOffset": 524,
+                "startLine": 14,
+                "startColumn": 5,
+                "endLine": 18,
+                "endColumn": 6
+              },
+              "kind": "loop-carried",
+              "complete": true
+            },
+            {
+              "id": "phi:heap:424:address:[]#0",
+              "symbolId": "heap:424:address:[]",
+              "name": "address.",
+              "version": 0,
+              "output": "heap:424:address:[]#0",
+              "nodeId": "for-of-header:375:5",
+              "inputs": [
+                {
+                  "predecessor": "declaration:350:4",
+                  "value": "heap:424:address:[]#1"
+                },
+                {
+                  "predecessor": "block-exit:409:12",
+                  "value": "heap:424:address:[]#2"
+                }
+              ],
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 375,
+                "endOffset": 524,
+                "startLine": 14,
+                "startColumn": 5,
+                "endLine": 18,
+                "endColumn": 6
+              },
+              "kind": "loop-carried",
+              "complete": true
+            },
+            {
+              "id": "phi:heap:7:FirstService:[]#0",
+              "symbolId": "heap:7:FirstService:[]",
+              "name": "FirstService.",
+              "version": 0,
+              "output": "heap:7:FirstService:[]#0",
+              "nodeId": "for-of-header:375:5",
+              "inputs": [
+                {
+                  "predecessor": "declaration:350:4",
+                  "value": "heap:7:FirstService:[]#1"
+                },
+                {
+                  "predecessor": "block-exit:409:12",
+                  "value": "heap:7:FirstService:[]#2"
+                }
+              ],
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 375,
+                "endOffset": 524,
+                "startLine": 14,
+                "startColumn": 5,
+                "endLine": 18,
+                "endColumn": 6
+              },
+              "kind": "loop-carried",
+              "complete": true
+            }
+          ],
+          "aliasSummary": {
+            "aliasPairs": 0,
+            "propagatedWrites": 0,
+            "allocationSiteAccesses": 0,
+            "algorithm": "bounded-andersen-inclusion-points-to"
+          },
+          "diagnostics": [],
+          "limits": {
+            "pathSensitivity": "static-field-paths-only",
+            "aliasing": "intraprocedural-alias-facts plus bounded points-to; may-alias effects use weak updates",
+            "overlappingPaths": "ancestor-descendant writes invalidate observed overlapping paths",
+            "dynamicIndexes": "wildcard weak updates",
+            "unknownCalls": "possible effects only where mutation analysis emits an effect",
+            "objectShape": "field-sensitive locations; aggregate object identity is not fully versioned"
+          }
+        },
+        "pointsTo": {
+          "algorithm": "bounded-andersen-inclusion-points-to",
+          "allocationSites": 1,
+          "symbols": 1,
+          "targetRelations": 1,
+          "unknownSymbols": 2,
+          "unknownHeapFields": 0,
+          "aliasPairs": [],
+          "pointsToMap": {
+            "356:blocks": [
+              "alloc:adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227:365:array"
+            ]
+          },
+          "heapFields": {},
+          "constraints": {
+            "copies": 0,
+            "loads": 0,
+            "stores": 0
+          },
+          "convergence": {
+            "converged": true,
+            "passes": 1,
+            "maxPasses": 8
+          },
+          "diagnostics": [],
+          "limits": {
+            "flowSensitivity": "flow-insensitive-inclusion-constraints",
+            "contextSensitivity": "intraprocedural",
+            "unknownCalls": "not-assigned-fabricated-targets",
+            "externalParameters": "distinct-regions-with-explicit-may-alias",
+            "heapFields": "static-member-or-wildcard-with-top-widening"
+          }
+        },
+        "interprocedural": {
+          "algorithm": null,
+          "projectFunctionSummaries": 1,
+          "callSites": 5,
+          "calls": [
+            {
+              "callId": "call:291",
+              "callee": "[...new Set(addresses.map(x => x.postalCode))].sort",
+              "resolution": "external-or-unresolved",
+              "targetFunctionId": null,
+              "knownPure": false,
+              "argumentDependencies": [],
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 291,
+                "endOffset": 344,
+                "startLine": 11,
+                "startColumn": 21,
+                "endLine": 11,
+                "endColumn": 74
+              }
+            },
+            {
+              "callId": "call:303",
+              "callee": "addresses.map",
+              "resolution": "external-or-unresolved",
+              "targetFunctionId": null,
+              "knownPure": false,
+              "argumentDependencies": [
+                [
+                  "x",
+                  "x.postalCode"
+                ]
+              ],
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 303,
+                "endOffset": 335,
+                "startLine": 11,
+                "startColumn": 33,
+                "endLine": 11,
+                "endColumn": 65
+              }
+            },
+            {
+              "callId": "call:434",
+              "callee": "FirstService.getAddressByCode",
+              "resolution": "external-or-unresolved",
+              "targetFunctionId": null,
+              "knownPure": false,
+              "argumentDependencies": [
+                [
+                  "postalCode"
+                ],
+                [
+                  "countryMap"
+                ]
+              ],
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 434,
+                "endOffset": 487,
+                "startLine": 15,
+                "startColumn": 23,
+                "endLine": 15,
+                "endColumn": 76
+              }
+            },
+            {
+              "callId": "call:497",
+              "callee": "blocks.push",
+              "resolution": "external-or-unresolved",
+              "targetFunctionId": null,
+              "knownPure": false,
+              "argumentDependencies": [
+                [
+                  "address"
+                ]
+              ],
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 497,
+                "endOffset": 517,
+                "startLine": 17,
+                "startColumn": 7,
+                "endLine": 17,
+                "endColumn": 27
+              }
+            },
+            {
+              "callId": "call:539",
+              "callee": "blocks.includes",
+              "resolution": "external-or-unresolved",
+              "targetFunctionId": null,
+              "knownPure": false,
+              "argumentDependencies": [
+                [
+                  "countryCodes.Russia"
+                ]
+              ],
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 539,
+                "endOffset": 575,
+                "startLine": 20,
+                "startColumn": 12,
+                "endLine": 20,
+                "endColumn": 48
+              }
+            }
+          ],
+          "summaries": [
+            {
+              "functionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+              "symbolId": "adjustment-data/testing-functions/services/second-service.js#227:hasCorrectAddress",
+              "name": "hasCorrectAddress",
+              "sourceSpan": {
+                "file": "adjustment-data/testing-functions/services/second-service.js",
+                "startOffset": 227,
+                "endOffset": 580,
+                "startLine": 10,
+                "startColumn": 3,
+                "endLine": 21,
+                "endColumn": 4
+              },
+              "returnType": "boolean",
+              "purity": "impure",
+              "confidence": "medium",
+              "inlineable": false,
+              "calls": 5,
+              "returnFacts": 1,
+              "effects": 7
+            }
+          ],
+          "rootEffects": [
+            {
+              "kind": "unknown-method-effect",
+              "path": [
+                "FirstService"
+              ],
+              "certainty": "possible",
+              "propagation": "direct-root",
+              "contextId": null
+            },
+            {
+              "kind": "escaped-to-call",
+              "path": [
+                "postalCode"
+              ],
+              "certainty": "possible",
+              "propagation": "direct-root",
+              "contextId": null
+            },
+            {
+              "kind": "escaped-to-call",
+              "path": [
+                "countryMap"
+              ],
+              "certainty": "possible",
+              "propagation": "direct-root",
+              "contextId": null
+            },
+            {
+              "kind": "known-mutator",
+              "path": [
+                "blocks"
+              ],
+              "certainty": "definite",
+              "propagation": "direct-root",
+              "contextId": null
+            },
+            {
+              "kind": "escaped-to-call",
+              "path": [
+                "address"
+              ],
+              "certainty": "possible",
+              "propagation": "direct-root",
+              "contextId": null
+            },
+            {
+              "kind": "unknown-method-effect",
+              "path": [
+                "blocks"
+              ],
+              "certainty": "possible",
+              "propagation": "direct-root",
+              "contextId": null
+            },
+            {
+              "kind": "escaped-to-call",
+              "path": [
+                "countryCodes",
+                "Russia"
+              ],
+              "certainty": "possible",
+              "propagation": "direct-root",
+              "contextId": null
+            }
+          ],
+          "contexts": {
+            "count": 0,
+            "maxDepthObserved": 0,
+            "effects": 0,
+            "unresolvedBindings": 0,
+            "diagnostics": []
+          },
+          "diagnostics": []
+        },
+        "arrayPipelines": [
+          {
+            "id": "array-pipeline-303-335",
+            "collection": "addresses",
+            "stages": [
+              {
+                "method": "map",
+                "kind": null
+              }
+            ],
+            "provenance": null,
+            "warningCount": 0,
+            "warnings": []
+          }
+        ],
+        "loopFlow": {
+          "loops": 1,
+          "summaries": [
+            {
+              "kind": "for-of",
+              "stateTransfer": "reaching-definitions-and-phi-candidates",
+              "confidence": "low",
+              "nodeCount": 6
+            }
+          ],
+          "reduceFlows": 0
+        },
+        "warnings": [
+          {
+            "code": "UNREACHABLE_CFG_NODES",
+            "severity": "info",
+            "message": null,
+            "sourceSpan": null
+          },
+          {
+            "code": "SSA_UNRESOLVED_USES",
+            "severity": "warning",
+            "message": "3 use binding(s) have no reaching SSA version.",
+            "sourceSpan": null
+          },
+          {
+            "code": "POSSIBLE_MUTATION",
+            "severity": "info",
+            "message": "unknown-method-effect may affect FirstService.",
+            "sourceSpan": {
+              "file": "adjustment-data/testing-functions/services/second-service.js",
+              "startOffset": 434,
+              "endOffset": 487,
+              "startLine": 15,
+              "startColumn": 23,
+              "endLine": 15,
+              "endColumn": 76
+            }
+          },
+          {
+            "code": "POSSIBLE_MUTATION",
+            "severity": "info",
+            "message": "escaped-to-call may affect postalCode.",
+            "sourceSpan": {
+              "file": "adjustment-data/testing-functions/services/second-service.js",
+              "startOffset": 434,
+              "endOffset": 487,
+              "startLine": 15,
+              "startColumn": 23,
+              "endLine": 15,
+              "endColumn": 76
+            }
+          },
+          {
+            "code": "POSSIBLE_MUTATION",
+            "severity": "info",
+            "message": "escaped-to-call may affect countryMap.",
+            "sourceSpan": {
+              "file": "adjustment-data/testing-functions/services/second-service.js",
+              "startOffset": 434,
+              "endOffset": 487,
+              "startLine": 15,
+              "startColumn": 23,
+              "endLine": 15,
+              "endColumn": 76
+            }
+          },
+          {
+            "code": "POSSIBLE_MUTATION",
+            "severity": "info",
+            "message": "escaped-to-call may affect address.",
+            "sourceSpan": {
+              "file": "adjustment-data/testing-functions/services/second-service.js",
+              "startOffset": 497,
+              "endOffset": 517,
+              "startLine": 17,
+              "startColumn": 7,
+              "endLine": 17,
+              "endColumn": 27
+            }
+          },
+          {
+            "code": "POSSIBLE_MUTATION",
+            "severity": "info",
+            "message": "unknown-method-effect may affect blocks.",
+            "sourceSpan": {
+              "file": "adjustment-data/testing-functions/services/second-service.js",
+              "startOffset": 539,
+              "endOffset": 575,
+              "startLine": 20,
+              "startColumn": 12,
+              "endLine": 20,
+              "endColumn": 48
+            }
+          },
+          {
+            "code": "POSSIBLE_MUTATION",
+            "severity": "info",
+            "message": "escaped-to-call may affect countryCodes.Russia.",
+            "sourceSpan": {
+              "file": "adjustment-data/testing-functions/services/second-service.js",
+              "startOffset": 539,
+              "endOffset": 575,
+              "startLine": 20,
+              "startColumn": 12,
+              "endLine": 20,
+              "endColumn": 48
+            }
+          }
+        ]
+      },
+      "constraintStats": {
+        "mode": "hybrid",
+        "irAttempts": 0,
+        "irSolved": 0,
+        "irSolutionCount": 0,
+        "irTruncated": 0,
+        "mcdcIrSolved": 0,
+        "legacyFallback": 0,
+        "fallbackReasons": {}
+      },
+      "unsupportedBranches": [
+        {
+          "branchId": "loop-14-5",
+          "outcome": "iteration",
+          "reason": "Cannot resolve for-of iterable to a function input property.",
+          "sourceSpan": null
+        }
+      ],
+      "mcdc": {
+        "criterion": "unique-cause",
+        "decisionsAnalyzed": 0,
+        "conditionsAnalyzed": 0,
+        "independencePairsFound": 0,
+        "conditionsWithoutIndependencePair": [],
+        "decisions": []
+      },
+      "scenarios": [
+        {
+          "id": "loop-11-33-zero-callbacks-1",
+          "target": {
+            "branchId": "loop-11-33",
+            "kind": "loop",
+            "outcome": null,
+            "line": 11,
+            "column": 33,
+            "coverageOutcomeIndex": null,
+            "runtimeDecisionId": null
+          },
+          "arguments": [
+            {
+              "type": "array",
+              "length": 0,
+              "sample": []
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "mocks": [],
+          "assumptions": [
+            "addresses"
+          ],
+          "unsupported": [],
+          "evidence": {
+            "total": 0,
+            "byStatus": {},
+            "items": [],
+            "truncated": 0
+          }
+        },
+        {
+          "id": "loop-11-33-one-callback-1",
+          "target": {
+            "branchId": "loop-11-33",
+            "kind": "loop",
+            "outcome": null,
+            "line": 11,
+            "column": 33,
+            "coverageOutcomeIndex": null,
+            "runtimeDecisionId": null
+          },
+          "arguments": [
+            {
+              "type": "array",
+              "length": 1,
+              "sample": [
+                {
+                  "type": "object",
+                  "keys": [],
+                  "fields": {}
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "mocks": [],
+          "assumptions": [
+            "addresses"
+          ],
+          "unsupported": [],
+          "evidence": {
+            "total": 0,
+            "byStatus": {},
+            "items": [],
+            "truncated": 0
+          }
+        },
+        {
+          "id": "loop-11-33-multiple-callbacks-1",
+          "target": {
+            "branchId": "loop-11-33",
+            "kind": "loop",
+            "outcome": null,
+            "line": 11,
+            "column": 33,
+            "coverageOutcomeIndex": null,
+            "runtimeDecisionId": null
+          },
+          "arguments": [
+            {
+              "type": "array",
+              "length": 2,
+              "sample": [
+                {
+                  "type": "object",
+                  "keys": [],
+                  "fields": {}
+                },
+                {
+                  "type": "object",
+                  "keys": [],
+                  "fields": {}
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "mocks": [],
+          "assumptions": [
+            "addresses"
+          ],
+          "unsupported": [],
+          "evidence": {
+            "total": 0,
+            "byStatus": {},
+            "items": [],
+            "truncated": 0
+          }
+        }
+      ],
+      "scenarioIndex": {
+        "ids": [
+          "loop-11-33-zero-callbacks-1",
+          "loop-11-33-one-callback-1",
+          "loop-11-33-multiple-callbacks-1"
+        ],
+        "count": 3
+      },
+      "scenarioCount": 3,
+      "scenariosTruncated": 0,
+      "arrayPipelines": [
+        {
+          "id": "array-pipeline-303-335",
+          "collection": "addresses",
+          "stages": [
+            {
+              "method": "map",
+              "kind": null
+            }
+          ],
+          "provenance": null,
+          "warningCount": 0,
+          "warnings": []
+        }
+      ],
+      "mockTemplates": [
+        {
+          "call": "[...new Set(addresses.map(x => x.postalCode))].sort",
+          "suggestedValueCount": 1
+        },
+        {
+          "call": "blocks.push",
+          "suggestedValueCount": 1
+        },
+        {
+          "call": "blocks.includes",
+          "suggestedValueCount": 2
+        }
+      ]
+    }
+  ],
+  "callGraph": {
+    "edgeCount": 10,
+    "edges": [
+      {
+        "callerFunctionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "callerName": "hasCorrectAddress",
+        "callId": "call:adjustment-data/testing-functions/services/second-service.js:291",
+        "callee": "[...new Set(addresses.map(x => x.postalCode))].sort",
+        "targetFunctionId": null,
+        "resolution": "external-or-unresolved",
+        "knownPure": false,
+        "argumentDependencies": [],
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/services/second-service.js",
+          "startOffset": 291,
+          "endOffset": 344,
+          "startLine": 11,
+          "startColumn": 21,
+          "endLine": 11,
+          "endColumn": 74
+        }
+      },
+      {
+        "callerFunctionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "callerName": "hasCorrectAddress",
+        "callId": "call:adjustment-data/testing-functions/services/second-service.js:303",
+        "callee": "addresses.map",
+        "targetFunctionId": null,
+        "resolution": "external-or-unresolved",
+        "knownPure": false,
+        "argumentDependencies": [
+          [
+            "x",
+            "x.postalCode"
+          ]
+        ],
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/services/second-service.js",
+          "startOffset": 303,
+          "endOffset": 335,
+          "startLine": 11,
+          "startColumn": 33,
+          "endLine": 11,
+          "endColumn": 65
+        }
+      },
+      {
+        "callerFunctionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "callerName": "hasCorrectAddress",
+        "callId": "call:adjustment-data/testing-functions/services/second-service.js:434",
+        "callee": "FirstService.getAddressByCode",
+        "targetFunctionId": null,
+        "resolution": "external-or-unresolved",
+        "knownPure": false,
+        "argumentDependencies": [
+          [
+            "postalCode"
+          ],
+          [
+            "countryMap"
+          ]
+        ],
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/services/second-service.js",
+          "startOffset": 434,
+          "endOffset": 487,
+          "startLine": 15,
+          "startColumn": 23,
+          "endLine": 15,
+          "endColumn": 76
+        }
+      },
+      {
+        "callerFunctionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "callerName": "hasCorrectAddress",
+        "callId": "call:adjustment-data/testing-functions/services/second-service.js:497",
+        "callee": "blocks.push",
+        "targetFunctionId": null,
+        "resolution": "external-or-unresolved",
+        "knownPure": false,
+        "argumentDependencies": [
+          [
+            "address"
+          ]
+        ],
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/services/second-service.js",
+          "startOffset": 497,
+          "endOffset": 517,
+          "startLine": 17,
+          "startColumn": 7,
+          "endLine": 17,
+          "endColumn": 27
+        }
+      },
+      {
+        "callerFunctionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "callerName": "hasCorrectAddress",
+        "callId": "call:adjustment-data/testing-functions/services/second-service.js:539",
+        "callee": "blocks.includes",
+        "targetFunctionId": null,
+        "resolution": "external-or-unresolved",
+        "knownPure": false,
+        "argumentDependencies": [
+          [
+            "countryCodes.Russia"
+          ]
+        ],
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/services/second-service.js",
+          "startOffset": 539,
+          "endOffset": 575,
+          "startLine": 20,
+          "startColumn": 12,
+          "endLine": 20,
+          "endColumn": 48
+        }
+      },
+      {
+        "callerFunctionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "callId": "call:291",
+        "callee": "[...new Set(addresses.map(x => x.postalCode))].sort",
+        "targetFunctionId": null,
+        "resolution": "external-or-unresolved",
+        "knownPure": false,
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/services/second-service.js",
+          "startOffset": 291,
+          "endOffset": 344,
+          "startLine": 11,
+          "startColumn": 21,
+          "endLine": 11,
+          "endColumn": 74
+        }
+      },
+      {
+        "callerFunctionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "callId": "call:303",
+        "callee": "addresses.map",
+        "targetFunctionId": null,
+        "resolution": "external-or-unresolved",
+        "knownPure": false,
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/services/second-service.js",
+          "startOffset": 303,
+          "endOffset": 335,
+          "startLine": 11,
+          "startColumn": 33,
+          "endLine": 11,
+          "endColumn": 65
+        }
+      },
+      {
+        "callerFunctionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "callId": "call:434",
+        "callee": "FirstService.getAddressByCode",
+        "targetFunctionId": null,
+        "resolution": "external-or-unresolved",
+        "knownPure": false,
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/services/second-service.js",
+          "startOffset": 434,
+          "endOffset": 487,
+          "startLine": 15,
+          "startColumn": 23,
+          "endLine": 15,
+          "endColumn": 76
+        }
+      },
+      {
+        "callerFunctionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "callId": "call:497",
+        "callee": "blocks.push",
+        "targetFunctionId": null,
+        "resolution": "external-or-unresolved",
+        "knownPure": false,
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/services/second-service.js",
+          "startOffset": 497,
+          "endOffset": 517,
+          "startLine": 17,
+          "startColumn": 7,
+          "endLine": 17,
+          "endColumn": 27
+        }
+      },
+      {
+        "callerFunctionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "callId": "call:539",
+        "callee": "blocks.includes",
+        "targetFunctionId": null,
+        "resolution": "external-or-unresolved",
+        "knownPure": false,
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/services/second-service.js",
+          "startOffset": 539,
+          "endOffset": 575,
+          "startLine": 20,
+          "startColumn": 12,
+          "endLine": 20,
+          "endColumn": 48
+        }
+      }
+    ],
+    "truncated": 0
+  },
+  "execution": {
+    "status": "coverage-file-not-found",
+    "provider": null,
+    "totals": null,
+    "branchCoverage": null,
+    "executedScenarioCount": 0,
+    "testResults": {
+      "success": false,
+      "total": 3,
+      "passed": 0,
+      "failed": 3,
+      "pending": 0,
+      "cases": [
+        {
+          "id": "coverage-case-1",
+          "status": "failed",
+          "failureMessages": [
+            "Error: Cannot find module \"<redacted-string>\" from \"<redacted-string>\""
+          ]
+        },
+        {
+          "id": "coverage-case-2",
+          "status": "failed",
+          "failureMessages": [
+            "Error: Cannot find module \"<redacted-string>\" from \"<redacted-string>\""
+          ]
+        },
+        {
+          "id": "coverage-case-3",
+          "status": "failed",
+          "failureMessages": [
+            "Error: Cannot find module \"<redacted-string>\" from \"<redacted-string>\""
+          ]
+        }
+      ],
+      "error": null
+    },
+    "testBatching": {
+      "strategy": "test.each",
+      "inputCases": 3,
+      "batchedCases": 3,
+      "individualCases": 0,
+      "batchCount": 1,
+      "averageBatchSize": 3,
+      "diagnostics": [],
+      "batches": [
+        {
+          "id": "test-batch-0001",
+          "scenarioIds": [
+            "coverage-case-1",
+            "coverage-case-2",
+            "coverage-case-3"
+          ],
+          "size": 3,
+          "signature": {
+            "version": 1,
+            "target": "hasCorrectAddress",
+            "exportPath": "",
+            "environment": "",
+            "lifecycle": "isolated-test",
+            "runtime": "jest-coverage-feedback",
+            "setupProfileConfigured": false,
+            "mockMethods": []
+          }
+        }
+      ],
+      "individual": []
+    },
+    "scenarioCoverage": {
+      "totalCases": 3,
+      "passedCases": 0,
+      "casesWithBranchAttribution": 0,
+      "casesWithoutBranchAttribution": null,
+      "cases": [
+        {
+          "caseId": "coverage-case-1",
+          "status": "failed",
+          "arguments": [
+            {
+              "type": "array",
+              "length": 0,
+              "sample": []
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "mocks": [],
+          "references": [
+            {
+              "type": "branch",
+              "branchId": "loop-11-33",
+              "decisionId": null,
+              "pairId": null,
+              "sourceSpan": null
+            }
+          ],
+          "decisionExecutions": [],
+          "coveredBranchOutcomes": [],
+          "mcdcPairSides": []
+        },
+        {
+          "caseId": "coverage-case-2",
+          "status": "failed",
+          "arguments": [
+            {
+              "type": "array",
+              "length": 1,
+              "sample": [
+                {
+                  "type": "object",
+                  "keys": [],
+                  "fields": {}
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "mocks": [],
+          "references": [
+            {
+              "type": "branch",
+              "branchId": "loop-11-33",
+              "decisionId": null,
+              "pairId": null,
+              "sourceSpan": null
+            }
+          ],
+          "decisionExecutions": [],
+          "coveredBranchOutcomes": [],
+          "mcdcPairSides": []
+        },
+        {
+          "caseId": "coverage-case-3",
+          "status": "failed",
+          "arguments": [
+            {
+              "type": "array",
+              "length": 2,
+              "sample": [
+                {
+                  "type": "object",
+                  "keys": [],
+                  "fields": {}
+                },
+                {
+                  "type": "object",
+                  "keys": [],
+                  "fields": {}
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "mocks": [],
+          "references": [
+            {
+              "type": "branch",
+              "branchId": "loop-11-33",
+              "decisionId": null,
+              "pairId": null,
+              "sourceSpan": null
+            }
+          ],
+          "decisionExecutions": [],
+          "coveredBranchOutcomes": [],
+          "mcdcPairSides": []
+        }
+      ],
+      "truncated": 0
+    },
+    "mcdcPairs": [],
+    "mcdc": {
+      "generatedIndependencePairs": 0,
+      "inputPairVerification": "unknown",
+      "runtimeInstrumentation": {
+        "enabled": false,
+        "decisionsDiscovered": 0,
+        "decisionsInstrumented": 0,
+        "conditionsDiscovered": 0,
+        "conditionsInstrumented": 0,
+        "recordedDecisionExecutions": 0,
+        "verifiedIndependencePairs": 0,
+        "shortCircuitInferencePairs": 0,
+        "skipped": []
+      },
+      "verificationScope": {
+        "generatedPairs": 0,
+        "runtimeVerifiedPairs": 0,
+        "fullyInstrumentedPairs": 0,
+        "shortCircuitInferencePairs": 0,
+        "notRuntimeVerifiedPairs": 0,
+        "note": "A pair is runtime-verified only when both scenarios pass, the actual instrumented decision outcome matches, the target atom is observed with its expected value on both sides, all observed atoms match, and any short-circuited fixed atoms are independently confirmed by the concrete input check."
+      }
+    },
+    "staticBranchTargets": [],
+    "uncoveredBranchEntries": [],
+    "iterative": {
+      "enabled": true,
+      "strategy": "targeted-static-branch-expansion",
+      "maxIterations": 3,
+      "iterations": [
+        {
+          "iteration": 1,
+          "status": "coverage-file-not-found",
+          "generatedScenarioCount": 3,
+          "addedScenarioCount": 0,
+          "executedScenarioCount": 3,
+          "jestTests": {
+            "total": 3,
+            "passed": 0,
+            "failed": 3
+          },
+          "branchCoverage": null,
+          "staticTargets": null
+        }
+      ],
+      "totalAdditionalScenarios": 0,
+      "stopReason": "jest-coverage-file-not-found",
+      "goalReached": false
+    },
+    "minimalTestSet": null,
+    "errors": [
+      "No coverage entry matched the exact source path /<redacted-token>.js. Check collectCoverageFrom and coveragePathIgnorePatterns."
+    ],
+    "jest": {
+      "exitCode": 1,
+      "signal": null,
+      "hasStdout": false,
+      "hasStderr": true,
+      "coverageError": null
+    }
+  },
+  "externalExecution": {
+    "status": "captured-by-generator",
+    "runner": "/home/antonsemenkov/.nvm/versions/node/v24.20.0/bin/node",
+    "executedAt": "2026-11-06T13:49:30.022Z",
+    "startedAt": null,
+    "completedAt": null,
+    "durationMs": null,
+    "testCommand": null,
+    "environment": null,
+    "testResults": {
+      "total": 3,
+      "passed": 0,
+      "failed": 3,
+      "pending": 0,
+      "cases": [
+        {
+          "scenarioId": "coverage-case-1",
+          "status": "failed",
+          "failureMessages": [
+            "Error: Cannot find module \"<redacted-string>\" from \"<redacted-string>\""
+          ]
+        },
+        {
+          "scenarioId": "coverage-case-2",
+          "status": "failed",
+          "failureMessages": [
+            "Error: Cannot find module \"<redacted-string>\" from \"<redacted-string>\""
+          ]
+        },
+        {
+          "scenarioId": "coverage-case-3",
+          "status": "failed",
+          "failureMessages": [
+            "Error: Cannot find module \"<redacted-string>\" from \"<redacted-string>\""
+          ]
+        }
+      ]
+    },
+    "coverage": null,
+    "failingTests": [
+      {
+        "scenarioId": "coverage-case-1",
+        "messages": [
+          "Error: Cannot find module \"<redacted-string>\" from \"<redacted-string>\""
+        ]
+      },
+      {
+        "scenarioId": "coverage-case-2",
+        "messages": [
+          "Error: Cannot find module \"<redacted-string>\" from \"<redacted-string>\""
+        ]
+      },
+      {
+        "scenarioId": "coverage-case-3",
+        "messages": [
+          "Error: Cannot find module \"<redacted-string>\" from \"<redacted-string>\""
+        ]
+      }
+    ],
+    "notes": [],
+    "executionForm": {
+      "formType": "branch-scenarios-execution-results-form",
+      "schemaVersion": "1.0.0",
+      "status": "ready-to-fill",
+      "file": "second-service.scenarios.analysis-run-form.json"
+    },
+    "fillInWhenRunningTestsManually": [
+      "runner",
+      "startedAt",
+      "completedAt",
+      "durationMs",
+      "testCommand",
+      "testResults",
+      "coverage",
+      "failingTests",
+      "notes"
+    ]
+  },
+  "diagnostics": {
+    "project": [],
+    "functions": [
+      {
+        "functionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "code": "UNREACHABLE_CFG_NODES",
+        "severity": "info",
+        "message": null,
+        "sourceSpan": null
+      },
+      {
+        "functionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "code": "SSA_UNRESOLVED_USES",
+        "severity": "warning",
+        "message": "3 use binding(s) have no reaching SSA version.",
+        "sourceSpan": null
+      },
+      {
+        "functionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "code": "POSSIBLE_MUTATION",
+        "severity": "info",
+        "message": "unknown-method-effect may affect FirstService.",
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/services/second-service.js",
+          "startOffset": 434,
+          "endOffset": 487,
+          "startLine": 15,
+          "startColumn": 23,
+          "endLine": 15,
+          "endColumn": 76
+        }
+      },
+      {
+        "functionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "code": "POSSIBLE_MUTATION",
+        "severity": "info",
+        "message": "escaped-to-call may affect postalCode.",
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/services/second-service.js",
+          "startOffset": 434,
+          "endOffset": 487,
+          "startLine": 15,
+          "startColumn": 23,
+          "endLine": 15,
+          "endColumn": 76
+        }
+      },
+      {
+        "functionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "code": "POSSIBLE_MUTATION",
+        "severity": "info",
+        "message": "escaped-to-call may affect countryMap.",
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/services/second-service.js",
+          "startOffset": 434,
+          "endOffset": 487,
+          "startLine": 15,
+          "startColumn": 23,
+          "endLine": 15,
+          "endColumn": 76
+        }
+      },
+      {
+        "functionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "code": "POSSIBLE_MUTATION",
+        "severity": "info",
+        "message": "escaped-to-call may affect address.",
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/services/second-service.js",
+          "startOffset": 497,
+          "endOffset": 517,
+          "startLine": 17,
+          "startColumn": 7,
+          "endLine": 17,
+          "endColumn": 27
+        }
+      },
+      {
+        "functionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "code": "POSSIBLE_MUTATION",
+        "severity": "info",
+        "message": "unknown-method-effect may affect blocks.",
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/services/second-service.js",
+          "startOffset": 539,
+          "endOffset": 575,
+          "startLine": 20,
+          "startColumn": 12,
+          "endLine": 20,
+          "endColumn": 48
+        }
+      },
+      {
+        "functionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "code": "POSSIBLE_MUTATION",
+        "severity": "info",
+        "message": "escaped-to-call may affect countryCodes.Russia.",
+        "sourceSpan": {
+          "file": "adjustment-data/testing-functions/services/second-service.js",
+          "startOffset": 539,
+          "endOffset": 575,
+          "startLine": 20,
+          "startColumn": 12,
+          "endLine": 20,
+          "endColumn": 48
+        }
+      },
+      {
+        "functionId": "adjustment-data/testing-functions/services/second-service.js::hasCorrectAddress@227",
+        "severity": "warning",
+        "code": "UNSUPPORTED_BRANCH",
+        "branchId": "loop-14-5",
+        "outcome": "iteration",
+        "reason": "Cannot resolve for-of iterable to a function input property.",
+        "sourceSpan": null
+      }
+    ]
+  },
+  "privacy": {
+    "valueMode": "shape",
+    "valuesIncluded": false,
+    "sourceCodeIncluded": false,
+    "sourceExpressionsIncluded": false,
+    "absolutePathsIncluded": false,
+    "note": "Scenario values are represented by shape metadata; absolute paths and source file contents are omitted."
+  },
+  "assistantHandoff": {
+    "purpose": "Use this report to diagnose unsupported analysis, incorrect scenarios, mock classification, Data Flow/Points-to/SSA propagation, per-scenario coverage and test failures.",
+    "recommendedAttachments": [
+      "this analysis report",
+      "the smallest relevant source files with secrets removed",
+      "the exact command used to generate/run tests",
+      "Jest config/setup when coverage or mocks behave unexpectedly",
+      "the filled execution results form"
+    ],
+    "reviewQuestions": [
+      "Which generated scenarios are incorrect or redundant?",
+      "Are project-local calls incorrectly mocked or external dependencies left unmocked?",
+      "Are Points-to, Memory SSA, interprocedural summaries and array provenance consistent with source behavior?",
+      "Which branches remain unsupported or uncovered, and why?",
+      "Do test.each batches preserve independent mock state?"
+    ]
+  }
+}
