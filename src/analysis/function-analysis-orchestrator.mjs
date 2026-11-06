@@ -38,7 +38,16 @@ export function createFunctionAnalysisOrchestrator({
     // adapter resolves this instance through ctx rather than a global singleton.
     ctx.controlFlowAnalyzer = createControlFlowAnalyzer(createControlFlowPorts(ctx));
     const initialPath = [{ assignments: new Map(), unsupported: [] }];
-    if (fn.body && ts.isBlock(fn.body)) {
+    if (ctx.unsupportedParameters?.length) {
+      // An unsupported binding pattern makes every positional argument guess
+      // unsound for now. Report the boundary and do not emit null-based cases.
+      for (const parameter of ctx.unsupportedParameters) {
+        ctx.analysisState.dispatch({
+          type: 'analysis.unsupported-branch-recorded',
+          branch: { branchId: `unsupported-parameter-${parameter.index}`, outcome: 'both', reason: `${parameter.name}: ${parameter.reason}` },
+        });
+      }
+    } else if (fn.body && ts.isBlock(fn.body)) {
       ctx.controlFlowAnalyzer.analyzeStatements(fn.body.statements, initialPath, ctx);
     } else if (fn.body) {
       analyzeTernaries(fn.body, initialPath, ctx);
@@ -63,6 +72,7 @@ export function createFunctionAnalysisOrchestrator({
         } : {}),
       },
       scenarios: analysis.scenarios,
+      ...(ctx.unsupportedParameters?.length ? { unsupportedParameters: ctx.unsupportedParameters } : {}),
       ...(analysis.arrayPipelines.length ? { arrayPipelines: analysis.arrayPipelines } : {}),
       ...(generateMcdc ? { mcdc: {
         criterion: 'unique-cause',

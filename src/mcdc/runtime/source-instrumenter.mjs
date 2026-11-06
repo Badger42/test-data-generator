@@ -133,6 +133,9 @@ export function createMcdcSourceInstrumenter({ ts, getScriptKindForRuntimeInstru
     instrumentation.insertionEvents = insertionEvents;
     instrumentation.enabled = validSpans.length > 0;
     instrumentation.instrumentedSourceLength = generated.length;
+    // Required by the Istanbul/V8 coordinate remapper. Keep this internal to
+    // the execution pass; report serialization projects selected metadata only.
+    instrumentation.generatedSource = generated;
     instrumentation.originalSourceLength = sourceText.length;
     return { source: generated, instrumentation };
   };

@@ -1,4 +1,4 @@
-# Branch Scenario Generator 1.0.0-rc.6
+# Branch Scenario Generator 1.0.0-rc.7
 
 Генератор тестовых данных и Jest-сценариев для JavaScript/TypeScript-функций. Анализирует AST, Control Flow и Data Flow, строит ограничения, подбирает входные значения и моки, а при включённом coverage feedback проверяет результат реальным запуском Jest.
 
@@ -17,7 +17,7 @@
 
 ## Быстрый старт
 
-Установи зависимости генератора (включая TypeScript и закреплённый Jest 26.6.0 для integration tests):
+Установи зависимости генератора (TypeScript и Jest 30.5.2 для integration tests):
 
 ```bash
 npm install
@@ -31,7 +31,7 @@ node branch-scenarios.mjs src/passenger.ts \
   --function getPassengerCategory \
   --mcdc \
   --include-evidence \
-  --out test-data/passenger.scenarios.json
+  --out passenger.scenarios.json
 ```
 
 Coverage feedback через Jest:
@@ -53,7 +53,7 @@ npm run test:architecture
 npm test
 ```
 
-`npm install` устанавливает закреплённый Jest `26.6.0`. `npm test` включает обязательный реальный Jest integration test; отсутствие установленного Jest теперь считается ошибкой подготовки окружения, а не успешным skip. `npm run test:real-jest` можно запускать отдельно.
+`npm install` устанавливает закреплённый Jest `30.5.2`. `npm test` включает обязательный реальный Jest integration test; отсутствие установленного Jest теперь считается ошибкой подготовки окружения, а не успешным skip. `npm run test:real-jest` можно запускать отдельно.
 
 ## Документация
 
@@ -62,13 +62,13 @@ npm test
 - [Подсистемы и контракты](docs/architecture/SUBSYSTEMS.md)
 - [Статус проверок](docs/architecture/VALIDATION_STATUS.md)
 - [План выхода на стабильный v1.0.0](docs/architecture/RELEASE_PLAN.md)
-- [История реализации v0.19–v1.0.0-rc.6](docs/releases/IMPLEMENTATION_HISTORY.md)
+- [История реализации v0.19–v1.0.0-rc.7](docs/releases/IMPLEMENTATION_HISTORY.md)
 
 ## Требования
 
-- Node.js `>=14.17`.
-- TypeScript `^5.8.3` для AST/type analysis.
-- Jest `26.6.0` — точная `devDependency` генератора для реальных integration tests и проверки сгенерированного harness. При coverage-feedback на другом проекте runner сначала ищет Jest в целевом проекте; `--jest-bin` позволяет указать его явно. `jest-unit` не используется.
+- Node.js `>=24.0.0`.
+- TypeScript `5.8.3` — точная зависимость генератора для AST/type analysis.
+- Jest `30.5.2` — точная `devDependency` генератора для реальных integration tests. При coverage-feedback runner предпочитает Jest целевого проекта; поддерживается только Jest `>=30.5.2 <31.0.0`, а `--jest-bin` позволяет выбрать конкретную установку. `jest-unit` не является зависимостью генератора.
 
 ## Shareable analysis report
 
@@ -81,3 +81,15 @@ node branch-scenarios.mjs src/feature.ts --function calculate --mcdc --coverage-
 ```
 
 Use `--analysis-report-form-out <file.json>` to choose a custom form path. After running tests, fill `*.analysis-run-form.json` (keep every `scenarioId` unchanged), then create the merged report with `node tools/finalize-analysis-report.mjs <analysis-report.json> <analysis-run-form.json>`. Attach the resulting `*.final.json` here. For failures, also attach the smallest relevant source files with secrets removed and the exact test command. See `docs/README.md` for the workflow.
+
+
+## Platform requirements (rc.7)
+
+- Node.js `>=24.0.0` (CI matrix: 24.x and 26.x; `.nvmrc` selects 26).
+- Jest `30.5.2` is pinned for generator development and integration tests. Coverage feedback validates the consuming project's Jest version.
+- TypeScript is pinned to `5.8.3`; install the exact direct dependency versions with `npm install`. A committed lockfile remains a pre-stable release gate.
+
+
+### Security note for runtime MC/DC
+
+`--coverage-feedback --mcdc` evaluates selected condition expressions with the JavaScript `Function` constructor to validate concrete input values. This happens inside the same Node/Jest process that imports and executes the target module. Only use runtime feedback with source code you trust; do not run it against untrusted repositories or pull requests in a privileged environment.

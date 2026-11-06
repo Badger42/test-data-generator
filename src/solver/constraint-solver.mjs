@@ -114,6 +114,24 @@ function expressionCandidateValues(atoms) {
   ]);
   const output = [-10, -2, -1, 0, 1, 2, 5, 10, 20, 50, 100];
   const add = value => { if (Number.isFinite(value) && !output.includes(value)) output.push(value); };
+  const collectModuloDivisors = expression => {
+    if (!expression || typeof expression !== 'object') return [];
+    if (expression.kind === 'binary') {
+      const own = expression.operator === '%' && expression.right?.kind === 'literal' &&
+        typeof expression.right.value === 'number' && Number.isInteger(expression.right.value) && expression.right.value !== 0
+        ? [Math.abs(expression.right.value)] : [];
+      return [...own, ...collectModuloDivisors(expression.left), ...collectModuloDivisors(expression.right)];
+    }
+    if (expression.kind === 'unary') return collectModuloDivisors(expression.operand);
+    return [];
+  };
+  for (const item of atoms) {
+    for (const divisor of collectModuloDivisors(item.leftExpression)) {
+      if (divisor > 0 && divisor <= 100) {
+        for (let multiple = -8; multiple <= 8; multiple += 1) add(divisor * multiple);
+      }
+    }
+  }
   for (const value of literals) {
     add(value); add(value - 1); add(value + 1);
     add(-value); add(value * 2); add(value / 2);

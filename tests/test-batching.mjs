@@ -82,23 +82,24 @@ const nestedUnsupported = builder.build([
 assert.equal(nestedUnsupported.batches.length, 0, 'nested sequence/conditional actions are not valid leaf Jest mock steps');
 
 const registrations = renderJestEachRegistrations(plan);
-assert.match(registrations, /test\.each\(BATCHES\[0\]\.cases\)/);
-assert.match(registrations, /test\.each\(BATCHES\[1\]\.cases\)/);
-assert.match(registrations, /test\("case isolated"/);
+assert.match(registrations, /test\.each\(BATCHES\[0\]\.cases\.map\(scenario => \[/);
+assert.match(registrations, /\)\('%s', async \(_testName, scenario\)/);
+assert.match(registrations, /test\.each\(BATCHES\[1\]\.cases\.map\(scenario => \[/);
+assert.match(registrations, /test\("case isolated \[scenario:isolated\]"/);
 
 const cases = [makeCase('h1', [methodA]), makeCase('h2', [methodA])];
 const generated = buildJestFeedbackTest('/tmp/target.js', 'target', null, '/tmp/in.json', '/tmp/run.json', [{ name: 'target' }], cases, '/* recorder */');
 assert.match(generated, /const BATCHES =/);
-assert.match(generated, /test\.each\(BATCHES\[0\]\.cases\)/);
+assert.match(generated, /test\.each\(BATCHES\[0\]\.cases\.map\(scenario => \[/);
 assert.match(generated, /async function runScenario\(scenario\)/);
 assert.match(generated, /beforeEach\(async \(?\)? =>/);
-assert.match(generated, /jest\.resetAllMocks\(\)/, 'test.each rows must reset Jest mocks before applying row-specific mock actions');
+assert.match(generated, /jestApi\.resetAllMocks\(\)/, 'test.each rows must reset Jest mocks before applying row-specific mock actions');
 assert.match(generated, /__BRANCH_SCENARIO_RESET_MOCKS__/);
-assert.ok(generated.indexOf('jest.resetAllMocks()') < generated.indexOf('__BRANCH_SCENARIO_RESET_MOCKS__'), 'Jest resets all mocks before the optional project hook');
+assert.ok(generated.indexOf('jestApi.resetAllMocks()') < generated.indexOf('__BRANCH_SCENARIO_RESET_MOCKS__'), 'Jest resets all mocks before the optional project hook');
 assert.doesNotMatch(generated, /for \(const scenario of CASES\)/);
 
 const individualGenerated = buildJestFeedbackTest('/tmp/target.js', 'target', null, '/tmp/in.json', '/tmp/run.json', [{ name: 'target' }], cases, '/* recorder */', { enabled: false });
 assert.doesNotMatch(individualGenerated, /test\.each\(/);
-assert.match(individualGenerated, /test\("case h1"/);
+assert.match(individualGenerated, /test\("case h1 \[scenario:h1\]"/);
 
 console.log('Test Batching tests passed: stable execution signatures, method-set grouping, per-row mock variance, isolation fallback, chunk limits and Jest test.each rendering.');

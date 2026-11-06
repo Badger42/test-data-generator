@@ -24,12 +24,13 @@ export function renderJestEachRegistrations(plan, options = {}) {
     if (entry.kind === 'batch') {
       const index = batchIndexes.get(entry.batchId);
       if (index === undefined) throw new Error(`Unknown test batch '${entry.batchId}'.`);
-      return `${testApi}.each(${batchVariable}[${index}].cases)('$testName', async scenario => ${callbackName}(scenario));`;
+      const rows = `${batchVariable}[${index}].cases.map(scenario => [String(scenario.testName ?? '[Scenario]') + ' [scenario:' + scenario.id + ']', scenario])`;
+      return `${testApi}.each(${rows})('%s', async (_testName, scenario) => ${callbackName}(scenario));`;
     }
     const index = individualIndexes.get(entry.scenarioId);
     if (index === undefined) throw new Error(`Unknown individual scenario '${entry.scenarioId}'.`);
     const item = plan.individual[index];
-    return `${testApi}(${JSON.stringify(item.testName ?? `[Scenario] ${item.id}`)}, async () => ${callbackName}(${individualVariable}[${index}]));`;
+    return `${testApi}(${JSON.stringify(`${item.testName ?? `[Scenario] ${item.id}`} [scenario:${item.id}]`)}, async () => ${callbackName}(${individualVariable}[${index}]));`;
   }).join('\n');
 }
 

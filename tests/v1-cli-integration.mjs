@@ -16,7 +16,7 @@ try {
   assert.equal(run.status, 0, `CLI integration failed:\n${run.stdout}\n${run.stderr}`);
   const report = JSON.parse(fs.readFileSync(output, 'utf8'));
   assert.equal(report.generator.name, 'branch-scenarios-generator');
-  assert.equal(report.generator.version, '1.0.0-rc.6');
+  assert.equal(report.generator.version, '1.0.0-rc.7');
   assert.ok(report.functions.length >= 1);
   const scenarios = report.functions.flatMap(fn => fn.scenarios);
   assert.ok(scenarios.length > 0);
@@ -47,6 +47,7 @@ try {
 
   const customOutput = path.join(temp, 'custom-run.scenarios.json');
   const customForm = path.join(temp, 'forms', 'execution-results.json');
+  fs.mkdirSync(path.dirname(customForm), { recursive: true });
   const customRun = spawnSync(process.execPath, [
     path.join(project, 'branch-scenarios.mjs'), path.join(project, 'examples/passenger.ts'),
     '--all', '--analysis-report-form-out', customForm, '--out', customOutput,

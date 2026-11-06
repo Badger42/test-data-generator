@@ -1,4 +1,5 @@
 import path from 'node:path';
+import fs from 'node:fs';
 import process from 'node:process';
 import { loadTypescriptProject } from '../project/load-typescript-project.mjs';
 import { discoverFunctions } from '../project/discover-functions.mjs';
@@ -13,6 +14,92 @@ import { createFunctionAnalysisSession } from '../analysis/function-analysis-ses
 import { createFunctionAnalyzerAdapter } from '../analysis/function-analyzer-adapter.mjs';
 import { createTypeScriptDataFlowAnalyzer } from '../data-flow/data-flow-analyzer.mjs';
 import { createDataFlowAnalyzerAdapter } from '../data-flow/data-flow-adapter.mjs';
+
+
+function thrownErrorDescriptor(statement, ts) {
+  if (!statement) return null;
+  if (ts.isThrowStatement(statement)) {
+    const expression = statement.expression;
+    if (expression && ts.isNewExpression(expression)) {
+      const qualifiedName = expression.expression.getText(statement.getSourceFile()).split('.');
+      const name = qualifiedName[qualifiedName.length - 1];
+      return { name, source: expression.getText(statement.getSourceFile()) };
+    }
+    return { name: null, source: expression?.getText(statement.getSourceFile()) ?? null };
+  }
+  if (ts.isBlock(statement)) {
+    const last = statement.statements[statement.statements.length - 1];
+    return thrownErrorDescriptor(last, ts);
+  }
+  if (ts.isIfStatement(statement) && statement.elseStatement) {
+    const thenError = thrownErrorDescriptor(statement.thenStatement, ts);
+    const elseError = thrownErrorDescriptor(statement.elseStatement, ts);
+    return thenError && elseError && thenError.name === elseError.name
+      ? { name: thenError.name, source: `both branches throw (${thenError.source}; ${elseError.source})` }
+      : null;
+  }
+  return null;
+}
+
+function annotateExpectedThrowScenarios(functionResults, functionUnits, sourceFile, ts) {
+  const ifNodes = [];
+  function visit(node) {
+    if (ts.isIfStatement(node)) ifNodes.push(node);
+    ts.forEachChild(node, visit);
+  }
+  for (const unit of functionUnits) visit(unit.node);
+  const throwingConditions = new Map();
+  for (const node of ifNodes) {
+    const thenError = thrownErrorDescriptor(node.thenStatement, ts);
+    const elseError = thrownErrorDescriptor(node.elseStatement, ts);
+    if (thenError) throwingConditions.set(node.expression.getText(sourceFile), { outcome: true, expectedException: thenError });
+    if (elseError) throwingConditions.set(node.expression.getText(sourceFile), { outcome: false, expectedException: elseError });
+  }
+  const locationKey = node => {
+    const position = sourceFile.getLineAndCharacterOfPosition(node.expression.getStart(sourceFile));
+    return `${position.line + 1}:${position.character + 1}`;
+  };
+  const byLocation = new Map(ifNodes.map(node => [locationKey(node), node]));
+  return functionResults.map(result => {
+    const scenarios = (result.scenarios ?? []).map(scenario => {
+      const target = scenario.target;
+      if (target?.kind !== 'if' || typeof target.outcome !== 'boolean') return scenario;
+      const statement = byLocation.get(`${target.line}:${target.column}`);
+      if (!statement) return scenario;
+      const branch = target.outcome ? statement.thenStatement : statement.elseStatement;
+      const expectedException = thrownErrorDescriptor(branch, ts);
+      return expectedException ? { ...scenario, expectedException } : scenario;
+    });
+    const mcdc = result.mcdc ? {
+      ...result.mcdc,
+      decisions: (result.mcdc.decisions ?? []).map(decision => {
+        const throwing = throwingConditions.get(decision.expression);
+        if (!throwing) return decision;
+        return {
+          ...decision,
+          conditions: (decision.conditions ?? []).map(condition => ({
+            ...condition,
+            independencePairs: (condition.independencePairs ?? []).map(pair => ({
+              ...pair,
+              scenarios: Object.fromEntries(Object.entries(pair.scenarios ?? {}).map(([side, scenario]) => {
+                const expectedException = scenario?.decisionOutcome === throwing.outcome ? throwing.expectedException : null;
+                return [side, expectedException ? { ...scenario, expectedException } : scenario];
+              })),
+            })),
+          })),
+        };
+      }),
+    } : result.mcdc;
+    const annotated = { ...result, scenarios, ...(mcdc ? { mcdc } : {}) };
+    // Preserve the session-owned, non-enumerable metadata consumed by report
+    // aggregation and later Data Flow/coverage stages. Object spread drops it.
+    for (const key of Object.getOwnPropertyNames(result)) {
+      const descriptor = Object.getOwnPropertyDescriptor(result, key);
+      if (descriptor && !descriptor.enumerable) Object.defineProperty(annotated, key, descriptor);
+    }
+    return annotated;
+  });
+}
 
 export function validateGenerateOptions(args) {
   if (!args.file) throw new Error('A source file is required.');
@@ -43,6 +130,14 @@ export function generateScenarios(args, runtime = {}) {
     throw new TypeError('generateScenarios requires version, analyzer, source formatter and coverage-feedback runtime ports.');
   }
   validateGenerateOptions(args);
+  for (const [option, outputPath] of [
+    ['--out', args.out], ['--minimal-suite-out', args.minimalSuiteOut],
+    ['--analysis-report-out', args.analysisReportOut], ['--analysis-report-form-out', args.analysisReportFormOut],
+  ]) {
+    if (!outputPath) continue;
+    const directory = path.dirname(path.resolve(cwd, outputPath));
+    if (!fs.existsSync(directory)) throw new Error(`${option} output directory does not exist: ${directory}. Create it explicitly before running the generator.`);
+  }
 
   const project = loadTypescriptProject({ file: args.file, configFile: args.tsconfig });
   const { checker, sourceFile, absoluteFile } = project;
@@ -77,7 +172,8 @@ export function generateScenarios(args, runtime = {}) {
       includeEvidence: args.includeEvidence === true,
     },
   }, functionAnalyzer));
-  const functionResults = analysisSessions.map(session => session.analyze());
+  const analyzedFunctionResults = analysisSessions.map(session => session.analyze());
+  const functionResults = annotateExpectedThrowScenarios(analyzedFunctionResults, functions, sourceFile, project.compilerApi);
 
   const reportBuilder = createReportBuilder();
   const result = reportBuilder.build({

@@ -22,10 +22,13 @@ function addScenarios(ctx, kind, node, conditionText, desired, incoming, targetL
   ctx.branchSeen.add(branchKey);
   const outcomeKey = `${branchId}:${desired}:${targetLabel ?? ''}`;
   const targetSolutions = solveCondition(solveNode, desired, ctx, incoming);
-  const fullSolutions = combineSolutions(incoming, targetSolutions, ctx.maxAlternatives);
+  const candidateSolutions = combineSolutions(incoming, targetSolutions, ctx.maxAlternatives);
+  const unsupportedSolutions = candidateSolutions.filter(solution => solution.unsupported?.length);
+  const fullSolutions = candidateSolutions.filter(solution => !solution.unsupported?.length);
   if (!fullSolutions.length) {
     if (!ctx.branchOutcomeSeen.has(outcomeKey)) {
-      recordUnsupportedBranch(ctx, { branchId, outcome: desired, reason: 'No consistent assignment found for this path/context.' });
+      const reasons = [...new Set(unsupportedSolutions.flatMap(solution => solution.unsupported ?? []))];
+      recordUnsupportedBranch(ctx, { branchId, outcome: desired, reason: reasons.length ? reasons.join('; ') : 'No consistent assignment found for this path/context.' });
     }
     return;
   }
@@ -114,12 +117,18 @@ function addScenarios(ctx, kind, node, conditionText, desired, incoming, targetL
     });
     recordScenario(ctx, scenario, { loop: kind === 'loop' });
   }
-  if (fullSolutions.some(s => s.unsupported.length)) {
-    recordUnsupportedBranch(ctx, { branchId, outcome: desired, reason: [...new Set(fullSolutions.flatMap(s => s.unsupported))].join('; ') });
+  if (unsupportedSolutions.length) {
+    recordUnsupportedBranch(ctx, { branchId, outcome: desired, reason: [...new Set(unsupportedSolutions.flatMap(solution => solution.unsupported ?? []))].join('; ') });
   }
 }
 
 function addCustomSwitchScenario(ctx, branchId, condition, label, solutions, node, switchStatement, coverageOutcomeIndex) {
+  const rejectedSolutions = solutions.filter(solution => solution.unsupported?.length);
+  solutions = solutions.filter(solution => !solution.unsupported?.length);
+  if (!solutions.length && rejectedSolutions.length) {
+    recordUnsupportedBranch(ctx, { branchId, outcome: label, reason: [...new Set(rejectedSolutions.flatMap(solution => solution.unsupported ?? []))].join('; ') });
+    return;
+  }
   let index = 0;
   const seen = new Set();
   for (const solution of solutions) {
@@ -146,7 +155,7 @@ function addCustomSwitchScenario(ctx, branchId, condition, label, solutions, nod
       unsupported: solution.unsupported,
     });
   }
-  if (solutions.some(s => s.unsupported.length)) recordUnsupportedBranch(ctx, { branchId, outcome: label, reason: [...new Set(solutions.flatMap(s => s.unsupported))].join('; ') });
+  if (rejectedSolutions.length) recordUnsupportedBranch(ctx, { branchId, outcome: label, reason: [...new Set(rejectedSolutions.flatMap(solution => solution.unsupported ?? []))].join('; ') });
 }
 
 function addLoopScenario(ctx, node, loopType, condition, outcome, solutions, metadata = {}) {
@@ -155,8 +164,11 @@ function addLoopScenario(ctx, node, loopType, condition, outcome, solutions, met
   if (ctx.branchSeen.has(branchKey)) return;
   ctx.branchSeen.add(branchKey);
   recordBranchOutcome(ctx, branchId, outcome, branchKey);
+  const rejectedSolutions = solutions.filter(solution => solution.unsupported?.length);
+  solutions = solutions.filter(solution => !solution.unsupported?.length);
   if (!solutions.length) {
-    recordUnsupportedBranch(ctx, { branchId, outcome, reason: 'No consistent input assignment could be constructed for this loop outcome.' });
+    const reasons = [...new Set(rejectedSolutions.flatMap(solution => solution.unsupported ?? []))];
+    recordUnsupportedBranch(ctx, { branchId, outcome, reason: reasons.length ? reasons.join('; ') : 'No consistent input assignment could be constructed for this loop outcome.' });
     return;
   }
 
@@ -197,11 +209,11 @@ function addLoopScenario(ctx, node, loopType, condition, outcome, solutions, met
       unsupported: solution.unsupported,
     }, { loop: true });
   }
-  if (solutions.some(solution => solution.unsupported.length)) {
+  if (rejectedSolutions.length) {
     recordUnsupportedBranch(ctx, {
       branchId,
       outcome,
-      reason: [...new Set(solutions.flatMap(solution => solution.unsupported))].join('; '),
+      reason: [...new Set(rejectedSolutions.flatMap(solution => solution.unsupported ?? []))].join('; '),
     });
   }
 }

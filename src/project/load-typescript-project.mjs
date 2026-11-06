@@ -48,6 +48,16 @@ export function loadTypescriptProject(request) {
   const program = ts.createProgram({ rootNames, options });
   const sourceFile = program.getSourceFile(absoluteFile);
   if (!sourceFile) throw new Error(`Could not load source file: ${absoluteFile}`);
+  const syntaxDiagnostics = sourceFile.parseDiagnostics ?? [];
+  if (syntaxDiagnostics.length) {
+    const details = syntaxDiagnostics.slice(0, 10).map(diagnostic => {
+      const position = diagnostic.file?.getLineAndCharacterOfPosition(diagnostic.start ?? 0);
+      const where = position ? `${position.line + 1}:${position.character + 1}` : 'unknown position';
+      return `${where} TS${diagnostic.code}: ${ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`;
+    });
+    const remaining = syntaxDiagnostics.length > details.length ? `\n…and ${syntaxDiagnostics.length - details.length} more syntax error(s).` : '';
+    throw new SyntaxError(`Source file has ${syntaxDiagnostics.length} syntax error(s):\n${details.join('\n')}${remaining}`);
+  }
 
   const projectRoot = configPath ? path.dirname(configPath) : process.cwd();
   const relativeFile = path.relative(projectRoot, absoluteFile).split(path.sep).join('/');

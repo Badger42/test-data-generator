@@ -5,20 +5,13 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const packageJson = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
-assert.equal(packageJson.engines?.node, '>=14.17', 'this check protects the declared Node 14.17 minimum');
-const files = [];
-function walk(directory) {
-  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
-    const filename = path.join(directory, entry.name);
-    if (entry.isDirectory()) walk(filename);
-    else if (entry.isFile() && filename.endsWith('.mjs')) files.push(filename);
-  }
-}
-walk(path.join(root, 'src'));
-const incompatible = [];
-for (const filename of files) {
-  const source = fs.readFileSync(filename, 'utf8');
-  if (/\.at\s*\(/.test(source)) incompatible.push(path.relative(root, filename));
-}
-assert.deepEqual(incompatible, [], 'production source must not use Array.prototype.at while Node >=14.17 remains supported');
-console.log(`Node compatibility tests passed: ${files.length} production modules contain no Array.prototype.at usage.`);
+assert.equal(packageJson.engines?.node, '>=24.0.0', 'the supported Node.js baseline is 24.0.0');
+assert.equal(fs.readFileSync(path.join(root, '.nvmrc'), 'utf8').trim(), '26');
+assert.equal(fs.readFileSync(path.join(root, '.node-version'), 'utf8').trim(), '26');
+const workflow = fs.readFileSync(path.join(root, '.github', 'workflows', 'ci.yml'), 'utf8');
+assert.match(workflow, /node:\s*\[24,\s*26\]/, 'CI must exercise both supported Node.js LTS lines');
+
+// The old Node 14-era restriction against Array.prototype.at is intentionally
+// removed. CI runs this source tree on the declared Node 24/26 baseline, which
+// is the authoritative syntax/runtime compatibility check.
+console.log('Node compatibility contract passed: Node >=24 is declared; local version files and CI matrix agree.');

@@ -55,6 +55,15 @@ function remapCoverageMapForInstrumentedSource(coverageMap, instrumentedPath, or
     remapLocation(branch.loc);
     for (const location of branch.locations ?? []) remapLocation(location);
   }
+  for (const statement of Object.values(entry.statementMap ?? {})) remapLocation(statement);
+  for (const fn of Object.values(entry.fnMap ?? {})) {
+    remapLocation(fn.loc);
+    remapLocation(fn.decl);
+  }
+  // Istanbul's compact line counters are keyed only by generated line number;
+  // there is no location metadata with which to translate them safely. Force
+  // the report builder to reconstruct line counters from the remapped statementMap.
+  delete entry.l;
   entry.path = originalPath;
   const nextMap = { ...coverageMap, [originalPath]: entry };
   delete nextMap[coveragePath];

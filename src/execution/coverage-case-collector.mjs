@@ -6,9 +6,11 @@ function collectCoverageExecutionCases(functionResults) {
   function addCase(scenario, reference) {
     if (!scenario || !Array.isArray(scenario.arguments)) return null;
     if (scenario.unsupported?.length) return null;
+    const expectedException = scenario.expectedException ?? reference?.expectedException ?? null;
     const payload = {
       arguments: scenario.arguments,
       mocks: scenario.mocks ?? [],
+      expectedException,
     };
     const fingerprint = JSON.stringify(payload);
     let item = byFingerprint.get(fingerprint);
@@ -17,6 +19,7 @@ function collectCoverageExecutionCases(functionResults) {
         id: `coverage-case-${byFingerprint.size + 1}`,
         arguments: scenario.arguments,
         mocks: scenario.mocks ?? [],
+        ...(expectedException ? { expectedException } : {}),
         references: [],
       };
       byFingerprint.set(fingerprint, item);
@@ -30,6 +33,7 @@ function collectCoverageExecutionCases(functionResults) {
       addCase(scenario, {
         type: 'branch', functionName: fn.name, scenarioId: scenario.id,
         branchId: scenario.target?.branchId, outcome: scenario.target?.outcome,
+        ...(scenario.expectedException ? { expectedException: scenario.expectedException } : {}),
       });
     }
     for (const decision of fn.mcdc?.decisions ?? []) {

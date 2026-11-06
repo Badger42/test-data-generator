@@ -30,45 +30,57 @@ const sourceFile = fileURLToPath(JSON.parse(sourceUrlMatch[1]));
 const mcdcResultsFile = JSON.parse(mcdcPathMatch[1]);
 
 // A small Jest API shim executes the generated adapter hooks and each test.
-// It is an integration test double, not a coverage instrumenter.
-const mockModules = path.join(path.dirname(resultsFile), 'mock-node-modules');
-const jestGlobalsDir = path.join(mockModules, '@jest', 'globals');
-fs.mkdirSync(jestGlobalsDir, { recursive: true });
-fs.writeFileSync(path.join(jestGlobalsDir, 'package.json'), JSON.stringify({ name: '@jest/globals', main: 'index.cjs', type: 'commonjs' }));
-const shimSource = [
-  "const before = [], beforeEachHooks = [], after = [], tests = [];",
-  "module.exports = {",
-  "  beforeAll: fn => before.push(fn),",
-  "  beforeEach: fn => beforeEachHooks.push(fn),",
-  "  afterAll: fn => after.push(fn),",
-  "  jest: { resetAllMocks: () => { globalThis.__BRANCH_SCENARIO_JEST_RESET_CALLS__ = (globalThis.__BRANCH_SCENARIO_JEST_RESET_CALLS__ || 0) + 1; } },",
-  "  test: Object.assign((name, fn) => tests.push({ name, fn }), { each: rows => (title, fn) => rows.forEach(row => tests.push({ name: title.replace(/\\$testName/g, row.testName), fn: () => fn(row) })) }),",
-  "  __run: async () => {",
-  "    let setupError;",
-  "    try { for (const fn of before) await fn(); } catch (error) { setupError = error; }",
-  "    const assertionResults = [];",
-  "    for (const item of tests) {",
-  "      try {",
-  "        if (setupError) throw setupError;",
-  "        for (const hook of beforeEachHooks) await hook();",
-  "        await item.fn();",
-  "        assertionResults.push({ fullName: item.name, status: 'passed', failureMessages: [] });",
-  "      } catch (error) {",
-  "        assertionResults.push({ fullName: item.name, status: 'failed', failureMessages: [error.stack || String(error)] });",
-  "      }",
-  "    }",
-  "    for (const fn of after) {",
-  "      try { await fn(); } catch (error) { assertionResults.push({ fullName: 'afterAll', status: 'failed', failureMessages: [error.stack || String(error)] }); }",
-  "    }",
-  "    return assertionResults;",
-  "  },",
-  "};",
-].join('\n');
-fs.writeFileSync(path.join(jestGlobalsDir, 'index.cjs'), shimSource, 'utf8');
-process.env.NODE_PATH = [mockModules, process.env.NODE_PATH].filter(Boolean).join(path.delimiter);
-Module._initPaths();
-const jestApi = require('@jest/globals');
-require(testFile);
+// Inject it only for the generated file. NODE_PATH is deliberately not used:
+// a real Jest installation must never shadow this test double.
+const before = [];
+const beforeEachHooks = [];
+const after = [];
+const tests = [];
+const jestApi = {
+  beforeAll: fn => before.push(fn),
+  beforeEach: fn => beforeEachHooks.push(fn),
+  afterAll: fn => after.push(fn),
+  jest: { resetAllMocks: () => {
+    globalThis.__BRANCH_SCENARIO_JEST_RESET_CALLS__ = (globalThis.__BRANCH_SCENARIO_JEST_RESET_CALLS__ || 0) + 1;
+  } },
+  test: Object.assign(
+    (name, fn) => tests.push({ name, fn }),
+    { each: rows => (title, fn) => rows.forEach(row => {
+      const values = Array.isArray(row) ? row : [row];
+      const renderedTitle = String(title).replace(/%s/g, String(values[0]));
+      tests.push({ name: renderedTitle, fn: () => fn(...values) });
+    }) },
+  ),
+  __run: async () => {
+    let setupError;
+    try { for (const fn of before) await fn(); } catch (error) { setupError = error; }
+    const assertionResults = [];
+    for (const item of tests) {
+      try {
+        if (setupError) throw setupError;
+        for (const hook of beforeEachHooks) await hook();
+        await item.fn();
+        assertionResults.push({ fullName: item.name, title: item.name, status: 'passed', failureMessages: [] });
+      } catch (error) {
+        assertionResults.push({ fullName: item.name, title: item.name, status: 'failed', failureMessages: [error.stack || String(error)] });
+      }
+    }
+    for (const fn of after) {
+      try { await fn(); } catch (error) { assertionResults.push({ fullName: 'afterAll', title: 'afterAll', status: 'failed', failureMessages: [error.stack || String(error)] }); }
+    }
+    return assertionResults;
+  },
+};
+const originalLoad = Module._load;
+Module._load = function(request, parent, isMain) {
+  if (request === '@jest/globals' && parent?.filename === testFile) return jestApi;
+  return Reflect.apply(originalLoad, this, [request, parent, isMain]);
+};
+try {
+  require(testFile);
+} finally {
+  Module._load = originalLoad;
+}
 
 (async () => {
   const assertionResults = await jestApi.__run();

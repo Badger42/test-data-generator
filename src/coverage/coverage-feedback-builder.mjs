@@ -1,4 +1,16 @@
 /** Compose normalized Istanbul counters and static branch mapping into feedback DTOs. */
+
+function deriveLineCounters(fileCoverage) {
+  const lineCounts = new Map();
+  for (const [statementId, location] of Object.entries(fileCoverage.statementMap ?? {})) {
+    const line = location?.start?.line;
+    if (!Number.isInteger(line)) continue;
+    const count = Number(fileCoverage.s?.[statementId] ?? 0);
+    lineCounts.set(line, Math.max(lineCounts.get(line) ?? 0, count));
+  }
+  return Object.fromEntries([...lineCounts].map(([line, count]) => [line, count]));
+}
+
 export function createCoverageFeedbackBuilder({ path, summarizeCounterMap, normalizeCoverageFileMap, mapCoverageBranches, collectStaticBranchTargets }) {
 function buildCoverageFeedback(coverageMap, sourceFile, functionResults, options = {}) {
   const match = normalizeCoverageFileMap(coverageMap, sourceFile);
@@ -26,7 +38,7 @@ function buildCoverageFeedback(coverageMap, sourceFile, functionResults, options
   const statements = summarizeCounterMap(fileCoverage.s);
   const functions = summarizeCounterMap(fileCoverage.f);
   const branches = summarizeCounterMap(fileCoverage.b);
-  const lines = summarizeCounterMap(fileCoverage.l);
+  const lines = summarizeCounterMap(fileCoverage.l && Object.keys(fileCoverage.l).length ? fileCoverage.l : deriveLineCounters(fileCoverage));
   const mapped = mapCoverageBranches(fileCoverage, functionResults);
   const uncoveredBranchEntries = mapped.coverageEntries.filter(entry => entry.counts.some(count => Number(count) === 0));
   const coveredStaticTargets = mapped.targets.filter(target => target.coverageStatus === 'covered');

@@ -114,3 +114,8 @@ Added a companion execution-results form linked to the analysis report by `repor
 ### v1.0.0-rc.6 — Jest 26.6.0 dependency
 
 Pinned Jest 26.6.0 as a development dependency, added an exact-version dependency check, and changed real-Jest integration from a silent skip to a required check. The runner still resolves the consuming project's Jest first; `JEST_BIN` supports explicit selection. No jest-unit dependency is added.
+
+
+### v1.0.0-rc.7 — platform modernization and audit remediation
+
+Node.js baseline raised to 24+, Jest pinned to 30.5.2, TypeScript pinned to 5.8.3, and Node version files added. A lockfile could not be generated in the build environment and remains a pre-stable release gate. Jest batching uses positional `%s` arguments and unique scenario ID titles; result attribution consumes each assertion exactly once. Fake runner injects a shim without `NODE_PATH`. Coverage remapping now receives the generated instrumented source. Additional input validation, CLI diagnostics, exception expectations, conservative unsupported-parameter handling and CI/test runner changes are included where covered by regression tests.

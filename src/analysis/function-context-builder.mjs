@@ -23,13 +23,17 @@ export function createFunctionContextBuilder(dependencies) {
   function createFunctionContext(fn, sourceFile, checker, maxScenarios, generateMcdc = false, generationOptions = {}) {
     const parameters = [];
     const parameterMap = new Map();
+    const unsupportedParameters = [];
     const parameterNames = fn.node.parameters
       .filter(parameter => ts.isIdentifier(parameter.name))
       .map(parameter => parameter.name.text);
 
     fn.node.parameters.forEach((parameter, index) => {
       if (!ts.isIdentifier(parameter.name)) {
-        parameters.push({ name: parameter.name.getText(sourceFile), type: checker.typeToString(checker.getTypeAtLocation(parameter)), supported: false });
+        const name = parameter.name.getText(sourceFile);
+        const reason = 'Destructured parameters are not yet mapped to solver input paths; scenario generation is suppressed to avoid fabricated argument values.';
+        parameters.push({ name, type: checker.typeToString(checker.getTypeAtLocation(parameter)), supported: false, reason });
+        unsupportedParameters.push({ name, reason, index });
         return;
       }
       const type = checker.getTypeAtLocation(parameter);
@@ -129,6 +133,7 @@ export function createFunctionContextBuilder(dependencies) {
       analysisState: generationOptions.analysisState,
       maxAlternatives: generationOptions.maxAlternatives ?? defaultMaxAlternatives(),
       parameters,
+      unsupportedParameters,
       baseArgs,
       maxScenarios,
       branchSeen: new Set(),

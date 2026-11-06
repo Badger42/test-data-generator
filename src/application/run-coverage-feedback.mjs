@@ -47,6 +47,19 @@ function createCoverageFeedback(result, sourceFile, outputFile, args) {
 
   const sourceDirectory = path.dirname(absoluteSource);
   const jestWorkingDirectory = resolveJestWorkingDirectory(absoluteSource, args.jestConfig);
+  if (runner.version) {
+    const parsed = runner.version.match(/^(\d+)\.(\d+)\.(\d+)/);
+    const versionTuple = parsed ? parsed.slice(1).map(Number) : null;
+    const isSupported = Boolean(versionTuple && versionTuple[0] === 30 &&
+      (versionTuple[1] > 5 || (versionTuple[1] === 5 && versionTuple[2] >= 2)));
+    if (!isSupported) {
+      return {
+        version: 1, status: 'jest-version-unsupported',
+        error: `Coverage feedback requires Jest >=30.5.2 <31.0.0; found ${runner.version}. Update the consuming project's Jest or pass --jest-bin to a supported installation.`,
+        requiredJestVersion: '>=30.5.2 <31.0.0', actualJestVersion: runner.version,
+      };
+    }
+  }
   let tempDirectory;
   try {
     tempDirectory = fs.mkdtempSync(path.join(sourceDirectory, '.branch-scenarios-feedback-'));

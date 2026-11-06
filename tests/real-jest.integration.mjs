@@ -33,7 +33,7 @@ function findJest() {
 
 const jestBin = findJest();
 if (!jestBin) {
-  throw new Error('Real Jest integration requires Jest 26.6.0. Run `npm install` in the generator repository or set JEST_BIN to an explicit Jest executable.');
+  throw new Error('Real Jest integration requires Jest 30.5.2. Run `npm install` in the generator repository or set JEST_BIN to an explicit Jest executable.');
 }
 
 if (!configuredJest) {

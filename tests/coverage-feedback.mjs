@@ -165,6 +165,22 @@ try {
   const missingJestReport = JSON.parse(fs.readFileSync(missingJestOutput, 'utf8'));
   assert.equal(missingJestReport.coverageFeedback.status, 'jest-not-found');
 
+  // Known incompatible consumer Jest releases fail before the harness is launched.
+  const jest26Root = path.join(tempDir, 'old-project', 'node_modules', 'jest');
+  const jest26Bin = path.join(jest26Root, 'bin', 'jest.js');
+  fs.mkdirSync(path.dirname(jest26Bin), { recursive: true });
+  fs.writeFileSync(path.join(jest26Root, 'package.json'), JSON.stringify({ name: 'jest', version: '26.6.0' }));
+  fs.writeFileSync(jest26Bin, '');
+  const oldJestOutput = path.join(tempDir, 'old-jest.json');
+  const oldJest = spawnSync(process.execPath, [
+    cli, fixture, '--function', 'coverageTarget', '--mcdc', '--coverage-feedback',
+    '--jest-bin', jest26Bin, '--out', oldJestOutput,
+  ], { cwd: projectDir, encoding: 'utf8' });
+  assert.notEqual(oldJest.status, 0, `incompatible Jest should be reported in the JSON result, not crash the CLI: ${oldJest.stderr}`);
+  const oldJestReport = JSON.parse(fs.readFileSync(oldJestOutput, 'utf8'));
+  assert.equal(oldJestReport.coverageFeedback.status, 'jest-version-unsupported');
+  assert.equal(oldJestReport.coverageFeedback.actualJestVersion, '26.6.0');
+
   console.log(`Coverage feedback tests passed: ${withJest.coverageFeedback.execution.generatedCases} generated cases, ${withJest.coverageFeedback.execution.mcdcPairs.length} MC/DC pairs; synthetic Istanbul mapping verified.`);
 } finally {
   fs.rmSync(tempDir, { recursive: true, force: true });

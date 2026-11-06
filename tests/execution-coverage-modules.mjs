@@ -27,7 +27,7 @@ try {
 
   const jestRunner = createJestRunner({ fs, path, process, spawnSync: () => ({ status: 0 }) });
   assert.deepEqual(jestRunner.findJestRunner(explicitJest, sourceFile, null), {
-    command: process.execPath, prefixArgs: [explicitJest], shell: false,
+    command: process.execPath, prefixArgs: [explicitJest], shell: false, version: null,
   });
   assert.equal(jestRunner.resolveJestWorkingDirectory(sourceFile, null), packageRoot);
 
@@ -46,7 +46,7 @@ try {
     spawnSync: () => ({ status: 0 }),
   });
   assert.deepEqual(projectFirstRunner.findJestRunner(null, sourceFile, null), {
-    command: process.execPath, prefixArgs: [targetJest], shell: false,
+    command: process.execPath, prefixArgs: [targetJest], shell: false, version: null,
   });
   assert.equal(jestRunner.run('cmd', [], {}).status, 0);
 
@@ -61,6 +61,9 @@ try {
   assert.equal(collected.cases.length, 2, 'identical argument/mocks payloads are deduplicated');
   assert.equal(collected.pairRecords.length, 1);
   assert.equal(collected.cases.find(item => item.arguments[0] === 1).references.length, 2);
+  const expectedThrow = { name: 'RangeError', source: "new RangeError('negative age')" };
+  const thrownCases = collectCoverageExecutionCases([{ name: 'throws', scenarios: [{ id: 'throw-1', arguments: [-1], mocks: [], expectedException: expectedThrow, target: { branchId: 'throw-branch', outcome: true } }] }]);
+  assert.deepEqual(thrownCases.cases[0].expectedException, expectedThrow, 'expected exception metadata must survive case collection');
 
   const harness = buildJestFeedbackTest(sourceFile, 'target', null, 'in.json', 'runtime.json', [{ name: 'target' }], collected.cases, '/* runtime-recorder-fixture */');
   assert.ok(harness.includes('/* runtime-recorder-fixture */'));
@@ -76,6 +79,17 @@ try {
   const testResults = readJestTestResults(jestResultsPath, collected.cases, fs);
   assert.deepEqual(testResults.cases.map(item => item.status), ['passed', 'failed']);
   assert.equal(testResults.numFailedTests, 1);
+  const duplicateTitleCases = [
+    { id: 'same-a', testName: 'same display name', references: [] },
+    { id: 'same-b', testName: 'same display name', references: [] },
+  ];
+  const duplicateTitlePath = path.join(temp, 'duplicate-title-results.json');
+  fs.writeFileSync(duplicateTitlePath, JSON.stringify({ success: true, testResults: [{ assertionResults: [
+    { fullName: 'same display name [scenario:same-b]', status: 'passed' },
+    { fullName: 'same display name [scenario:same-a]', status: 'failed', failureMessages: ['specific failure'] },
+  ] }] }));
+  const duplicateResults = readJestTestResults(duplicateTitlePath, duplicateTitleCases, fs);
+  assert.deepEqual(duplicateResults.cases.map(item => item.status), ['failed', 'passed'], 'scenario IDs, not display titles, must determine result attribution');
   assert.deepEqual(readRuntimeTraceFile(path.join(temp, 'missing.json'), { fs, fallback: ['fallback'] }), ['fallback']);
   const tracePath = path.join(temp, 'trace.json');
   fs.writeFileSync(tracePath, '[{"caseId":"s1"}]');
@@ -86,12 +100,18 @@ try {
   const originalText = 'if (value) return true;';
   const remapped = sourceMap.remapCoverageMapForInstrumentedSource({ [instrumentedPath]: {
     branchMap: { 0: { loc: { start: { line: 1, column: 12 }, end: { line: 1, column: 30 } }, locations: [] } },
+    statementMap: { 0: { start: { line: 1, column: 13 }, end: { line: 1, column: 30 } } },
+    fnMap: { 0: { loc: { start: { line: 1, column: 13 }, end: { line: 1, column: 30 } }, decl: { start: { line: 1, column: 13 }, end: { line: 1, column: 30 } } } },
+    l: { 1: 1 },
   } }, instrumentedPath, sourceFile, originalText, {
     generatedSource: '/* wrapped */if (value) return true;',
     insertionEvents: [{ generatedStart: 0, generatedEnd: 13, originalOffset: 0 }],
   });
   assert.equal(remapped.remapped, true);
   assert.equal(remapped.coverageMap[sourceFile].branchMap[0].loc.start.column, 0);
+  assert.equal(remapped.coverageMap[sourceFile].statementMap[0].start.column, 0, 'statementMap coordinates must be remapped too');
+  assert.equal(remapped.coverageMap[sourceFile].fnMap[0].loc.start.column, 0, 'fnMap coordinates must be remapped too');
+  assert.equal(Object.hasOwn(remapped.coverageMap[sourceFile], 'l'), false, 'generated line counters must be rebuilt from remapped statement locations');
 
   const normalizer = createSourceMapNormalizer({ fs, path, platform: 'linux' });
   const mapper = createBranchMapper({ fs, path, platform: 'linux', canonicalCoveragePath: normalizer.canonicalCoveragePath });
