@@ -69,33 +69,32 @@ function coverageTypeMatches(targetKind, coverageKind) {
 }
 
 function coverageLocationScore(target, entry) {
-  const hasCoverageAnchor = Number.isInteger(target.coverageLine) && Number.isInteger(target.coverageColumn);
-  const expectedLine = hasCoverageAnchor ? target.coverageLine : target.line;
-  const expectedColumn = hasCoverageAnchor ? target.coverageColumn : target.column;
+  // Jest's V8 provider converts source ranges to one-counter Istanbul entries
+  // with type 'branch'. For an if target, this is the boolean-condition range,
+  // not a semantic two-outcome Istanbul if branch.
+  const isV8IfConditionRange = target.kind === 'if' && entry.type === 'branch';
+  const hasCoverageAnchor = !isV8IfConditionRange && Number.isInteger(target.coverageLine) && Number.isInteger(target.coverageColumn);
+  const expectedLine = isV8IfConditionRange ? target.line : hasCoverageAnchor ? target.coverageLine : target.line;
+  const expectedColumn = isV8IfConditionRange ? target.column : hasCoverageAnchor ? target.coverageColumn : target.column;
   if (!expectedLine || entry.loc?.start?.line !== expectedLine) return null;
-  if (!coverageTypeMatches(target.kind, entry.type)) return null;
+  if (!isV8IfConditionRange && !coverageTypeMatches(target.kind, entry.type)) return null;
 
   const actualColumn = Number(entry.loc?.start?.column);
   const columnDistance = Number.isFinite(actualColumn) && Number.isFinite(expectedColumn)
     ? Math.abs((actualColumn + 1) - expectedColumn)
     : Number.MAX_SAFE_INTEGER;
-  const expectedEndLine = hasCoverageAnchor ? null : target.endLine;
-  const expectedEndColumn = hasCoverageAnchor ? null : target.endColumn;
+  const expectedEndLine = isV8IfConditionRange ? target.endLine : hasCoverageAnchor ? null : target.endLine;
+  const expectedEndColumn = isV8IfConditionRange ? target.endColumn : hasCoverageAnchor ? null : target.endColumn;
   const actualEndLine = entry.loc?.end?.line;
   const actualEndColumn = entry.loc?.end?.column;
   const endLineDistance = expectedEndLine && actualEndLine ? Math.abs(expectedEndLine - actualEndLine) : 0;
   const endColumnDistance = expectedEndColumn && actualEndColumn && endLineDistance === 0
     ? Math.abs(expectedEndColumn - (actualEndColumn + 1)) : 0;
-  // Start position is the stable anchor across Istanbul providers. End position
-  // only breaks ties; transformed source maps can legitimately alter node ends.
-  return {
-    columnDistance,
-    endLineDistance,
-    endColumnDistance,
-    score: columnDistance * 1000 + endLineDistance * 10 + Math.min(endColumnDistance, 9),
-  };
+  // Matching both condition boundaries distinguishes the complete expression
+  // from nested atomic-condition ranges emitted by the V8 provider.
+  return { columnDistance, endLineDistance, endColumnDistance, isV8IfConditionRange,
+    score: columnDistance * 1000 + endLineDistance * 10 + Math.min(endColumnDistance, 9) };
 }
-
 function mapCoverageBranches(fileCoverage, functionResults) {
   const coverageEntries = Object.entries(fileCoverage.branchMap ?? {}).map(([id, branch]) => ({
     id,
@@ -172,8 +171,10 @@ function mapCoverageBranches(fileCoverage, functionResults) {
       covered: Number(count) > 0,
       location: best.locations[index] ?? null,
     }));
+    const isV8IfConditionRange = best.isV8IfConditionRange === true;
     const outcomeDetails = target.outcomes.map(outcome => {
-      let coverageOutcomeIndex = outcome.coverageOutcomeIndex;
+      // One V8 range counter cannot establish separate true/false outcomes.
+      let coverageOutcomeIndex = isV8IfConditionRange ? null : outcome.coverageOutcomeIndex;
       if (!Number.isInteger(coverageOutcomeIndex) && typeof outcome.value === 'boolean' && ['if', 'cond-expr', 'while', 'for'].includes(best.type)) {
         coverageOutcomeIndex = outcome.value ? 0 : 1;
       }
@@ -194,16 +195,19 @@ function mapCoverageBranches(fileCoverage, functionResults) {
     const relevantTotal = target.kind === 'switch' && relevantOutcomes.length
       ? relevantOutcomes.length
       : coverageOutcomes.length;
-    const coverageStatus = relevantTotal === 0 ? 'not-mapped'
-      : coveredCount === 0 ? 'uncovered'
-      : coveredCount === relevantTotal ? 'covered'
-      : 'partially-covered';
+    const coverageStatus = isV8IfConditionRange
+      ? (coverageOutcomes.some(outcome => outcome.covered) ? 'partially-covered' : 'uncovered')
+      : relevantTotal === 0 ? 'not-mapped'
+        : coveredCount === 0 ? 'uncovered'
+        : coveredCount === relevantTotal ? 'covered'
+        : 'partially-covered';
 
     return {
       ...target,
       outcomes: outcomeDetails,
       coverageStatus,
-      mappingStatus: best.columnDistance === 0 ? 'exact-start' : 'nearest-start',
+      mappingStatus: isV8IfConditionRange ? 'v8-condition-range-only' : best.columnDistance === 0 ? 'exact-start' : 'nearest-start',
+      ...(isV8IfConditionRange ? { coverageOutcomeMapping: 'not-available-from-v8-range-map' } : {}),
       coverageBranchId: best.id,
       coverageType: best.type,
       columnMatchDistance: best.columnDistance,

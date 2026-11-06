@@ -50,8 +50,8 @@ try {
     'temporary files must be removed after timeout');
 
   await new Promise(resolve => setTimeout(resolve, 35));
-  const second = useCase.createCoverageFeedback({ functions: [{ name: 'target', scenarios: [] }] }, sourceFile, outputFile, args);
-  assert.equal(second.status, 'execution-timeout', 'the same args object must retain one total budget across iterative passes');
+  const second = useCase.createCoverageFeedback({ functions: [{ name: 'target', scenarios: [] }] }, sourceFile, outputFile, { ...args });
+  assert.equal(second.status, 'execution-timeout', 'a copied args object for the same source/output run must retain the original total budget');
   assert.equal(calls.length, 1, 'an exhausted total budget must prevent another Jest process from starting');
 
 

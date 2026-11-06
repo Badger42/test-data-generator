@@ -11,6 +11,13 @@ const require = createRequire(import.meta.url);
 const expectedJestVersion = JSON.parse(fs.readFileSync(path.join(projectDir, 'package.json'), 'utf8')).devDependencies?.jest;
 const cli = path.join(projectDir, 'branch-scenarios.mjs');
 const configuredJest = process.env.JEST_BIN;
+function readCoverageFailureDiagnostics(reportFile) {
+  try {
+    const report = JSON.parse(fs.readFileSync(reportFile, 'utf8'));
+    const feedback = report.coverageFeedback ?? {};
+    return JSON.stringify({ status: feedback.status, jest: feedback.jest ?? null, testResults: feedback.execution?.testResults ?? null });
+  } catch (error) { return `report unavailable: ${error.message}`; }
+}
 function findJest() {
   if (configuredJest) {
     const explicit = path.resolve(configuredJest);
@@ -70,7 +77,7 @@ try {
     '--out', outputFile,
   ], { cwd: tempDir, encoding: 'utf8', env: { ...process.env } });
 
-  assert.equal(result.status, 0, `Real Jest integration failed:\n${result.stdout}\n${result.stderr}`);
+  assert.equal(result.status, 0, `Real Jest integration failed:\n${result.stdout}\n${result.stderr}\nCoverage diagnostics: ${readCoverageFailureDiagnostics(outputFile)}`);
   const report = JSON.parse(fs.readFileSync(outputFile, 'utf8'));
   assert.equal(report.coverageFeedback.status, 'passed');
   assert.ok(report.coverageFeedback.execution.testResults.numPassedTests > 0);

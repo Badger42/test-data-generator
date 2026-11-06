@@ -7,7 +7,7 @@
 import { createTestBatchBuilder } from '../testing/batching/test-batch-builder.mjs';
 
 export function createCoverageFeedbackUseCase(deps) {
-  const executionDeadlines = new WeakMap();
+  const executionDeadlines = new Map();
   const {
     fs, path, process, runJest, collectCoverageExecutionCases, findJestRunner,
     resolveJestWorkingDirectory, instrumentMcdcSource, buildJestFeedbackTest,
@@ -180,10 +180,14 @@ function createCoverageFeedback(result, sourceFile, outputFile, args) {
     JEST_WORKER_ID: '1',
   };
   const now = Date.now();
-  if (!executionDeadlines.has(args)) {
-    executionDeadlines.set(args, now + (args.coverageFeedbackTimeoutMs ?? 600_000));
+  // Iterative passes may receive fresh args objects with identical options.
+  // Tie the deadline to the analyzed input/output run so wrappers or shallow
+  // copies cannot accidentally reset the total execution budget.
+  const executionBudgetKey = `${absoluteSource}\u0000${path.resolve(outputFile)}`;
+  if (!executionDeadlines.has(executionBudgetKey)) {
+    executionDeadlines.set(executionBudgetKey, now + (args.coverageFeedbackTimeoutMs ?? 600_000));
   }
-  const remainingBudgetMs = executionDeadlines.get(args) - now;
+  const remainingBudgetMs = executionDeadlines.get(executionBudgetKey) - now;
   if (remainingBudgetMs <= 0) {
     fs.rmSync(tempDirectory, { recursive: true, force: true });
     if (instrumentedSourcePath) fs.rmSync(instrumentedSourcePath, { force: true });

@@ -134,6 +134,29 @@ try {
   assert.ok(syntheticArrayTargets.length > 0);
   assert.ok(syntheticArrayTargets.every(target => target.coverageStatus === 'not-applicable' && target.mappingStatus === 'not-applicable'));
 
+  // Jest 30's V8 provider converts source ranges to one-counter Istanbul entries
+  // (type 'branch'), not semantic two-outcome 'if' entries.
+  const v8IfSource = 'export function v8IfTarget(input) {\\n  if (input.enabled && input.score >= 10) return \'active\';\\n  return \'inactive\';\\n}\\n';
+  const v8IfFile = path.join(tempDir, 'v8-if-target.mjs');
+  fs.writeFileSync(v8IfFile, v8IfSource);
+  const v8IfReport = run('v8-if-target.mjs', 'v8IfTarget', {
+    [v8IfFile]: {
+      path: v8IfFile, statementMap: {}, fnMap: {},
+      branchMap: {
+        0: { type: 'branch', loc: { start: { line: 2, column: 6 }, end: { line: 2, column: 40 } }, locations: [{ start: { line: 2, column: 6 }, end: { line: 2, column: 40 } }] },
+        1: { type: 'branch', loc: { start: { line: 2, column: 6 }, end: { line: 2, column: 19 } }, locations: [{ start: { line: 2, column: 6 }, end: { line: 2, column: 19 } }] },
+        2: { type: 'branch', loc: { start: { line: 2, column: 20 }, end: { line: 2, column: 40 } }, locations: [{ start: { line: 2, column: 20 }, end: { line: 2, column: 40 } }] },
+      },
+      s: {}, f: {}, b: { 0: [5], 1: [5], 2: [3] }, l: {},
+    },
+  }, path.join(tempDir, 'v8-if.json'));
+  const v8IfTarget = v8IfReport.staticBranchTargets.find(target => target.kind === 'if');
+  assert.ok(v8IfTarget);
+  assert.equal(v8IfTarget.coverageBranchId, '0', 'the full V8 condition range must win over nested atom ranges');
+  assert.equal(v8IfTarget.mappingStatus, 'v8-condition-range-only');
+  assert.equal(v8IfTarget.coverageStatus, 'partially-covered');
+  assert.equal(v8IfTarget.coverageOutcomeMapping, 'not-available-from-v8-range-map');
+  assert.ok(v8IfTarget.outcomes.every(outcome => outcome.covered === null), 'a single V8 range counter must not be misrepresented as true/false outcome coverage');
   // Two equally good Istanbul candidates must be reported as ambiguous,
   // rather than silently assigning the first entry.
   const ambiguousCoverage = {
@@ -152,7 +175,7 @@ try {
   assert.equal(ambiguousReport.staticBranchTargets[0].mappingStatus, 'ambiguous');
   assert.equal(ambiguousReport.staticBranchTargets[0].coverageBranchId, null);
 
-  console.log('Coverage branch mapping tests passed: exact if/while/for statement anchors, ternary condition anchors, switch clause indexes, synthetic array-cardinality targets, and ambiguous mappings are handled without guessing.');
+  console.log('Coverage branch mapping tests passed: Istanbul semantic branches, Jest V8 condition ranges, loops, ternaries, switch clauses, synthetic array-cardinality targets and ambiguous mappings are handled without guessing.');
 } finally {
   fs.rmSync(tempDir, { recursive: true, force: true });
 }
