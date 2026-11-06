@@ -143,7 +143,7 @@ try {
     '  testMatch: [\'**/*.test.cjs\'],',
     '  collectCoverageFrom: [\'target.cjs\'],',
     '};',
-  ].join('\\n'));
+  ].join(String.fromCharCode(10)));
   fs.writeFileSync(cjsSource, `function cjsCoverageTarget(input) {
   const setupMockValue = globalThis.__BSG_SETUP_MOCK__().toUpperCase();
   if (input.enabled && input.score >= 10) return setupMockValue;

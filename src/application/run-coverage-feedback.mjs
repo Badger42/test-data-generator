@@ -7,7 +7,7 @@
 import { createTestBatchBuilder } from '../testing/batching/test-batch-builder.mjs';
 
 export function createCoverageFeedbackUseCase(deps) {
-  const executionDeadlines = new Map();
+  let executionDeadline = null;
   const {
     fs, path, process, runJest, collectCoverageExecutionCases, findJestRunner,
     resolveJestWorkingDirectory, instrumentMcdcSource, buildJestFeedbackTest,
@@ -68,7 +68,7 @@ function createCoverageFeedback(result, sourceFile, outputFile, args) {
   }
   let tempDirectory;
   try {
-    tempDirectory = fs.mkdtempSync(path.join(sourceDirectory, '.branch-scenarios-feedback-'));
+    tempDirectory = fs.mkdtempSync(path.join(sourceDirectory, 'branch-scenarios-feedback-'));
   } catch (error) {
     return {
       version: 1, status: 'temporary-directory-error',
@@ -183,11 +183,11 @@ function createCoverageFeedback(result, sourceFile, outputFile, args) {
   // Iterative passes may receive fresh args objects with identical options.
   // Tie the deadline to the analyzed input/output run so wrappers or shallow
   // copies cannot accidentally reset the total execution budget.
-  const executionBudgetKey = `${absoluteSource}\u0000${path.resolve(outputFile)}`;
-  if (!executionDeadlines.has(executionBudgetKey)) {
-    executionDeadlines.set(executionBudgetKey, now + (args.coverageFeedbackTimeoutMs ?? 600_000));
-  }
-  const remainingBudgetMs = executionDeadlines.get(executionBudgetKey) - now;
+  // One use-case instance represents one generation run. Keep a single
+  // deadline across all iterative passes, even if callers rebuild args or
+  // output paths are normalized differently by the host platform.
+  if (executionDeadline === null) executionDeadline = now + (args.coverageFeedbackTimeoutMs ?? 600_000);
+  const remainingBudgetMs = executionDeadline - now;
   if (remainingBudgetMs <= 0) {
     fs.rmSync(tempDirectory, { recursive: true, force: true });
     if (instrumentedSourcePath) fs.rmSync(instrumentedSourcePath, { force: true });
