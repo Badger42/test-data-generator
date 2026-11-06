@@ -9,6 +9,16 @@ import {
   summarizeCoverageIteration,
 } from '../coverage/coverage-feedback-iteration.mjs';
 
+function collectUnverifiableStaticTargets(feedback) {
+  return (feedback?.staticBranchTargets ?? []).filter(target => {
+    if (target.coverageApplicable === false || target.coverageStatus === 'not-applicable') return false;
+    if (target.coverageStatus === 'not-mapped' || target.coverageStatus === 'ambiguous') return true;
+    // Null/undefined means this provider or mapping did not establish an
+    // individual semantic outcome (for example a V8 if-condition range).
+    return (target.outcomes ?? []).some(outcome => outcome.covered == null);
+  });
+}
+
 export function createIterativeCoverageFeedbackUseCase({
   createCoverageFeedback,
   analyzeFunction,
@@ -59,12 +69,25 @@ export function createIterativeCoverageFeedbackUseCase({
       }
 
       const branchPct = feedback.totals?.branches?.pct;
-      if (branchPct !== null && branchPct !== undefined && branchPct >= args.coverageGoal) {
+      const aggregateGoalReached = branchPct !== null && branchPct !== undefined && branchPct >= args.coverageGoal;
+      const missingOutcomeKeys = collectUncoveredStaticOutcomeKeys(feedback);
+      const unverifiableTargets = collectUnverifiableStaticTargets(feedback);
+
+      // Aggregate Istanbul counters are not sufficient evidence for semantic
+      // branch outcomes. In particular, Jest's V8 provider reports one counter
+      // for an if-condition range, so it cannot prove separate true/false paths.
+      // Do not stop early when mapped outcomes remain measurable but uncovered;
+      // do stop without expanding when the selected provider cannot distinguish
+      // the outstanding outcomes at all.
+      if (aggregateGoalReached && missingOutcomeKeys.size === 0 && unverifiableTargets.length === 0) {
         stopReason = 'coverage-goal-reached';
         break;
       }
+      if (aggregateGoalReached && unverifiableTargets.length > 0) {
+        stopReason = 'coverage-goal-unverifiable-with-current-provider';
+        break;
+      }
 
-      const missingOutcomeKeys = collectUncoveredStaticOutcomeKeys(feedback);
       if (!missingOutcomeKeys.size) {
         const unmapped = feedback.branchCoverage?.staticTargetsUnmapped ?? 0;
         const ambiguous = feedback.branchCoverage?.staticTargetsAmbiguous ?? 0;
@@ -124,6 +147,13 @@ export function createIterativeCoverageFeedbackUseCase({
       );
     }
 
+    const aggregateGoalReached = feedback?.status === 'passed' &&
+      feedback.totals?.branches?.pct != null && feedback.totals.branches.pct >= args.coverageGoal;
+    const remainingOutcomeKeys = collectUncoveredStaticOutcomeKeys(feedback);
+    const unverifiableTargets = collectUnverifiableStaticTargets(feedback);
+    const staticBranchOutcomesVerified = feedback?.status === 'passed' &&
+      remainingOutcomeKeys.size === 0 && unverifiableTargets.length === 0;
+
     feedback.iterative = {
       enabled: true,
       strategy: 'targeted-static-branch-expansion',
@@ -134,8 +164,17 @@ export function createIterativeCoverageFeedbackUseCase({
       totalAdditionalScenarios: totalAddedScenarios,
       iterations: history,
       stopReason,
-      goalReached: Boolean(feedback.totals?.branches?.pct != null && feedback.totals.branches.pct >= args.coverageGoal),
-      note: 'Each pass expands solver alternatives only for static branch outcomes still uncovered according to the preceding Istanbul report. The full accumulated scenario set is re-executed on every pass. This is bounded candidate expansion, not unrestricted symbolic execution.',
+      aggregateGoalReached: Boolean(aggregateGoalReached),
+      staticBranchOutcomesVerified: Boolean(staticBranchOutcomesVerified),
+      unverifiableStaticTargets: unverifiableTargets.map(target => ({
+        id: target.id,
+        coverageStatus: target.coverageStatus ?? 'unknown',
+        mappingStatus: target.mappingStatus ?? 'unknown',
+      })),
+      // The public goal is met only when both the aggregate percentage and
+      // semantic static-target checks are satisfied.
+      goalReached: Boolean(aggregateGoalReached && staticBranchOutcomesVerified),
+      note: 'Aggregate Istanbul percentages and semantic static branch outcomes are reported independently. V8 condition-range counters cannot prove individual if true/false outcomes. Each pass re-executes the accumulated scenario set; this is bounded candidate expansion, not unrestricted symbolic execution.',
     };
     return feedback;
   }
