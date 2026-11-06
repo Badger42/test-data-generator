@@ -140,7 +140,7 @@ try {
     '  rootDir: __dirname,',
     '  transform: {},',
     '  testEnvironment: \'node\',',
-    '  testMatch: [\'**/*.test.cjs\'],',
+    '  testMatch: [\'<rootDir>/**/*.test.cjs\'],',
     '  collectCoverageFrom: [\'target.cjs\'],',
     '};',
   ].join(String.fromCharCode(10)));

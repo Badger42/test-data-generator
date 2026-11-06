@@ -231,7 +231,11 @@ beforeEach(async () => {
 
 beforeAll(async () => {
   if (SETUP_URL) await import(SETUP_URL);
-  const namespace = await import(SOURCE_URL);
+  const sourceUrl = new URL(SOURCE_URL);
+  const isCommonJs = sourceUrl.pathname.toLowerCase().endsWith('.cjs');
+  const namespace = isCommonJs
+    ? require(require('node:url').fileURLToPath(sourceUrl))
+    : await import(SOURCE_URL);
   targetFunction = resolveExport(namespace, EXPORT_PATH);
   if (typeof targetFunction !== 'function') {
     throw new Error('Cannot resolve an exported function. Expected export path: ' +
