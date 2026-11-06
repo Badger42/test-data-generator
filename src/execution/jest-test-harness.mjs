@@ -44,19 +44,40 @@ const SETUP_URL = ${serializedSetup};
 const MCDC_INPUT_CHECKS_FILE = ${serializedMcdcResults};
 const MCDC_RUNTIME_CHECKS_FILE = ${serializedMcdcRuntimeResults};
 let targetFunction;
+let targetReceiver;
 
 function getByPath(object, expression) {
   if (!expression) return undefined;
   return expression.split('.').reduce((value, key) => value == null ? undefined : value[key], object);
 }
 
+function getByPathBinding(object, expression) {
+  if (!expression) return { value: undefined, receiver: undefined };
+  const segments = expression.split('.');
+  let receiver;
+  let value = object;
+  for (const key of segments) {
+    receiver = value;
+    value = value == null ? undefined : value[key];
+  }
+  return { value, receiver };
+}
+
 function resolveExport(namespace, exportPath) {
-  if (typeof namespace === 'function') return namespace;
-  if (!exportPath) return undefined;
-  let value = getByPath(namespace, exportPath);
-  if (value === undefined && namespace.default) value = getByPath(namespace.default, exportPath);
-  if (value === undefined && typeof namespace.default === 'function') value = namespace.default;
-  return value;
+  if (typeof namespace === 'function') return { value: namespace, receiver: undefined };
+  if (!exportPath) return { value: undefined, receiver: undefined };
+  if (exportPath === 'default' && typeof namespace.default === 'function') {
+    return { value: namespace.default, receiver: undefined };
+  }
+
+  const direct = getByPathBinding(namespace, exportPath);
+  if (direct.value !== undefined) return direct;
+  if (namespace.default != null) {
+    const fromDefault = getByPathBinding(namespace.default, exportPath);
+    if (fromDefault.value !== undefined) return fromDefault;
+    if (typeof namespace.default === 'function') return { value: namespace.default, receiver: undefined };
+  }
+  return { value: undefined, receiver: undefined };
 }
 
 function hydrate(value) {
@@ -269,7 +290,9 @@ beforeAll(async () => {
   const namespace = isCommonJs
     ? require(require('node:url').fileURLToPath(sourceUrl))
     : await import(SOURCE_URL);
-  targetFunction = resolveExport(namespace, EXPORT_PATH);
+  const resolvedTarget = resolveExport(namespace, EXPORT_PATH);
+  targetFunction = resolvedTarget?.value;
+  targetReceiver = resolvedTarget?.receiver;
   if (typeof targetFunction !== 'function') {
     throw new Error('Cannot resolve an exported function. Expected export path: ' +
       String(EXPORT_PATH) + '. Export the analyzed function or pass --export <path>.');
@@ -307,7 +330,7 @@ async function runScenario(scenario) {
       let didThrow = false;
       let thrownValue;
       try {
-        await targetFunction(...tracked.args);
+        await Reflect.apply(targetFunction, targetReceiver, tracked.args);
       } catch (error) {
         didThrow = true;
         thrownValue = error;

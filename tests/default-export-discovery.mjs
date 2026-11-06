@@ -23,7 +23,7 @@ try {
     "export const COUNTRY = 'RUS';\n" +
     "export function normalize(value) { return String(value).trim(); }\n");
   const objectFile = write('services/default-object.js',
-    "import { COUNTRY, normalize } from '../../common/values';\n" +
+    "import { COUNTRY, normalize } from '../common/values';\n" +
     "export default {\n" +
     "  methodShorthand(input) {\n" +
     "    if (input.enabled) return COUNTRY;\n" +
@@ -79,6 +79,27 @@ try {
   assert.equal(report.project.imports.project, 1,
     'the analysis report must classify extensionless relative imports as project files');
   assert.equal(report.project.functionIndex.functions.find(item => item.name === 'methodExpression').exported, true);
+
+  const receiverFile = write('services/receiver-object.js',
+    "export default {\n" +
+    "  getValue(input) { return input.value; },\n" +
+    "  check(input) {\n" +
+    "    if (input.enabled) return this.getValue(input);\n" +
+    "    return null;\n" +
+    "  },\n" +
+    "};\n");
+  const receiverOutput = path.join(temp, 'receiver.scenarios.json');
+  const receiverRun = spawnSync(process.execPath, [
+    path.join(root, 'branch-scenarios.mjs'), receiverFile,
+    '--function', 'check', '--coverage-feedback',
+    '--jest-bin', path.join(root, 'tests', 'fixtures', 'fake-jest-runner.cjs'),
+    '--out', receiverOutput,
+  ], { cwd: root, encoding: 'utf8', timeout: 90_000 });
+  assert.equal(receiverRun.status, 0,
+    'coverage feedback must preserve the default-exported object as method this:\\n' + receiverRun.stdout + '\\n' + receiverRun.stderr);
+  const receiverReport = JSON.parse(fs.readFileSync(receiverOutput, 'utf8'));
+  assert.equal(receiverReport.coverageFeedback.execution.testResults.numFailedTests, 0,
+    'method calls that use this must execute with the default-exported object as receiver');
 
   const instanceFile = write('services/default-instance.js',
     "class Service {\n" +
