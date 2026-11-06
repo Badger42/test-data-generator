@@ -66,13 +66,6 @@ function annotateExpectedThrowScenarios(functionResults, functionUnits, sourceFi
     ts.forEachChild(node, visit);
   }
   for (const unit of functionUnits) visit(unit.node);
-  const throwingConditions = new Map();
-  for (const node of ifNodes) {
-    const thenError = thrownErrorDescriptor(node.thenStatement, ts);
-    const elseError = thrownErrorDescriptor(node.elseStatement, ts);
-    if (thenError) throwingConditions.set(node.expression.getText(sourceFile), { outcome: true, expectedException: thenError });
-    if (elseError) throwingConditions.set(node.expression.getText(sourceFile), { outcome: false, expectedException: elseError });
-  }
   const locationKey = node => {
     const position = sourceFile.getLineAndCharacterOfPosition(node.expression.getStart(sourceFile));
     return `${position.line + 1}:${position.character + 1}`;
@@ -91,8 +84,13 @@ function annotateExpectedThrowScenarios(functionResults, functionUnits, sourceFi
     const mcdc = result.mcdc ? {
       ...result.mcdc,
       decisions: (result.mcdc.decisions ?? []).map(decision => {
-        const throwing = throwingConditions.get(decision.expression);
-        if (!throwing) return decision;
+        // Match the concrete AST decision, not its source text: identical
+        // expressions may occur in different if-statements with different
+        // throw behavior on either outcome.
+        const statement = decision.kind === 'if'
+          ? byLocation.get(`${decision.line}:${decision.column}`)
+          : null;
+        if (!statement) return decision;
         return {
           ...decision,
           conditions: (decision.conditions ?? []).map(condition => ({
@@ -100,7 +98,9 @@ function annotateExpectedThrowScenarios(functionResults, functionUnits, sourceFi
             independencePairs: (condition.independencePairs ?? []).map(pair => ({
               ...pair,
               scenarios: Object.fromEntries(Object.entries(pair.scenarios ?? {}).map(([side, scenario]) => {
-                const expectedException = scenario?.decisionOutcome === throwing.outcome ? throwing.expectedException : null;
+                const branch = scenario?.decisionOutcome === true ? statement.thenStatement
+                  : scenario?.decisionOutcome === false ? statement.elseStatement : null;
+                const expectedException = thrownErrorDescriptor(branch, ts);
                 return [side, expectedException ? { ...scenario, expectedException } : scenario];
               })),
             })),
