@@ -64,7 +64,7 @@ try {
   const outputFile = path.join(tempDir, 'real-jest-coverage.json');
   fs.writeFileSync(path.join(tempDir, 'package.json'), JSON.stringify({ type: 'module' }, null, 2));
   fs.writeFileSync(sourceFile, `export function realJestTarget(input) {\n  if (input.enabled && input.score >= 10) return 'active';\n  return 'inactive';\n}\n`);
-  fs.writeFileSync(configFile, `module.exports = {\n  rootDir: __dirname,\n  transform: {},\n  testEnvironment: 'node',\n  testMatch: ['<rootDir>/**/*.test.cjs'],\n  collectCoverageFrom: ['*.mjs'],\n};\n`);
+  fs.writeFileSync(configFile, `module.exports = {\n  rootDir: ${JSON.stringify(tempDir)},\n  transform: {},\n  testEnvironment: 'node',\n  testMatch: ['<rootDir>/**/*.test.cjs'],\n  collectCoverageFrom: ['*.mjs'],\n};\n`);
 
   const result = spawnSync(process.execPath, [
     cli, sourceFile,
@@ -137,7 +137,7 @@ try {
   const cjsConfigFile = path.join(tempDir, 'jest.cjs.config.cjs');
   fs.writeFileSync(cjsConfigFile, [
     'module.exports = {',
-    '  rootDir: __dirname,',
+    '  rootDir: ' + JSON.stringify(tempDir) + ',',
     '  transform: {},',
     '  testEnvironment: \'node\',',
     '  testMatch: [\'<rootDir>/**/*.test.cjs\'],',
