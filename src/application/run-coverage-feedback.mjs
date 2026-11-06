@@ -261,7 +261,8 @@ function createCoverageFeedback(result, sourceFile, outputFile, args) {
     const trueRuntime = verifyRuntimeMcdcSide(mcdcRuntimeResults, cases, pair.conditionTrueCaseId, pair, 'conditionTrue', trueCheck);
     const acceptedRuntimeStatuses = ['runtime-instrumented-verified', 'runtime-verified-with-short-circuit-inference'];
     const runtimeVerified = acceptedRuntimeStatuses.includes(falseRuntime.status) && acceptedRuntimeStatuses.includes(trueRuntime.status);
-    const inputVerified = falseCheck?.status === 'verified' && trueCheck?.status === 'verified';
+    const isInputVerified = check => ['verified', 'callback-runtime-context-verified'].includes(check?.status);
+    const inputVerified = isInputVerified(falseCheck) && isInputVerified(trueCheck);
     const bothScenariosPassed = falsePassed && truePassed;
     let status = 'scenarios-not-passed';
     if (bothScenariosPassed && inputVerified && runtimeVerified) {
@@ -361,7 +362,9 @@ function createCoverageFeedback(result, sourceFile, outputFile, args) {
     },
     testResults,
     mcdcPairs: pairExecution,
-    mcdcPairsInputVerified: pairExecution.filter(pair => pair.inputChecks.conditionFalse?.status === 'verified' && pair.inputChecks.conditionTrue?.status === 'verified').length,
+    mcdcPairsInputVerified: pairExecution.filter(pair =>
+      ['verified', 'callback-runtime-context-verified'].includes(pair.inputChecks.conditionFalse?.status) &&
+      ['verified', 'callback-runtime-context-verified'].includes(pair.inputChecks.conditionTrue?.status)).length,
     mcdcPairsRuntimeVerified: pairExecution.filter(pair => ['runtime-mcdc-verified', 'runtime-mcdc-verified-with-short-circuit-inference'].includes(pair.status)).length,
     mcdcPairsFullyRuntimeInstrumented: pairExecution.filter(pair => pair.status === 'runtime-mcdc-verified').length,
     mcdcPairsWithBothScenariosPassed: pairExecution.filter(pair => pair.bothScenariosPassed).length,
