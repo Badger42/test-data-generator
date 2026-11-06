@@ -149,6 +149,7 @@ try {
   if (input.enabled && input.score >= 10) return setupMockValue;
   return setupMockValue;
 }
+module.exports = { cjsCoverageTarget };
 `);
   fs.writeFileSync(setupFile, `import { jest } from '@jest/globals';
 globalThis.__BSG_SETUP_MOCK__ = jest.fn(() => 'preserved');
