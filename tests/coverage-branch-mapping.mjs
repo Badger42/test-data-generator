@@ -118,7 +118,7 @@ try {
         s: {}, f: {}, b: { 0: [1, 1] }, l: {},
       },
     }, path.join(tempDir, 'real-path.json'));
-    assert.equal(realPathReport.sourceFileMatch, 'realpath');
+    assert.equal(realPathReport.sourceFileMatch, 'absolute-path', 'the CLI canonicalizes source symlinks before coverage matching');
     assert.equal(realPathReport.staticBranchTargets[0].coverageStatus, 'covered');
   } catch (error) {
     if (!['EPERM', 'EACCES', 'ENOTSUP'].includes(error.code)) throw error;
