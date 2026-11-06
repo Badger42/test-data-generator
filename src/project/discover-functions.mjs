@@ -16,6 +16,16 @@ function sourceSpan(sourceFile, node, relativeFile) {
   };
 }
 
+function isFunctionExpression(node) {
+  return Boolean(node && (ts.isArrowFunction(node) || ts.isFunctionExpression(node)));
+}
+
+function propertyName(node, sourceFile) {
+  if (ts.isIdentifier(node) || ts.isPrivateIdentifier(node)) return node.text;
+  if (ts.isStringLiteralLike(node) || ts.isNumericLiteral(node)) return node.text;
+  return node.getText(sourceFile);
+}
+
 /**
  * Discover supported function-like declarations. AST references are internal
  * to the project/analysis front-end; stable identity is independent of the
@@ -36,15 +46,21 @@ export function discoverFunctions(sourceFile, options = {}) {
     });
   }
   function visit(node) {
-    if (ts.isFunctionDeclaration(node) && node.name) {
-      add(node.name.text, node);
-    } else if (ts.isVariableDeclaration(node) && node.initializer &&
-      (ts.isArrowFunction(node.initializer) || ts.isFunctionExpression(node.initializer))) {
+    if (ts.isFunctionDeclaration(node)) {
+      if (node.name) add(node.name.text, node);
+      else if (node.modifiers?.some(modifier => modifier.kind === ts.SyntaxKind.DefaultKeyword)) add('default', node);
+    } else if (ts.isVariableDeclaration(node) && isFunctionExpression(node.initializer)) {
       const name = ts.isIdentifier(node.name) ? node.name.text : node.name.getText(sourceFile);
       add(name, node.initializer);
       return;
+    } else if (ts.isPropertyAssignment(node) && isFunctionExpression(node.initializer)) {
+      add(propertyName(node.name, sourceFile), node.initializer);
+      return;
+    } else if (ts.isExportAssignment(node) && isFunctionExpression(node.expression)) {
+      add('default', node.expression);
+      return;
     } else if (ts.isMethodDeclaration(node) && node.body) {
-      add(node.name.getText(sourceFile), node);
+      add(propertyName(node.name, sourceFile), node);
     }
     ts.forEachChild(node, visit);
   }

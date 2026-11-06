@@ -26,8 +26,11 @@ export function loadTypescriptProject(request) {
 
   let options = {
     target: ts.ScriptTarget.ES2022,
-    module: ts.ModuleKind.NodeNext,
-    moduleResolution: ts.ModuleResolutionKind.NodeNext,
+    // Without a tsconfig, analyse common bundler-style source projects,
+    // including extensionless relative imports used by Vue/Vite/Webpack apps.
+    // An explicit project config still takes precedence below.
+    module: ts.ModuleKind.ESNext,
+    moduleResolution: ts.ModuleResolutionKind.Bundler,
     allowJs: true,
     checkJs: true,
     jsx: ts.JsxEmit.Preserve,
