@@ -136,7 +136,7 @@ try {
 
   // Jest 30's V8 provider converts source ranges to one-counter Istanbul entries
   // (type 'branch'), not semantic two-outcome 'if' entries.
-  const v8IfSource = 'export function v8IfTarget(input) {\\n  if (input.enabled && input.score >= 10) return \'active\';\\n  return \'inactive\';\\n}\\n';
+  const v8IfSource = "export function v8IfTarget(input) {\n  if (input.enabled && input.score >= 10) return 'active';\n  return 'inactive';\n}";
   const v8IfFile = path.join(tempDir, 'v8-if-target.mjs');
   fs.writeFileSync(v8IfFile, v8IfSource);
   const v8IfReport = run('v8-if-target.mjs', 'v8IfTarget', {
