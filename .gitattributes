@@ -7,3 +7,4 @@
 # Verify CJS export and latest platform fixes.
 # Validate canonical temp paths and coverage fixtures.
 # Validate matching Jest rootDir on Windows.
+# Verify canonical source path resolution in Windows CI.
