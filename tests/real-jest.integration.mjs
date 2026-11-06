@@ -85,7 +85,10 @@ try {
   assert.ok(report.coverageFeedback.totals.branches.total > 0);
   assert.ok(report.coverageFeedback.staticBranchTargets.length > 0);
   const mappedIfTargets = report.coverageFeedback.staticBranchTargets.filter(target => target.kind === 'if' && target.coverageBranchId);
-  assert.ok(mappedIfTargets.length > 0, 'Expected the real Jest Istanbul branch map to match the analyzed if statement.');
+  assert.ok(
+    mappedIfTargets.length > 0,
+    `Expected the real Jest Istanbul branch map to match the analyzed if statement. Targets: ${JSON.stringify(report.coverageFeedback.staticBranchTargets)}. Coverage entries: ${JSON.stringify(report.coverageFeedback.coverageBranchEntries)}. Remapping: ${JSON.stringify(report.coverageFeedback.mcdc.runtimeInstrumentation)}`,
+  );
   assert.ok(mappedIfTargets.some(target => target.coverageStatus === 'covered' || target.coverageStatus === 'partially-covered'));
   assert.ok(fs.existsSync(report.coverageFeedback.coverageFile));
 
