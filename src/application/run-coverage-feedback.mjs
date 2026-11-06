@@ -16,7 +16,10 @@ export function createCoverageFeedbackUseCase(deps) {
     readRuntimeTraceFile, verifyRuntimeMcdcSide, buildScenarioCoverageAttribution,
   } = deps;
 function createCoverageFeedback(result, sourceFile, outputFile, args) {
-  const absoluteSource = path.resolve(sourceFile);
+  const requestedSource = path.resolve(sourceFile);
+  const absoluteSource = typeof fs.realpathSync?.native === 'function'
+    ? fs.realpathSync.native(requestedSource)
+    : fs.realpathSync(requestedSource);
   if (args.coverageFrom) {
     const coveragePath = path.resolve(args.coverageFrom);
     if (!fs.existsSync(coveragePath)) {
