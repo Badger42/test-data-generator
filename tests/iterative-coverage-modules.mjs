@@ -43,8 +43,9 @@ const useCase = createIterativeCoverageFeedbackUseCase({
       ...firstFeedback,
       totals: { branches: { covered: 2, total: 2, pct: 100 } },
       staticBranchTargets: [{ id: 'branch-1', coverageType: 'if', coverageStatus: 'covered', outcomes: [
-        { value: true, scenarioIds: ['s-true'] }, { value: false, scenarioIds: ['s-false'] },
-      ] }],
+        { value: true, covered: true, coverageOutcomeIndex: 0, scenarioIds: ['s-true'] },
+        { value: false, covered: true, coverageOutcomeIndex: 1, scenarioIds: ['s-false'] },
+      ], coverageOutcomes: [{ covered: true }, { covered: true }] }],
     };
   },
   analyzeFunction(_node, _source, _checker, maxScenarios, _mcdc, options) {
