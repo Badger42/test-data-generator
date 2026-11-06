@@ -33,8 +33,8 @@ function makeUseCase({ runJest, buildJestFeedbackTest = () => '/* generated test
 
 try {
   const calls = [];
-  const timedOutRun = () => {
-    calls.push({});
+  const timedOutRun = command => {
+    if (command !== 'taskkill') calls.push({});
     const error = new Error('spawnSync jest ETIMEDOUT');
     error.code = 'ETIMEDOUT';
     return { status: null, signal: 'SIGTERM', pid: 43210, error, stdout: '', stderr: '' };
