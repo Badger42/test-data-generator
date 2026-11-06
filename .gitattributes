@@ -6,3 +6,4 @@
 # Re-run CI after Jest discovery and timeout test fixes.
 # Verify CJS export and latest platform fixes.
 # Validate canonical temp paths and coverage fixtures.
+# Validate matching Jest rootDir on Windows.
