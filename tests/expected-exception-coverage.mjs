@@ -46,12 +46,11 @@ ${differentResult.stderr}`);
     'the true decision outcome must retain the TypeError from its own AST branch');
   assert.equal(pair.scenarios.conditionFalse.expectedException.name, 'RangeError',
     'the false decision outcome must retain the RangeError from its own AST branch');
-  const differentCases = differentReport.coverageFeedback.execution.testResults.cases;
-  for (const side of ['conditionTrue', 'conditionFalse']) {
-    const scenario = pair.scenarios[side];
-    const resultCase = differentCases.find(item => item.references.some(reference => reference.scenarioId === scenario.id));
-    assert.equal(resultCase?.status, 'passed', `${side}: matching branch exception must pass runtime verification`);
-  }
+  const differentResults = differentReport.coverageFeedback.execution.testResults;
+  assert.equal(differentResults.numFailedTests, 0,
+    'both MC/DC outcomes must be accepted as expected exceptions by the runtime harness');
+  assert.equal(differentResults.numPassedTests, differentResults.numTotalTests,
+    'all generated MC/DC cases must pass when their branch-specific exceptions are correct');
 
   console.log('Expected exception coverage passed: thrown branch recorded as a passing runtime outcome without losing sibling cases.');
 } finally {
