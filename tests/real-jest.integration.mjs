@@ -135,11 +135,16 @@ try {
   const setupFile = path.join(tempDir, 'coverage-feedback-setup.mjs');
   const cjsOutput = path.join(tempDir, 'real-jest-cjs-babel.json');
   const cjsConfigFile = path.join(tempDir, 'jest.cjs.config.cjs');
-  fs.writeFileSync(cjsConfigFile, `module.exports = {
-  rootDir: __dirname,
-  transform: {},
-  testEnvironment: 'node',
-  testRegex: '.*\\\\.test\\\\.cjs  fs.writeFileSync(cjsSource, `function cjsCoverageTarget(input) {
+  fs.writeFileSync(cjsConfigFile, [
+    'module.exports = {',
+    '  rootDir: __dirname,',
+    '  transform: {},',
+    '  testEnvironment: \'node\',',
+    '  testMatch: [\'**/*.test.cjs\'],',
+    '  collectCoverageFrom: [\'target.cjs\'],',
+    '};',
+  ].join('\\n'));
+  fs.writeFileSync(cjsSource, `function cjsCoverageTarget(input) {
   const setupMockValue = globalThis.__BSG_SETUP_MOCK__().toUpperCase();
   if (input.enabled && input.score >= 10) return setupMockValue;
   return setupMockValue;
