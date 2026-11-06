@@ -9,3 +9,4 @@
 # Validate matching Jest rootDir on Windows.
 # Verify canonical source path resolution in Windows CI.
 # Verify final cross-platform CI after canonical mapping assertion update.
+# Verify cross-platform symlink match assertion.
