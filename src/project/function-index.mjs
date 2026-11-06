@@ -24,6 +24,59 @@ function normalizedRelative(root, filename) {
   return path.relative(root, filename).split(path.sep).join('/');
 }
 
+function hasExportModifierInAncestors(node, sourceFile, ts) {
+  for (let current = node; current && current !== sourceFile; current = current.parent) {
+    if (current.modifiers?.some(modifier =>
+      modifier.kind === ts.SyntaxKind.ExportKeyword || modifier.kind === ts.SyntaxKind.DefaultKeyword)) return true;
+    if (ts.isExportAssignment(current)) return true;
+  }
+  return false;
+}
+
+function collectExportedFunctionNodes(sourceFile, checker, ts) {
+  const exportedNodes = new WeakSet();
+  const markDeclaration = declaration => {
+    if (!declaration) return;
+    if (isFunctionLike(declaration, ts)) {
+      exportedNodes.add(declaration);
+      return;
+    }
+    if ((ts.isPropertyAssignment(declaration) || ts.isPropertyDeclaration?.(declaration)) &&
+        isFunctionLike(declaration.initializer, ts)) {
+      exportedNodes.add(declaration.initializer);
+      return;
+    }
+    if (ts.isVariableDeclaration(declaration) && isFunctionLike(declaration.initializer, ts)) {
+      exportedNodes.add(declaration.initializer);
+    }
+  };
+
+  if (!sourceFile.symbol) return exportedNodes;
+  let exports = [];
+  try { exports = checker.getExportsOfModule(sourceFile.symbol) ?? []; } catch { /* Not an external module. */ }
+  for (const exportSymbol of exports) {
+    const resolved = resolveAliasedSymbol(exportSymbol, checker, ts) ?? exportSymbol;
+    for (const declaration of resolved.declarations ?? (resolved.valueDeclaration ? [resolved.valueDeclaration] : [])) {
+      markDeclaration(declaration);
+    }
+    try {
+      const declaration = exportSymbol.valueDeclaration ?? resolved.valueDeclaration ?? resolved.declarations?.[0];
+      let type = null;
+      if (declaration && ts.isExportAssignment(declaration)) {
+        type = checker.getTypeAtLocation(declaration.expression);
+      } else if (declaration) {
+        type = checker.getTypeOfSymbolAtLocation(resolved, declaration);
+      }
+      if (type) {
+        for (const property of checker.getPropertiesOfType(type)) {
+          for (const propertyDeclaration of property.declarations ?? []) markDeclaration(propertyDeclaration);
+        }
+      }
+    } catch { /* Export type information supplements direct AST ancestry. */ }
+  }
+  return exportedNodes;
+}
+
 /**
  * Builds a project-scoped TypeScript function index. Symbol IDs include the
  * source module and declaration offset, so same-named declarations in
@@ -59,7 +112,7 @@ export function buildProjectFunctionIndex(project) {
     return `${relativeFile}#${offset}:${resolved.getName?.() ?? 'anonymous'}`;
   };
 
-  const add = (node, sourceFile) => {
+  const add = (node, sourceFile, exportedFunctionNodes) => {
     if (!isFunctionLike(node, ts)) return;
     const nameNode = declarationNameNode(node, ts);
     const symbol = nameNode ? checker.getSymbolAtLocation(nameNode) : null;
@@ -85,7 +138,7 @@ export function buildProjectFunctionIndex(project) {
     const entry = {
       functionId, symbolId, name, node, sourceFile, relativeFile,
       startOffset, endOffset: node.end,
-      exported: Boolean(resolved.declarations?.some(declaration => declaration.modifiers?.some(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword))),
+      exported: hasExportModifierInAncestors(node, sourceFile, ts) || exportedFunctionNodes.has(node),
     };
     entries.push(entry);
     bySymbolId.set(symbolId, entry);
@@ -100,8 +153,9 @@ export function buildProjectFunctionIndex(project) {
   });
 
   for (const sourceFile of sourceFiles) {
+    const exportedFunctionNodes = collectExportedFunctionNodes(sourceFile, checker, ts);
     const visit = node => {
-      if (isFunctionLike(node, ts)) add(node, sourceFile);
+      if (isFunctionLike(node, ts)) add(node, sourceFile, exportedFunctionNodes);
       ts.forEachChild(node, visit);
     };
     visit(sourceFile);
