@@ -11,8 +11,11 @@ for (const item of manifest.files) {
   const file = path.join(root, item.path);
   assert.ok(fs.existsSync(file), `Missing golden fixture: ${item.path}`);
   const bytes = fs.readFileSync(file);
-  assert.equal(bytes.length, item.bytes, `Golden fixture size changed: ${item.path}`);
-  assert.equal(createHash('sha256').update(bytes).digest('hex'), item.sha256, `Golden fixture changed: ${item.path}`);
-  if (item.path.endsWith('.json')) assert.doesNotThrow(() => JSON.parse(bytes.toString('utf8')), `Invalid JSON fixture: ${item.path}`);
+  // Git may check text fixtures out with CRLF on Windows. The baseline hashes
+  // describe canonical LF content, so normalize line endings before checking.
+  const canonicalBytes = Buffer.from(bytes.toString('utf8').replace(/\r\n/g, '\n'), 'utf8');
+  assert.equal(canonicalBytes.length, item.bytes, `Golden fixture size changed: ${item.path}`);
+  assert.equal(createHash('sha256').update(canonicalBytes).digest('hex'), item.sha256, `Golden fixture changed: ${item.path}`);
+  if (item.path.endsWith('.json')) assert.doesNotThrow(() => JSON.parse(canonicalBytes.toString('utf8')), `Invalid JSON fixture: ${item.path}`);
 }
 console.log(`Golden baseline: ${manifest.files.length} frozen fixture(s) verified.`);

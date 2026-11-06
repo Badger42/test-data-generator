@@ -93,9 +93,9 @@ assert.match(generated, /const BATCHES =/);
 assert.match(generated, /test\.each\(BATCHES\[0\]\.cases\.map\(scenario => \[/);
 assert.match(generated, /async function runScenario\(scenario\)/);
 assert.match(generated, /beforeEach\(async \(?\)? =>/);
-assert.match(generated, /jestApi\.resetAllMocks\(\)/, 'test.each rows must reset Jest mocks before applying row-specific mock actions');
+assert.match(generated, /jestApi\.clearAllMocks\(\)/, 'test.each rows must reset Jest mocks before applying row-specific mock actions');
 assert.match(generated, /__BRANCH_SCENARIO_RESET_MOCKS__/);
-assert.ok(generated.indexOf('jestApi.resetAllMocks()') < generated.indexOf('__BRANCH_SCENARIO_RESET_MOCKS__'), 'Jest resets all mocks before the optional project hook');
+assert.ok(generated.indexOf('jestApi.clearAllMocks()') < generated.indexOf('__BRANCH_SCENARIO_RESET_MOCKS__'), 'Jest resets all mocks before the optional project hook');
 assert.doesNotMatch(generated, /for \(const scenario of CASES\)/);
 
 const individualGenerated = buildJestFeedbackTest('/tmp/target.js', 'target', null, '/tmp/in.json', '/tmp/run.json', [{ name: 'target' }], cases, '/* recorder */', { enabled: false });

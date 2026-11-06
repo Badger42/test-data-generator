@@ -1,48 +1,62 @@
-# Validation status — v1.0.0-rc.7
+# Validation status — v1.0.0-rc.8
 
-## Текущий результат
+## Текущее состояние
 
-RC.7 содержит обновление платформы и исправления из тестового аудита. Пакет объявляет Node.js `>=24.0.0`; CI workflow проверяет Node 24 и 26. Jest генератора закреплён на `30.5.2`, а Coverage Feedback проверяет версию локального Jest целевого проекта (поддерживается `>=30.5.2 <31.0.0`, когда версия установки может быть определена).
+RC.8 — кандидат на выпуск с усиленной runtime-изоляцией, корректной обработкой исключений, ограничениями времени выполнения, более строгим определением Jest и расширенной CI-матрицей.
 
-Локальная среда сборки на момент подготовки архива работает под Node `22.16.0`, то есть ниже объявленной платформы. TypeScript доступен как глобальная установка `5.8.3`; Jest не установлен. Получить Jest и сформировать `package-lock.json` не удалось: обращения npm к `registry.npmjs.org` завершались `EAI_AGAIN`. Поэтому настоящая Jest 30 integration и проверка Node 24/26 в этой среде не заявляются как пройденные. CI использует `npm install` до появления lockfile; commit lockfile остаётся pre-stable release gate.
+Пакет требует Node.js `>=24.0.0`; `.nvmrc` и `.node-version` выбирают Node 26. GitHub Actions проверяет Ubuntu и Windows на Node 24 и 26. Jest генератора закреплён на `30.5.2`; для Coverage Feedback версия Jest целевого проекта должна быть `>=30.5.2 <31.0.0`. Неопределённая версия считается ошибкой совместимости.
 
-## RC.7: выполненные регрессионные проверки
+**Ограничение происхождения архива:** этот рабочий снимок подготовлен из доступного локального RC.7-архива. Получить побайтно актуальный удалённый `main` не удалось из-за DNS/сетевой недоступности GitHub в среде сборки. Поэтому RC.8 ZIP не следует считать экспортом текущего GitHub `main`; перед применением поверх более новых коммитов нужно сверить изменения.
 
-Успешно выполнены отдельные проверки:
+Локальная среда использует Node.js `22.16.0`, то есть ниже объявленной платформы. Jest 30.5.2 не установлен. Получить Jest и сформировать настоящий `package-lock.json` не удалось: npm registry завершал запросы ошибкой `EAI_AGAIN`, а локальный offline cache не содержал пакет Jest. Поэтому реальная Jest 30 integration и выполнение на Node 24/26/Windows здесь не заявляются как пройденные. Архив не содержит `package-lock.json`; workflow использует `npm ci`, если lockfile присутствует, иначе `npm install`. Воспроизводимость установки остаётся release gate.
 
-- `tests/coverage-feedback.mjs`: fake-runner flow, callback MC/DC и явный отказ для Jest 26.6.0.
-- `tests/expected-exception-coverage.mjs`: ожидаемый `RangeError` считается passing runtime outcome, соседние сценарии не теряются.
-- `tests/execution-coverage-modules.mjs`: сборка execution cases, дублирующиеся отображаемые заголовки, ожидаемые исключения и remapping branch/statement/function Istanbul locations.
-- `tests/test-batching.mjs`: Jest `test.each` с позиционными строками, `%s` и уникальными Scenario ID.
-- `tests/input-validation-and-solver-regressions.mjs`: syntax errors, обязательные значения CLI, отсутствие автоматического создания `--out` директорий, destructured parameters, modulo witness `n=15` и неподдерживаемый `typeof`.
-- Дополнительно успешно выполнены: `analysis-operation-context`, `analysis-report`, `analysis-run-form`, `analysis-state-reducer`, array callback/data-flow/method tests, CLI modules, Constraint IR migration/extended operands, constraint orchestration, control-flow/array, coverage branch mapping, iterative coverage, data-flow engine, docs structure и execution/coverage modules.
+## RC.8: выполненные локальные проверки
 
-Из 55 обнаруживаемых тестовых модулей 53, не требующих установленного Jest, прошли при отдельных/параллельных прогонах; в эту группу входят Constraint IR migration/extended operands, callback MC/DC, minimal suite, multi-witness, session isolation, CLI и межфайловые регрессии. Два Jest-зависимых модуля (`jest-dependency` и `real-jest.integration`) не подтверждены локально: в среде нет Jest 30 и используется Node 22. Полный агрегированный `npm test` также не завершился в 300-секундном лимите контейнерной сессии, поэтому итоговый CI-прогон остаётся обязательным. После установки зависимостей выполнить `npm run check:contracts`, `npm run test:jest-dependency`, `npm run test:real-jest` и `npm test` на Node 24/26.
+Следующие наборы успешно выполнены в доступной среде (Node 22.16.0 + TypeScript 5.8.3; TypeScript подключался только для локальных проверок через временный symlink):
 
-## RC.7: изменения
+- `npm run check:contracts` — TypeScript contracts.
+- `npm run test:constraints` — Constraint IR и TypeScript constraint compiler.
+- `npm run test:analysis-state` — reducer, function session, traversal и orchestration.
+- `npm run test:scenarios` — scenario materialization, undefined serialization и report compatibility.
+- `npm run test:mocks` — mock engine и production planner integration.
+- `npm run test:interfile` — inter-file summaries, import/re-export, recursion и points-to uncertainty.
+- `npm run test:test-batching` — batch signatures, row-level mock variance и `%s` rendering.
+- `npm run test:architecture` — contracts, docs, module map, dependency directions и cycle detection.
+- `npm run test:mcdc` — decision extraction, independence pairs, callbacks и advanced callback/index MC/DC.
+- `npm run test:arrays` — callback, array chains, sorting/flat/last methods и array dataflow.
+- `npm run test:reporting` — report schema, redaction, execution form и validation.
+- `npm run test:execution-coverage` — Jest runner, source-map remapping, feedback, iterative coverage, branch mapping и minimal suite через fake runner.
+- `npm run test:v1-integrations` и `npm run test:v1-cli-integration`.
+- Дополнительно: `tests/coverage-feedback-timeouts.mjs`, `tests/runtime-callback-async.mjs`, `tests/test-runner-config.mjs`, `tests/node-compatibility.mjs`, `tests/cli-modules.mjs`, `tests/docs-structure.mjs`, `tests/module-boundaries.mjs`, `tests/expected-exception-coverage.mjs`.
 
-- `package.json`: версия `1.0.0-rc.7`, `engines.node >=24.0.0`, точные версии TypeScript `5.8.3` и Jest `30.5.2`.
-- `.nvmrc` и `.node-version` выбирают Node 26; добавлен GitHub Actions matrix Node 24/26.
-- Harness: исключён конфликт объявления `jest`; `test.each` использует `[title, scenario]` + `%s`; Scenario ID встроен в уникальный заголовок.
-- Fake runner внедряет shim только при загрузке сгенерированного test file; `NODE_PATH` и глобальная module path mutation удалены.
-- Result reader сопоставляет runtime outcomes по уникальному Scenario ID и потребляет каждое assertion ровно один раз.
-- Runtime exceptions можно объявить ожидаемыми; такие outcomes проходят без потери остальных кейсов.
-- V8/Istanbul remapper переводит branchMap, statementMap и fnMap из generated coordinates в original coordinates; line counters пересобираются из remapped statements.
-- Destructured parameters и solver-unsupported candidates не приводят к выдаче фиктивных входных данных; ограничения видны в отчёте.
-- Parse diagnostics блокируют генерацию при синтаксической ошибке; CLI проверяет отсутствующие значения и не создаёт несуществующие output directories молча.
-- Устранено двойное добавление `jest-` в stop reason; `normalizeCollectionPath` теперь вызывается с корректно экранированными regex в template-generated harness.
-- Общий test runner запускает обнаруженные `.mjs` тесты с ограниченной параллельностью вместо одной длинной цепочки `&&`.
+Архитектурная проверка обнаружила 119 source modules: циклов и запрещённых межслойных зависимостей не обнаружено. Во время проверки были найдены и исправлены регрессии в result reader и MODULE_MAP.
+
+**Не пройдено/не подтверждено:** полный агрегированный `npm test` превысил 300-секундный лимит среды; Jest-зависимые `jest-dependency` и `real-jest.integration` не запускались из-за отсутствия установленного Jest 30.5.2; Node 24/26 и Windows не запускались локально. В CI обязательны `npm run check:contracts`, `npm run test:node-compatibility` и полный `npm test`.
+
+## RC.8: дополнительные исправления надёжности
+
+- Runtime callback и decision frames используют `AsyncLocalStorage`, чтобы `await` и параллельные callbacks не делили MC/DC frames; поздние события завершённого сценария не приписываются следующему.
+- Harness различает thrown value и truthiness: `throw null`, `throw undefined`, `throw false` и `throw 0` не считаются отсутствием исключения. Примитивные ожидаемые исключения сравниваются по типу/значению; неизвестные выражения отклоняются fail-closed.
+- `clearAllMocks()` очищает историю вызовов и сохраняет реализации моков из setup-файлов. Result reader сохраняет счётчик очистки из fake runner.
+- Jest version discovery следует по symlink и Windows `.cmd`/`.bat`; неизвестная версия не считается совместимой.
+- Один запуск Jest ограничен `--jest-timeout` (120000 ms по умолчанию), суммарное время итераций — `--coverage-feedback-timeout` (600000 ms по умолчанию). Таймаут отражается как `execution-timeout`; на Windows дополнительно завершается дерево процесса Jest через `taskkill /t /f`. Временные файлы удаляются на ошибках сборки harness, instrumentation, result/report processing и timeout.
+- Test runner проверяет положительные целые `TEST_CONCURRENCY`/`TEST_FILE_TIMEOUT_MS`, ограничивает время и объём captured output, отказывается выполнять пустой suite и завершает дерево процессов при timeout на Windows.
+- Интеграционный набор расширен CJS+Babel+setup-mock, TypeScript transform и falsy-throw кейсами. Эти проверки требуют реального Jest и остаются ожидающими CI.
+- GitHub Actions проверяет Ubuntu/Windows × Node 24/26; использует `npm ci`, когда package lock присутствует.
+- MODULE_MAP включает общий модуль конфигурации тестового runner; docs и version references синхронизированы с RC.8.
 
 ## Оставшиеся release gates
 
-- Сгенерировать и закоммитить `package-lock.json`, после чего вернуть `npm ci` в CI.
-- Прогнать настоящий Jest `30.5.2` integration на Node 24 и 26; проверить consuming-project ESM/CJS и V8/Babel providers.
-- Проверить Windows в полном CI; текущая workflow matrix пока Ubuntu-only.
-- Выполнить `npm audit` на lockfile и закрыть все high/critical advisories либо зафиксировать обоснованные исключения.
-- Benchmark на реальных малых/средних/крупных проектах и доказать поведение Solver на дополнительном наборе неподдерживаемых операций.
+1. Получить и закоммитить настоящий `package-lock.json`; проверить `npm ci` на Node 24/26.
+2. Запустить настоящий Jest 30.5.2 integration на Node 24 и 26: ESM/V8, CJS/Babel, setup mocks, TypeScript transform, `test.each`, expected primitive throws и minimal suite.
+3. Получить зелёный GitHub Actions matrix на Ubuntu и Windows.
+4. Выполнить `npm audit` на lockfile и закрыть high/critical advisories либо зафиксировать обоснованные исключения.
+5. Проверить ESM/CJS edge cases и Jest launchers на реальной Windows-среде.
+6. Benchmark на небольших, средних и крупных проектах; установить CPU/memory budgets и проверить cancellation при реальных зависающих тестах.
+7. Проверить Solver на более широком наборе unsupported operations и убедиться, что conservative statuses сохраняются во всех итоговых отчётах.
 
-## Историческая валидация RC.4–RC.6
+## Историческое состояние RC.7
 
-Предыдущие release candidates успешно проверяли межфайловый FunctionIndex, import/re-export summaries, points-to unknown/top propagation, recursive SCC uncertainty, CFG/SSA, Constraint IR/Solver, callback/array/MC/DC engines, reporting и golden compatibility. Эти результаты относятся к указанным историческим версиям и не являются подтверждением RC.7 на Node 24/26.
+RC.7 поднял платформу до Node.js `>=24.0.0`, закрепил Jest `30.5.2` и TypeScript `5.8.3`, исправил batching, fake runner, runtime exception handling, V8/Istanbul remapping, destructured/unsupported inputs, syntax diagnostics и CLI validation. Эти изменения являются базой RC.8, но не подменяют проверки RC.8 выше.
 
-RC.5 добавил shareable analysis report и fillable execution form с проверкой `reportId`/Scenario ID. RC.6 закрепил Jest `26.6.0` как devDependency и сделал real-Jest integration обязательным. В RC.7 эта зависимость заменена на Jest `30.5.2`; `jest-unit` не добавлен.
+Предыдущие release candidates проверяли межфайловый FunctionIndex, import/re-export summaries, points-to unknown/top propagation, recursive summary widening, CFG/SSA, Constraint IR/Solver, callback/array/MC/DC engines и reporting. Результаты этих прогонов относятся к своим исходным версиям.

@@ -7,6 +7,7 @@
 import { createTestBatchBuilder } from '../testing/batching/test-batch-builder.mjs';
 
 export function createCoverageFeedbackUseCase(deps) {
+  let executionDeadline = null;
   const {
     fs, path, process, runJest, collectCoverageExecutionCases, findJestRunner,
     resolveJestWorkingDirectory, instrumentMcdcSource, buildJestFeedbackTest,
@@ -15,7 +16,10 @@ export function createCoverageFeedbackUseCase(deps) {
     readRuntimeTraceFile, verifyRuntimeMcdcSide, buildScenarioCoverageAttribution,
   } = deps;
 function createCoverageFeedback(result, sourceFile, outputFile, args) {
-  const absoluteSource = path.resolve(sourceFile);
+  const requestedSource = path.resolve(sourceFile);
+  const absoluteSource = typeof fs.realpathSync?.native === 'function'
+    ? fs.realpathSync.native(requestedSource)
+    : fs.realpathSync(requestedSource);
   if (args.coverageFrom) {
     const coveragePath = path.resolve(args.coverageFrom);
     if (!fs.existsSync(coveragePath)) {
@@ -47,22 +51,27 @@ function createCoverageFeedback(result, sourceFile, outputFile, args) {
 
   const sourceDirectory = path.dirname(absoluteSource);
   const jestWorkingDirectory = resolveJestWorkingDirectory(absoluteSource, args.jestConfig);
-  if (runner.version) {
-    const parsed = runner.version.match(/^(\d+)\.(\d+)\.(\d+)/);
-    const versionTuple = parsed ? parsed.slice(1).map(Number) : null;
-    const isSupported = Boolean(versionTuple && versionTuple[0] === 30 &&
-      (versionTuple[1] > 5 || (versionTuple[1] === 5 && versionTuple[2] >= 2)));
-    if (!isSupported) {
-      return {
-        version: 1, status: 'jest-version-unsupported',
-        error: `Coverage feedback requires Jest >=30.5.2 <31.0.0; found ${runner.version}. Update the consuming project's Jest or pass --jest-bin to a supported installation.`,
-        requiredJestVersion: '>=30.5.2 <31.0.0', actualJestVersion: runner.version,
-      };
-    }
+  if (!runner.version) {
+    return {
+      version: 1, status: 'jest-version-undetectable',
+      error: 'Could not determine the Jest version for the selected executable. Use a standard Jest package entry point or a launcher that supports `--version`; unknown versions are not assumed compatible.',
+      requiredJestVersion: '>=30.5.2 <31.0.0', actualJestVersion: null,
+    };
+  }
+  const parsedVersion = runner.version.match(/^(\d+)\.(\d+)\.(\d+)$/);
+  const versionTuple = parsedVersion ? parsedVersion.slice(1).map(Number) : null;
+  const isSupported = Boolean(versionTuple && versionTuple[0] === 30 &&
+    (versionTuple[1] > 5 || (versionTuple[1] === 5 && versionTuple[2] >= 2)));
+  if (!isSupported) {
+    return {
+      version: 1, status: 'jest-version-unsupported',
+      error: `Coverage feedback requires Jest >=30.5.2 <31.0.0; found ${runner.version}. Update the consuming project's Jest or pass --jest-bin to a supported installation.`,
+      requiredJestVersion: '>=30.5.2 <31.0.0', actualJestVersion: runner.version,
+    };
   }
   let tempDirectory;
   try {
-    tempDirectory = fs.mkdtempSync(path.join(sourceDirectory, '.branch-scenarios-feedback-'));
+    tempDirectory = fs.mkdtempSync(path.join(sourceDirectory, 'branch-scenarios-feedback-'));
   } catch (error) {
     return {
       version: 1, status: 'temporary-directory-error',
@@ -96,14 +105,20 @@ function createCoverageFeedback(result, sourceFile, outputFile, args) {
     fs.rmSync(tempDirectory, { recursive: true, force: true });
     return { version: 1, status: 'jest-setup-not-found', error: `Jest setup file does not exist: ${setupFile}` };
   }
-  const testBatchPlan = args.testBatching === false
-    ? { batches: [], individual: cases, stats: { inputCases: cases.length, batchedCases: 0, individualCases: cases.length, batchCount: 0, averageBatchSize: 0 }, diagnostics: [] }
-    : createTestBatchBuilder({ minBatchSize: args.testBatchMinSize ?? 2, maxBatchSize: args.testBatchMaxSize ?? 100 }).build(cases, {
-      functionName: result.functions[0]?.name ?? '',
-      exportPath: args.exportName ?? '',
-      setupProfileId: setupFile ?? '',
-      runtimeKind: 'jest-coverage-feedback',
-    });
+  let testBatchPlan;
+  try {
+    testBatchPlan = args.testBatching === false
+      ? { batches: [], individual: cases, stats: { inputCases: cases.length, batchedCases: 0, individualCases: cases.length, batchCount: 0, averageBatchSize: 0 }, diagnostics: [] }
+      : createTestBatchBuilder({ minBatchSize: args.testBatchMinSize ?? 2, maxBatchSize: args.testBatchMaxSize ?? 100 }).build(cases, {
+        functionName: result.functions[0]?.name ?? '',
+        exportPath: args.exportName ?? '',
+        setupProfileId: setupFile ?? '',
+        runtimeKind: 'jest-coverage-feedback',
+      });
+  } catch (error) {
+    fs.rmSync(tempDirectory, { recursive: true, force: true });
+    return { version: 1, status: 'test-batching-error', error: error.message };
+  }
 
   let runtimeSourceFile = absoluteSource;
   let runtimeInstrumentation = { enabled: false, reason: args.mcdc ? 'No instrumentable MC/DC decisions were found.' : 'MC/DC mode was not enabled.' };
@@ -123,10 +138,23 @@ function createCoverageFeedback(result, sourceFile, outputFile, args) {
       }
     } catch (error) {
       fs.rmSync(tempDirectory, { recursive: true, force: true });
+      if (instrumentedSourcePath) fs.rmSync(instrumentedSourcePath, { force: true });
       return { version: 1, status: 'runtime-instrumentation-error', error: error.message };
     }
   }
-  fs.writeFileSync(testFile, buildJestFeedbackTest(runtimeSourceFile, args.exportName, setupFile, mcdcResultsFile, mcdcRuntimeResultsFile, result.functions, cases, runtimeRecorderSource, { enabled: args.testBatching !== false, minBatchSize: args.testBatchMinSize ?? 2, maxBatchSize: args.testBatchMaxSize ?? 100, plan: testBatchPlan }), 'utf8');
+  try {
+    const harnessSource = buildJestFeedbackTest(
+      runtimeSourceFile, args.exportName, setupFile, mcdcResultsFile, mcdcRuntimeResultsFile,
+      result.functions, cases, runtimeRecorderSource,
+      { enabled: args.testBatching !== false, minBatchSize: args.testBatchMinSize ?? 2,
+        maxBatchSize: args.testBatchMaxSize ?? 100, plan: testBatchPlan },
+    );
+    fs.writeFileSync(testFile, harnessSource, 'utf8');
+  } catch (error) {
+    fs.rmSync(tempDirectory, { recursive: true, force: true });
+    if (instrumentedSourcePath) fs.rmSync(instrumentedSourcePath, { force: true });
+    return { version: 1, status: 'jest-harness-generation-error', error: error.message };
+  }
   const jestArgs = [
     ...runner.prefixArgs,
     '--runInBand',
@@ -154,11 +182,30 @@ function createCoverageFeedback(result, sourceFile, outputFile, args) {
     NODE_OPTIONS: `${nodeOptions} --experimental-vm-modules`.trim(),
     JEST_WORKER_ID: '1',
   };
+  const now = Date.now();
+  // Iterative passes may receive fresh args objects with identical options.
+  // Tie the deadline to the analyzed input/output run so wrappers or shallow
+  // copies cannot accidentally reset the total execution budget.
+  // One use-case instance represents one generation run. Keep a single
+  // deadline across all iterative passes, even if callers rebuild args or
+  // output paths are normalized differently by the host platform.
+  if (executionDeadline === null) executionDeadline = now + (args.coverageFeedbackTimeoutMs ?? 600_000);
+  const remainingBudgetMs = executionDeadline - now;
+  if (remainingBudgetMs <= 0) {
+    fs.rmSync(tempDirectory, { recursive: true, force: true });
+    if (instrumentedSourcePath) fs.rmSync(instrumentedSourcePath, { force: true });
+    return {
+      version: 1, status: 'execution-timeout',
+      error: 'The total Coverage Feedback execution budget was exhausted before the next Jest pass.',
+      timeoutMs: args.coverageFeedbackTimeoutMs ?? 600_000,
+    };
+  }
+  const jestTimeoutMs = Math.min(args.jestTimeoutMs ?? 120_000, remainingBudgetMs);
   let run;
   try {
     run = runJest(runner.command, jestArgs, {
       cwd: jestWorkingDirectory, env, encoding: 'utf8', maxBuffer: 20 * 1024 * 1024,
-      shell: Boolean(runner.shell),
+      shell: Boolean(runner.shell), timeout: jestTimeoutMs, killSignal: 'SIGTERM',
     });
   } catch (error) {
     fs.rmSync(tempDirectory, { recursive: true, force: true });
@@ -166,9 +213,22 @@ function createCoverageFeedback(result, sourceFile, outputFile, args) {
     return { version: 1, status: 'jest-launch-error', error: error.message };
   }
 
+  try {
   const testResults = readJestTestResults(jestResultsFile, cases, fs);
   const allCaseTestsPassed = Boolean(testResults && testResults.cases.length === cases.length && testResults.cases.every(item => item.status === 'passed'));
-  const effectiveJestStatus = run.error ? 'jest-launch-error' : run.status !== 0 ? 'jest-tests-failed' : allCaseTestsPassed ? 'passed' : 'incomplete-test-results';
+  const timedOut = run.error?.code === 'ETIMEDOUT';
+  let timeoutTreeKill = null;
+  if (timedOut && process.platform === 'win32' && Number.isInteger(run.pid) && run.pid > 0) {
+    try {
+      const treeKill = runJest('taskkill', ['/pid', String(run.pid), '/t', '/f'], {
+        encoding: 'utf8', windowsHide: true, timeout: 5_000, maxBuffer: 1024 * 1024,
+      });
+      timeoutTreeKill = { attempted: true, status: treeKill.status ?? null, error: treeKill.error?.message ?? null };
+    } catch (error) {
+      timeoutTreeKill = { attempted: true, status: null, error: error.message };
+    }
+  }
+  const effectiveJestStatus = timedOut ? 'execution-timeout' : run.error ? 'jest-launch-error' : run.status !== 0 ? 'jest-tests-failed' : allCaseTestsPassed ? 'passed' : 'incomplete-test-results';
   let coverageMap = null;
   let coverageError = null;
   let coverageRemapping = { remapped: false, coveragePath: null };
@@ -282,7 +342,10 @@ function createCoverageFeedback(result, sourceFile, outputFile, args) {
     cwd: jestWorkingDirectory,
     exitCode: run.status,
     signal: run.signal ?? null,
-    launchError: run.error?.message ?? null,
+    launchError: timedOut ? null : (run.error?.message ?? null),
+    timeoutMs: jestTimeoutMs,
+    timedOut,
+    ...(timeoutTreeKill ? { timeoutTreeKill } : {}),
     stdoutTail: (run.stdout ?? '').slice(-6000),
     stderrTail: (run.stderr ?? '').slice(-6000),
     ...(coverageError ? { coverageError } : {}),
@@ -311,9 +374,13 @@ function createCoverageFeedback(result, sourceFile, outputFile, args) {
   };
   feedback.execution.scenarioCoverage = buildScenarioCoverageAttribution(cases, testResults, mcdcRuntimeResults, result.functions, pairExecution);
   if (coverageMap) feedback.coverageFile = coverageOutputFile;
-  fs.rmSync(tempDirectory, { recursive: true, force: true });
-  if (instrumentedSourcePath) fs.rmSync(instrumentedSourcePath, { force: true });
   return feedback;
+  } finally {
+    // Also clean up when a reader, mapper or report builder throws after Jest
+    // exits; cleanup must not depend on successful report assembly.
+    fs.rmSync(tempDirectory, { recursive: true, force: true });
+    if (instrumentedSourcePath) fs.rmSync(instrumentedSourcePath, { force: true });
+  }
 }
 
   return { createCoverageFeedback };

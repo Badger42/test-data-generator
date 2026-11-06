@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
+import { createRequire } from 'node:module';
 import ts from 'typescript';
 import { createMcdcDecisionExtractor } from '../src/mcdc/static/decision-extractor.mjs';
 import { planUniqueCauseCandidates, verifyUniqueCauseCandidate } from '../src/mcdc/static/pair-planner.mjs';
@@ -123,7 +124,7 @@ assert.equal(instrumented.instrumentation.conditionsInstrumented, 3);
 assert.match(instrumented.source, /\.decision\(/);
 assert.match(instrumented.source, /\.condition\(/);
 
-const sandbox = { Symbol, Map, Boolean, Object };
+const sandbox = { Symbol, Map, Boolean, Object, require: createRequire(import.meta.url) };
 const runtime = vm.runInNewContext(`${createMcdcRuntimeRecorderSource()}\nglobalThis[Symbol.for(${JSON.stringify(RUNTIME_MCDC_SYMBOL)})]`, sandbox);
 assert.ok(runtime);
 runtime.beginCase('case-1');

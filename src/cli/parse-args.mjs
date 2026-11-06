@@ -10,7 +10,7 @@ export function parseCliArgs(argv) {
     file: null, functionName: null, exportName: null, out: null, tsconfig: null,
     jestConfig: null, jestBin: null, jestSetup: null, coverageFrom: null,
     coverageProvider: 'v8', maxScenarios: 40, coverageIterations: 3,
-    coverageGoal: 100, all: false, mcdc: false, coverageFeedback: false,
+    coverageGoal: 100, jestTimeoutMs: 120_000, coverageFeedbackTimeoutMs: 600_000, all: false, mcdc: false, coverageFeedback: false,
     minimalSuite: false, minimalSuiteOut: null, testBatching: true, testBatchMinSize: 2, testBatchMaxSize: 100,
     constraintEngine: 'hybrid', constraintDiagnostics: false, includeEvidence: false,
     analysisReport: false, analysisReportOut: null, analysisReportFormOut: null, analysisReportValueMode: 'shape', analysisReportMaxScenarios: 500,
@@ -33,6 +33,8 @@ export function parseCliArgs(argv) {
     else if (arg === '--minimal-suite-out') { result.minimalSuite = true; result.minimalSuiteOut = requireOptionValue(argv, i, arg); result.coverageFeedback = true; result.mcdc = true; i += 1; }
     else if (arg === '--coverage-iterations') { result.coverageIterations = Number(requireOptionValue(argv, i, arg)); i += 1; }
     else if (arg === '--coverage-goal') { result.coverageGoal = Number(requireOptionValue(argv, i, arg)); i += 1; }
+    else if (arg === '--jest-timeout') { result.jestTimeoutMs = Number(requireOptionValue(argv, i, arg)); i += 1; }
+    else if (arg === '--coverage-feedback-timeout') { result.coverageFeedbackTimeoutMs = Number(requireOptionValue(argv, i, arg)); i += 1; }
     else if (arg === '--max-scenarios') { result.maxScenarios = Number(requireOptionValue(argv, i, arg)); i += 1; }
     else if (arg === '--constraint-engine') { result.constraintEngine = requireOptionValue(argv, i, arg); i += 1; }
     else if (arg === '--constraint-diagnostics') result.constraintDiagnostics = true;
@@ -50,6 +52,11 @@ export function parseCliArgs(argv) {
     else if (arg === '--help' || arg === '-h') result.help = true;
     else if (!arg.startsWith('-') && !result.file) result.file = arg;
     else throw new Error(`Unknown argument: ${arg}`);
+  }
+  for (const [name, value] of [['--jest-timeout', result.jestTimeoutMs], ['--coverage-feedback-timeout', result.coverageFeedbackTimeoutMs]]) {
+    if (!Number.isSafeInteger(value) || value < 1 || value > 86_400_000) {
+      throw new Error(`${name} must be an integer between 1 and 86400000 milliseconds.`);
+    }
   }
   return result;
 }

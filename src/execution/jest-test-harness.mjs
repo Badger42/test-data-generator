@@ -184,13 +184,17 @@ function createRuntimeTrackedArguments(args, parameterNames, references, runtime
                 const callbackIndex = property === 'sort' || property === 'toSorted'
                   ? callbackInvocation++
                   : property === 'reduce' || property === 'reduceRight' ? callbackArgs[2] : callbackArgs[1];
-                const previousContext = runtime?.enterCallback?.({
+                const callbackContext = {
                   method: property,
                   collection: valuePath,
                   iterationIndex: Number.isInteger(callbackIndex) ? callbackIndex : null,
-                });
-                try { return Reflect.apply(originalCallback, this, callbackArgs); }
-                finally { runtime?.leaveCallback?.(previousContext); }
+                };
+                if (typeof runtime?.runInCallback === 'function') {
+                  // AsyncLocalStorage preserves this callback's context across
+                  // await and isolates concurrent callbacks from one another.
+                  return runtime.runInCallback(callbackContext, () => Reflect.apply(originalCallback, this, callbackArgs));
+                }
+                return Reflect.apply(originalCallback, this, callbackArgs);
               };
             }
             const output = Reflect.apply(child, receiver, methodArgs);
@@ -217,10 +221,9 @@ function createRuntimeTrackedArguments(args, parameterNames, references, runtime
 ${runtimeRecorderSource}
 
 beforeEach(async () => {
-  // Every test.each row is an independent Jest test case. Always reset Jest
-  // mocks first; an optional project hook may then restore custom spies or
-  // adapter state before the row-specific MockPlan is applied.
-  jestApi.resetAllMocks();
+  // Clear call history between test.each rows without discarding mock
+  // implementations registered by the consuming project's setup files.
+  jestApi.clearAllMocks();
   if (typeof globalThis.__BRANCH_SCENARIO_RESET_MOCKS__ === 'function') {
     await globalThis.__BRANCH_SCENARIO_RESET_MOCKS__({ jest: jestApi });
   }
@@ -228,7 +231,11 @@ beforeEach(async () => {
 
 beforeAll(async () => {
   if (SETUP_URL) await import(SETUP_URL);
-  const namespace = await import(SOURCE_URL);
+  const sourceUrl = new URL(SOURCE_URL);
+  const isCommonJs = sourceUrl.pathname.toLowerCase().endsWith('.cjs');
+  const namespace = isCommonJs
+    ? require(require('node:url').fileURLToPath(sourceUrl))
+    : await import(SOURCE_URL);
   targetFunction = resolveExport(namespace, EXPORT_PATH);
   if (typeof targetFunction !== 'function') {
     throw new Error('Cannot resolve an exported function. Expected export path: ' +
@@ -264,21 +271,35 @@ async function runScenario(scenario) {
       .map(reference => ({ ...reference, caseId: scenario.id }));
     const tracked = createRuntimeTrackedArguments(args, parameterNames, runtimeReferences, runtimeRecorder);
     try {
-      let thrown = null;
+      let didThrow = false;
+      let thrownValue;
       try {
         await targetFunction(...tracked.args);
       } catch (error) {
-        thrown = error;
+        didThrow = true;
+        thrownValue = error;
       }
       const expectedException = scenario.expectedException ?? scenario.references?.find(reference => reference.expectedException)?.expectedException ?? null;
-      if (expectedException) {
-        if (!thrown) throw new Error('Expected ' + (expectedException.name || 'an exception') + ' but the function completed normally.');
-        if (expectedException.name && thrown.name !== expectedException.name) {
-          throw new Error('Expected ' + expectedException.name + ' but received ' + thrown.name + ': ' + thrown.message);
+      if (expectedException !== null) {
+        if (!didThrow) throw new Error('Expected ' + (expectedException.name || 'an exception') + ' but the function completed normally.');
+        const thrownName = thrownValue == null ? undefined : Object(thrownValue).name;
+        const thrownMessage = thrownValue == null ? String(thrownValue) : (Object(thrownValue).message ?? String(thrownValue));
+        if (expectedException.primitive) {
+          const primitive = expectedException.primitive;
+          const matches = primitive.type === 'undefined' ? thrownValue === undefined
+            : primitive.type === 'null' ? thrownValue === null
+            : typeof thrownValue === primitive.type && thrownValue === primitive.value;
+          if (!matches) throw new Error('Expected thrown primitive ' + JSON.stringify(primitive) + ' from ' + expectedException.source + ' but received ' + thrownMessage);
+        } else if (expectedException.name) {
+          if (thrownName !== expectedException.name) {
+            throw new Error('Expected ' + expectedException.name + ' but received ' + (thrownName || typeof thrownValue) + ': ' + thrownMessage);
+          }
+        } else {
+          throw new Error('The expected throw expression cannot be verified safely: ' + (expectedException.source || '<unknown expression>'));
         }
         return;
       }
-      if (thrown) throw thrown;
+      if (didThrow) throw thrownValue;
     } finally {
       tracked.finalize();
     }

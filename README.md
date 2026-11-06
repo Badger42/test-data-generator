@@ -1,4 +1,4 @@
-# Branch Scenario Generator 1.0.0-rc.7
+# Branch Scenario Generator 1.0.0-rc.8
 
 Генератор тестовых данных и Jest-сценариев для JavaScript/TypeScript-функций. Анализирует AST, Control Flow и Data Flow, строит ограничения, подбирает входные значения и моки, а при включённом coverage feedback проверяет результат реальным запуском Jest.
 
@@ -43,6 +43,8 @@ node branch-scenarios.mjs src/passenger.ts \
   --jest-config jest.config.js
 ```
 
+`--jest-timeout <ms>` ограничивает один запуск Jest (по умолчанию 120000 ms), а `--coverage-feedback-timeout <ms>` задаёт общий бюджет всех итераций Coverage Feedback (по умолчанию 600000 ms). При исчерпании бюджета отчёт получает отдельный статус `execution-timeout`.
+
 `--constraint-engine legacy` оставлен как публичный совместимый псевдоним режима `recursive-ast`; рекомендуемый режим — `hybrid`.
 
 ## Проверки
@@ -62,7 +64,7 @@ npm test
 - [Подсистемы и контракты](docs/architecture/SUBSYSTEMS.md)
 - [Статус проверок](docs/architecture/VALIDATION_STATUS.md)
 - [План выхода на стабильный v1.0.0](docs/architecture/RELEASE_PLAN.md)
-- [История реализации v0.19–v1.0.0-rc.7](docs/releases/IMPLEMENTATION_HISTORY.md)
+- [История реализации v0.19–v1.0.0-rc.8](docs/releases/IMPLEMENTATION_HISTORY.md)
 
 ## Требования
 
@@ -83,11 +85,11 @@ node branch-scenarios.mjs src/feature.ts --function calculate --mcdc --coverage-
 Use `--analysis-report-form-out <file.json>` to choose a custom form path. After running tests, fill `*.analysis-run-form.json` (keep every `scenarioId` unchanged), then create the merged report with `node tools/finalize-analysis-report.mjs <analysis-report.json> <analysis-run-form.json>`. Attach the resulting `*.final.json` here. For failures, also attach the smallest relevant source files with secrets removed and the exact test command. See `docs/README.md` for the workflow.
 
 
-## Platform requirements (rc.7)
+## Platform requirements (rc.8)
 
 - Node.js `>=24.0.0` (CI matrix: 24.x and 26.x; `.nvmrc` selects 26).
 - Jest `30.5.2` is pinned for generator development and integration tests. Coverage feedback validates the consuming project's Jest version.
-- TypeScript is pinned to `5.8.3`; install the exact direct dependency versions with `npm install`. A committed lockfile remains a pre-stable release gate.
+- TypeScript is pinned to `5.8.3`; install the exact direct dependency versions with `npm install`. CI runs `npm ci` when `package-lock.json` is present; this prepared archive does not include the repository lockfile because the npm registry was unreachable during assembly, so use `npm install` for this archive and regenerate/commit the lockfile before a reproducible release.
 
 
 ### Security note for runtime MC/DC

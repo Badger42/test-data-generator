@@ -1,2 +1,6 @@
 node_modules/
 *.log
+
+# Temporary execution/MC/DC artifacts (also cleaned by the runner on normal exits)
+.branch-scenarios-feedback-/
+*.branch-scenarios-runtime-*

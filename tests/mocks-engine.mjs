@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
 import { createDependencyDiscovery } from '../src/mocks/dependency-discovery.mjs';
 import { createMockTemplateBuilder } from '../src/mocks/mock-template-builder.mjs';
@@ -7,7 +8,7 @@ import { createMockPlanner } from '../src/mocks/mock-planner.mjs';
 import { createJestMockAdapter } from '../src/mocks/adapters/jest-mock-adapter.mjs';
 import { createMockReportAdapter } from '../src/reporting/mock-report-adapter.mjs';
 
-const fixture = new URL('./fixtures/mock-planner-fixture.ts', import.meta.url).pathname;
+const fixture = fileURLToPath(new URL('./fixtures/mock-planner-fixture.ts', import.meta.url));
 const program = ts.createProgram([fixture], { strict: true, target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext });
 const checker = program.getTypeChecker();
 const sourceFile = program.getSourceFile(fixture);
