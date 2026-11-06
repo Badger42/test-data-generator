@@ -180,6 +180,7 @@ function createRuntimeTrackedArguments(args, parameterNames, references, runtime
             const originalCallback = methodArgs[0];
             if (typeof originalCallback === 'function') {
               let callbackInvocation = 0;
+              const verifiedReferences = new Set();
               methodArgs[0] = function (...callbackArgs) {
                 const callbackIndex = property === 'sort' || property === 'toSorted'
                   ? callbackInvocation++
@@ -189,11 +190,43 @@ function createRuntimeTrackedArguments(args, parameterNames, references, runtime
                   collection: valuePath,
                   iterationIndex: Number.isInteger(callbackIndex) ? callbackIndex : null,
                 };
+                const verifyCallbackInputs = () => {
+                  for (const reference of callbackReferences) {
+                    const assertion = reference.mcdcAssertion;
+                    const expected = assertion.callbackContext;
+                    const key = reference.pairId + ':' + reference.side;
+                    if (verifiedReferences.has(key) || expected.method !== property ||
+                        normalizeCollectionPath(expected.collection) !== normalizeCollectionPath(valuePath) ||
+                        (Number.isInteger(expected.iterationIndex) && expected.iterationIndex !== callbackIndex)) continue;
+                    const rootScope = {};
+                    for (const [index, name] of (assertion.functionParameterNames ?? []).entries()) {
+                      if (name) rootScope[name] = args[index];
+                    }
+                    const verification = verifyMcdcAtCallback(assertion, rootScope, callbackArgs);
+                    globalThis.__BRANCH_SCENARIO_MCDC_INPUT_CHECKS__.push({
+                      caseId: reference.caseId,
+                      pairId: reference.pairId,
+                      decisionId: reference.decisionId,
+                      conditionId: reference.conditionId,
+                      side: reference.side,
+                      ...verification,
+                    });
+                    verifiedReferences.add(key);
+                    if (verification.status !== 'callback-runtime-context-verified') {
+                      throw new Error('MC/DC callback input verification failed for ' + reference.pairId +
+                        ' (' + reference.side + '): ' + (verification.reason ?? verification.status));
+                    }
+                  }
+                };
                 if (typeof runtime?.runInCallback === 'function') {
-                  // AsyncLocalStorage preserves this callback's context across
-                  // await and isolates concurrent callbacks from one another.
-                  return runtime.runInCallback(callbackContext, () => Reflect.apply(originalCallback, this, callbackArgs));
+                  // Verify against actual method-specific callback arguments,
+                  // then preserve this invocation's async-local runtime context.
+                  return runtime.runInCallback(callbackContext, () => {
+                    verifyCallbackInputs();
+                    return Reflect.apply(originalCallback, this, callbackArgs);
+                  });
                 }
+                verifyCallbackInputs();
                 return Reflect.apply(originalCallback, this, callbackArgs);
               };
             }
@@ -251,7 +284,7 @@ async function runScenario(scenario) {
     if (typeof globalThis.__BRANCH_SCENARIO_APPLY_MOCKS__ === 'function') {
       await globalThis.__BRANCH_SCENARIO_APPLY_MOCKS__(scenario.mocks || [], scenario);
     }
-    for (const reference of scenario.references.filter(item => item.mcdcAssertion)) {
+    for (const reference of scenario.references.filter(item => item.mcdcAssertion && !item.mcdcAssertion.callbackContext)) {
       const verification = verifyMcdcReference(scenario, reference);
       globalThis.__BRANCH_SCENARIO_MCDC_INPUT_CHECKS__.push({
         caseId: scenario.id,

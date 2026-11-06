@@ -109,6 +109,30 @@ try {
 
   assert.ok(callbackDecisions >= 7, `Expected at least 7 callback decisions, got ${callbackDecisions}`);
   assert.ok(verifiedPairs >= 12, `Expected at least 12 verified callback pairs, got ${verifiedPairs}`);
+  const fakeJest = path.join(projectDir, 'tests', 'fixtures', 'fake-jest-runner.cjs');
+  const coverageOutput = path.join(os.tmpdir(), `branch-scenarios-mcdc-callback-runtime-${process.pid}.json`);
+  try {
+    const coverageRun = spawnSync(process.execPath, [
+      cli, fixture, '--function', 'indexSensitive', '--mcdc', '--coverage-feedback',
+      '--jest-bin', fakeJest, '--out', coverageOutput,
+    ], { cwd: projectDir, encoding: 'utf8', timeout: 90_000 });
+    assert.equal(coverageRun.status, 0,
+      `Callback runtime feedback failed:
+${coverageRun.stdout}
+${coverageRun.stderr}`);
+    const coverageReport = JSON.parse(fs.readFileSync(coverageOutput, 'utf8'));
+    const callbackChecks = coverageReport.coverageFeedback.execution.mcdcInputChecks.filter(item =>
+      item.caseId && item.pairId);
+    assert.ok(callbackChecks.length > 0, 'callback MC/DC input checks must be recorded during actual callback invocation');
+    assert.ok(callbackChecks.every(item => item.status === 'callback-runtime-context-verified'),
+      `callback checks must use actual callback arguments: ${JSON.stringify(callbackChecks)}`);
+    assert.equal(coverageReport.coverageFeedback.execution.mcdcPairsInputVerified,
+      coverageReport.coverageFeedback.execution.mcdcPairs.length,
+      'actual callback argument checks must count as verified input pairs');
+  } finally {
+    fs.rmSync(coverageOutput, { force: true });
+  }
+
   console.log(`Advanced callback MC/DC tests passed: ${callbackDecisions} callback decision(s), ${verifiedPairs} verified pair(s), including index-varying pairs and local const expansion.`);
 } finally {
   fs.rmSync(output, { force: true });

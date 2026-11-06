@@ -44,7 +44,8 @@ export function verifyRuntimeMcdcSide(runtimeRecords, cases, caseId, pair, side,
     const observed = trace.conditions?.[conditionId];
     if (!observed?.evaluated) {
       missingConditions.push(conditionId);
-      if (conditionId !== targetConditionId && inputCheck?.status === 'verified') inferredConditions.push(conditionId);
+      if (conditionId !== targetConditionId &&
+          ['verified', 'callback-runtime-context-verified'].includes(inputCheck?.status)) inferredConditions.push(conditionId);
       continue;
     }
     if (observed.value !== Boolean(expectedValue)) mismatchedConditions.push(conditionId);
