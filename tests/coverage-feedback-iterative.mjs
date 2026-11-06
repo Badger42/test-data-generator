@@ -10,12 +10,10 @@ const cli = path.join(projectDir, 'branch-scenarios.mjs');
 const fixture = path.join(projectDir, 'examples', 'coverage-feedback-iterative-target.js');
 const fakeJestScript = path.join(projectDir, 'tests', 'fixtures', 'fake-jest-runner.cjs');
 const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'branch-scenarios-iterative-'));
-const fakeJestCommand = path.join(tempDir, 'fake-jest');
+const fakeJestCommand = fakeJestScript;
 const output = path.join(tempDir, 'iterative.json');
 
 try {
-  fs.writeFileSync(fakeJestCommand, `#!/bin/sh\nexec "${process.execPath}" "${fakeJestScript}" "$@"\n`, { mode: 0o755 });
-  fs.chmodSync(fakeJestCommand, 0o755);
 
   const run = spawnSync(process.execPath, [
     cli, fixture,

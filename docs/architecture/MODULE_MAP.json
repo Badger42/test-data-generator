@@ -1,7 +1,7 @@
 {
   "baselineVersion": "0.18.0",
   "baselineEntry": "branch-scenarios.mjs",
-  "currentVersion": "1.0.0-rc.7",
+  "currentVersion": "1.0.0-rc.8",
   "architectureStatus": {
     "legacyMonolithRemoved": true,
     "legacySourceDirectoryRemoved": true,
@@ -328,13 +328,14 @@
       "status": "implemented"
     },
     {
-      "id": "testing-batching",
+      "id": "testing",
       "target": "src/testing",
-      "purpose": "Execution signatures, contiguous test batching and Jest each renderer.",
+      "purpose": "Test execution infrastructure, test-runner configuration, execution signatures, contiguous batching and Jest each rendering.",
       "implementedFiles": [
         "src/testing/batching/execution-signature.mjs",
         "src/testing/batching/jest-each-generator.mjs",
-        "src/testing/batching/test-batch-builder.mjs"
+        "src/testing/batching/test-batch-builder.mjs",
+        "src/testing/test-runner-config.mjs"
       ],
       "contractFiles": [
         "contracts/testing-batching.d.ts"

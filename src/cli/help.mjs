@@ -31,6 +31,8 @@ Options:
                             With --mcdc, instrument decisions and atomic conditions for runtime MC/DC
       --coverage-iterations <n> Maximum Jest feedback passes (default: 3, including the initial run)
       --coverage-goal <pct>   Stop when file-level branch coverage reaches this percentage (default: 100)
+      --jest-timeout <ms>     Maximum duration of one Jest pass (default: 120000)
+      --coverage-feedback-timeout <ms> Overall Jest-pass budget across iterative feedback (default: 600000)
       --coverage-from <json> Read an existing coverage-final.json instead of running Jest
       --jest-config <file>  Use a specific Jest config
       --jest-bin <file>     Explicit path to jest.js (auto-detected by default)

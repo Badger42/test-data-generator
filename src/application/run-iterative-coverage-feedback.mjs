@@ -53,7 +53,8 @@ export function createIterativeCoverageFeedbackUseCase({
       pendingAddedScenarios = 0;
 
       if (feedback.status !== 'passed') {
-        stopReason = feedback.status.startsWith('jest-') ? feedback.status : `jest-${feedback.status}`;
+        stopReason = feedback.status === 'execution-timeout' || feedback.status.startsWith('jest-')
+          ? feedback.status : `jest-${feedback.status}`;
         break;
       }
 

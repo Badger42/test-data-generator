@@ -6,17 +6,27 @@ on:
 
 jobs:
   test:
-    name: Node ${{ matrix.node }}
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }} / Node ${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest, windows-latest]
         node: [24, 26]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node }}
-      - run: npm install --ignore-scripts --no-audit --no-fund
+      # The RC source snapshot used to prepare this archive does not include
+      # package-lock.json. Use npm ci automatically once the committed lockfile
+      # is present; until then keep CI usable with npm install.
+      - name: Install dependencies (lockfile-aware)
+        if: hashFiles('package-lock.json') != ''
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Install dependencies (no lockfile yet)
+        if: hashFiles('package-lock.json') == ''
+        run: npm install --ignore-scripts --no-audit --no-fund
       - run: npm run check:contracts
+      - run: npm run test:node-compatibility
       - run: npm test

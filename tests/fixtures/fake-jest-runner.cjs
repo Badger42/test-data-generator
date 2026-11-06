@@ -4,6 +4,10 @@ const Module = require('node:module');
 const { fileURLToPath } = require('node:url');
 
 const args = process.argv.slice(2);
+if (args.includes('--version')) {
+  process.stdout.write('30.5.2\n');
+  process.exit(0);
+}
 const value = prefix => args.find(arg => arg.startsWith(prefix))?.slice(prefix.length);
 const coverageDir = value('--coverageDirectory=');
 const resultsFile = value('--outputFile=');
@@ -40,8 +44,8 @@ const jestApi = {
   beforeAll: fn => before.push(fn),
   beforeEach: fn => beforeEachHooks.push(fn),
   afterAll: fn => after.push(fn),
-  jest: { resetAllMocks: () => {
-    globalThis.__BRANCH_SCENARIO_JEST_RESET_CALLS__ = (globalThis.__BRANCH_SCENARIO_JEST_RESET_CALLS__ || 0) + 1;
+  jest: { clearAllMocks: () => {
+    globalThis.__BRANCH_SCENARIO_JEST_CLEAR_CALLS__ = (globalThis.__BRANCH_SCENARIO_JEST_CLEAR_CALLS__ || 0) + 1;
   } },
   test: Object.assign(
     (name, fn) => tests.push({ name, fn }),
@@ -149,7 +153,7 @@ try {
     testResults: [{ assertionResults }],
     mcdcInputChecks: mcdcResults,
     setupHookCalls: globalThis.__BRANCH_SCENARIO_SETUP_HOOK_CALLS__ ?? 0,
-    jestResetAllMocksCalls: globalThis.__BRANCH_SCENARIO_JEST_RESET_CALLS__ ?? 0,
+    jestClearAllMocksCalls: globalThis.__BRANCH_SCENARIO_JEST_CLEAR_CALLS__ ?? 0,
   }));
   process.exitCode = failed ? 1 : 0;
 })().catch(error => {

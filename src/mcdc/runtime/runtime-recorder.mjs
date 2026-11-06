@@ -1,6 +1,137 @@
 export const RUNTIME_MCDC_SYMBOL = 'branch-scenarios-generator.runtime-mcdc.v1';
 
-const RECORDER_SOURCE = "const RUNTIME_MCDC_SYMBOL = 'branch-scenarios-generator.runtime-mcdc.v1';\nfunction createMcdcRuntimeRecorder() {\n  return {\n    caseId: null,\n    frames: [],\n    pendingAtoms: new Map(),\n    records: [],\n    callbackContext: null,\n    callbackInvocation: 0,\n    beginCase(caseId) {\n      this.caseId = caseId;\n      this.frames = [];\n      this.pendingAtoms.clear();\n      this.callbackContext = null;\n      this.callbackInvocation = 0;\n    },\n    enterCallback(context) {\n      const previous = this.callbackContext;\n      this.callbackInvocation += 1;\n      this.callbackContext = { ...context, invocationId: this.callbackInvocation };\n      return previous;\n    },\n    leaveCallback(previous) {\n      const completedInvocationId = this.callbackContext?.invocationId ?? null;\n      if (completedInvocationId !== null) {\n        // A callback can return before reaching its instrumented decision. Drop\n        // any aliases captured for that invocation so they cannot accumulate\n        // across large collections or be mistaken for a later callback.\n        for (const [decisionId, pending] of this.pendingAtoms) {\n          const remaining = pending.filter(item => item.callbackInvocationId !== completedInvocationId);\n          if (remaining.length) this.pendingAtoms.set(decisionId, remaining);\n          else this.pendingAtoms.delete(decisionId);\n        }\n      }\n      this.callbackContext = previous ?? null;\n    },\n    recordConditionValue(decisionId, conditionId, rawValue) {\n      const entry = {\n        value: Boolean(rawValue), evaluated: true,\n        callbackInvocationId: this.callbackContext?.invocationId ?? null,\n        callbackContext: this.callbackContext ? { ...this.callbackContext } : null,\n      };\n      const frame = [...this.frames].reverse().find(item => item.decisionId === decisionId &&\n        item.callbackInvocationId === entry.callbackInvocationId);\n      if (frame) frame.conditions[conditionId] = entry;\n      else {\n        const pending = this.pendingAtoms.get(decisionId) ?? [];\n        pending.push({ conditionId, ...entry });\n        this.pendingAtoms.set(decisionId, pending);\n      }\n      return rawValue;\n    },\n    condition(decisionId, conditionId, evaluate) { return this.recordConditionValue(decisionId, conditionId, evaluate()); },\n    async conditionAsync(decisionId, conditionId, evaluate) { return this.recordConditionValue(decisionId, conditionId, await evaluate()); },\n    takePending(decisionId) {\n      const pending = this.pendingAtoms.get(decisionId) ?? [];\n      const invocationId = this.callbackContext?.invocationId ?? null;\n      const selected = pending.filter(item => item.callbackInvocationId === invocationId);\n      const remaining = pending.filter(item => item.callbackInvocationId !== invocationId);\n      if (remaining.length) this.pendingAtoms.set(decisionId, remaining);\n      else this.pendingAtoms.delete(decisionId);\n      return Object.fromEntries(selected.map(item => [item.conditionId, {\n        value: item.value, evaluated: item.evaluated, callbackContext: item.callbackContext,\n      }]));\n    },\n    decision(decisionId, evaluate) { return this.runDecision(decisionId, evaluate); },\n    async decisionAsync(decisionId, evaluate) { return this.runDecisionAsync(decisionId, evaluate); },\n    runDecision(decisionId, evaluate) {\n      const frame = {\n        decisionId, caseId: this.caseId,\n        callbackInvocationId: this.callbackContext?.invocationId ?? null,\n        callbackContext: this.callbackContext ? { ...this.callbackContext } : null,\n        conditions: this.takePending(decisionId),\n      };\n      this.frames.push(frame);\n      try {\n        const rawValue = evaluate();\n        this.records.push({ caseId: frame.caseId, decisionId, decisionOutcome: Boolean(rawValue),\n          conditions: frame.conditions, callbackContext: frame.callbackContext, executionStatus: 'completed' });\n        return rawValue;\n      } catch (error) {\n        this.records.push({ caseId: frame.caseId, decisionId, decisionOutcome: null,\n          conditions: frame.conditions, callbackContext: frame.callbackContext, executionStatus: 'threw', error: error?.message ?? String(error) });\n        throw error;\n      } finally {\n        const index = this.frames.lastIndexOf(frame);\n        if (index >= 0) this.frames.splice(index, 1);\n      }\n    },\n    async runDecisionAsync(decisionId, evaluate) {\n      const frame = {\n        decisionId, caseId: this.caseId,\n        callbackInvocationId: this.callbackContext?.invocationId ?? null,\n        callbackContext: this.callbackContext ? { ...this.callbackContext } : null,\n        conditions: this.takePending(decisionId),\n      };\n      this.frames.push(frame);\n      try {\n        const rawValue = await evaluate();\n        this.records.push({ caseId: frame.caseId, decisionId, decisionOutcome: Boolean(rawValue),\n          conditions: frame.conditions, callbackContext: frame.callbackContext, executionStatus: 'completed' });\n        return rawValue;\n      } catch (error) {\n        this.records.push({ caseId: frame.caseId, decisionId, decisionOutcome: null,\n          conditions: frame.conditions, callbackContext: frame.callbackContext, executionStatus: 'threw', error: error?.message ?? String(error) });\n        throw error;\n      } finally {\n        const index = this.frames.lastIndexOf(frame);\n        if (index >= 0) this.frames.splice(index, 1);\n      }\n    },\n    snapshot() { return this.records; },\n  };\n}\n\nglobalThis.__BRANCH_SCENARIO_MCDC_INPUT_CHECKS__ = [];\nglobalThis[Symbol.for(RUNTIME_MCDC_SYMBOL)] = createMcdcRuntimeRecorder();";
+const RECORDER_SOURCE = String.raw`
+const AsyncLocalStorage = require('node:async_hooks').AsyncLocalStorage;
+const RUNTIME_MCDC_SYMBOL = 'branch-scenarios-generator.runtime-mcdc.v1';
+const runtimeCallbackStorage = new AsyncLocalStorage();
+// Each instrumented decision owns an async-local frame stack. A shared stack
+// corrupts evidence when two async callbacks evaluate the same decision in parallel.
+const decisionFrameStorage = new AsyncLocalStorage();
+function createMcdcRuntimeRecorder() {
+  return {
+    caseId: null,
+    pendingAtoms: new Map(),
+    records: [],
+    callbackInvocation: 0,
+    beginCase(caseId) {
+      this.caseId = caseId;
+      this.pendingAtoms.clear();
+      this.callbackInvocation = 0;
+    },
+    getCallbackContext() {
+      return runtimeCallbackStorage.getStore() ?? null;
+    },
+    runInCallback(context, callback) {
+      const invocationId = ++this.callbackInvocation;
+      return runtimeCallbackStorage.run({ ...context, caseId: this.caseId, invocationId }, callback);
+    },
+    // Backward-compatible synchronous scope API used by callers that cannot
+    // supply a callback thunk. New instrumentation should prefer runInCallback.
+    enterCallback(context) {
+      const previous = this.getCallbackContext();
+      const invocationId = ++this.callbackInvocation;
+      runtimeCallbackStorage.enterWith({ ...context, caseId: this.caseId, invocationId });
+      return previous;
+    },
+    leaveCallback(previous) {
+      runtimeCallbackStorage.enterWith(previous ?? undefined);
+    },
+    recordConditionValue(decisionId, conditionId, rawValue) {
+      const callbackContext = this.getCallbackContext();
+      const caseId = callbackContext?.caseId ?? this.caseId;
+      // Detached async callbacks may outlive their Jest case. Never attribute
+      // their late completions to the next generated scenario.
+      if (caseId !== this.caseId) return rawValue;
+      const entry = {
+        caseId,
+        value: Boolean(rawValue),
+        evaluated: true,
+        callbackInvocationId: callbackContext?.invocationId ?? null,
+        callbackContext: callbackContext ? { ...callbackContext } : null,
+      };
+      const frames = decisionFrameStorage.getStore() ?? [];
+      const frame = [...frames].reverse().find(item => item.decisionId === decisionId &&
+        item.caseId === caseId && item.callbackInvocationId === entry.callbackInvocationId);
+      if (frame) frame.conditions[conditionId] = entry;
+      else {
+        const pending = this.pendingAtoms.get(decisionId) ?? [];
+        pending.push({ conditionId, ...entry });
+        this.pendingAtoms.set(decisionId, pending);
+      }
+      return rawValue;
+    },
+    condition(decisionId, conditionId, evaluate) { return this.recordConditionValue(decisionId, conditionId, evaluate()); },
+    async conditionAsync(decisionId, conditionId, evaluate) { return this.recordConditionValue(decisionId, conditionId, await evaluate()); },
+    takePending(decisionId) {
+      const callbackContext = this.getCallbackContext();
+      const caseId = callbackContext?.caseId ?? this.caseId;
+      const invocationId = callbackContext?.invocationId ?? null;
+      const pending = this.pendingAtoms.get(decisionId) ?? [];
+      const selected = pending.filter(item => item.caseId === caseId && item.callbackInvocationId === invocationId);
+      const remaining = pending.filter(item => item.caseId !== caseId || item.callbackInvocationId !== invocationId);
+      if (remaining.length) this.pendingAtoms.set(decisionId, remaining);
+      else this.pendingAtoms.delete(decisionId);
+      return Object.fromEntries(selected.map(item => [item.conditionId, {
+        value: item.value, evaluated: item.evaluated, callbackContext: item.callbackContext,
+      }]));
+    },
+    decision(decisionId, evaluate) { return this.runDecision(decisionId, evaluate); },
+    async decisionAsync(decisionId, evaluate) { return this.runDecisionAsync(decisionId, evaluate); },
+    runDecision(decisionId, evaluate) {
+      const callbackContext = this.getCallbackContext();
+      const caseId = callbackContext?.caseId ?? this.caseId;
+      if (caseId !== this.caseId) return evaluate();
+      const frame = {
+        decisionId, caseId,
+        callbackInvocationId: callbackContext?.invocationId ?? null,
+        callbackContext: callbackContext ? { ...callbackContext } : null,
+        conditions: this.takePending(decisionId),
+      };
+      const parentFrames = decisionFrameStorage.getStore() ?? [];
+      return decisionFrameStorage.run([...parentFrames, frame], () => {
+        try {
+          const rawValue = evaluate();
+          this.records.push({ caseId: frame.caseId, decisionId, decisionOutcome: Boolean(rawValue),
+            conditions: frame.conditions, callbackContext: frame.callbackContext, executionStatus: 'completed' });
+          return rawValue;
+        } catch (error) {
+          this.records.push({ caseId: frame.caseId, decisionId, decisionOutcome: null,
+            conditions: frame.conditions, callbackContext: frame.callbackContext, executionStatus: 'threw', error: error?.message ?? String(error) });
+          throw error;
+        }
+      });
+    },
+    async runDecisionAsync(decisionId, evaluate) {
+      const callbackContext = this.getCallbackContext();
+      const caseId = callbackContext?.caseId ?? this.caseId;
+      if (caseId !== this.caseId) return evaluate();
+      const frame = {
+        decisionId, caseId,
+        callbackInvocationId: callbackContext?.invocationId ?? null,
+        callbackContext: callbackContext ? { ...callbackContext } : null,
+        conditions: this.takePending(decisionId),
+      };
+      const parentFrames = decisionFrameStorage.getStore() ?? [];
+      return decisionFrameStorage.run([...parentFrames, frame], async () => {
+        try {
+          const rawValue = await evaluate();
+          this.records.push({ caseId: frame.caseId, decisionId, decisionOutcome: Boolean(rawValue),
+            conditions: frame.conditions, callbackContext: frame.callbackContext, executionStatus: 'completed' });
+          return rawValue;
+        } catch (error) {
+          this.records.push({ caseId: frame.caseId, decisionId, decisionOutcome: null,
+            conditions: frame.conditions, callbackContext: frame.callbackContext, executionStatus: 'threw', error: error?.message ?? String(error) });
+          throw error;
+        }
+      });
+    },
+    snapshot() { return this.records; },
+  };
+}
+
+globalThis.__BRANCH_SCENARIO_MCDC_INPUT_CHECKS__ = [];
+globalThis[Symbol.for(RUNTIME_MCDC_SYMBOL)] = createMcdcRuntimeRecorder();
+`;
 
 export function createMcdcRuntimeRecorderSource() {
   return RECORDER_SOURCE;

@@ -119,3 +119,8 @@ Pinned Jest 26.6.0 as a development dependency, added an exact-version dependenc
 ### v1.0.0-rc.7 — platform modernization and audit remediation
 
 Node.js baseline raised to 24+, Jest pinned to 30.5.2, TypeScript pinned to 5.8.3, and Node version files added. A lockfile could not be generated in the build environment and remains a pre-stable release gate. Jest batching uses positional `%s` arguments and unique scenario ID titles; result attribution consumes each assertion exactly once. Fake runner injects a shim without `NODE_PATH`. Coverage remapping now receives the generated instrumented source. Additional input validation, CLI diagnostics, exception expectations, conservative unsupported-parameter handling and CI/test runner changes are included where covered by regression tests.
+
+
+### v1.0.0-rc.8 — runtime isolation and reliability
+
+Introduced callback/decision `AsyncLocalStorage` isolation, including parallel async execution and protection against late callback evidence leaking into later cases. Harness records falsy thrown values correctly and clears mock call history without resetting consuming-project setup implementations. Jest version detection handles symlinks and Windows command shims and rejects unknown versions. Added per-run and cumulative feedback deadlines, explicit timeout outcomes, harness-build cleanup, stricter test-runner concurrency/timeout/empty-suite checks, bounded output, Windows process-tree termination, and regression tests. CI now spans Ubuntu/Windows and Node 24/26 with current checkout/setup-node actions; it uses npm ci when a lockfile is available.

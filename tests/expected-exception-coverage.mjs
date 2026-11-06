@@ -8,12 +8,9 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'bsg-expected-exception-'));
 const output = path.join(temp, 'throw-feedback.json');
-const fakeCommand = path.join(temp, 'fake-jest');
-const fakeRunner = path.join(root, 'tests', 'fixtures', 'fake-jest-runner.cjs');
+const fakeCommand = path.join(root, 'tests', 'fixtures', 'fake-jest-runner.cjs');
 const source = path.join(root, 'examples', 'coverage-feedback-throw-target.js');
 try {
-  fs.writeFileSync(fakeCommand, `#!/bin/sh\nexec "${process.execPath}" "${fakeRunner}" "$@"\n`, { mode: 0o755 });
-  fs.chmodSync(fakeCommand, 0o755);
   const result = spawnSync(process.execPath, [
     path.join(root, 'branch-scenarios.mjs'), source,
     '--function', 'throwOnNegative', '--mcdc', '--coverage-feedback',

@@ -1,6 +1,6 @@
 # План стабилизации v1.0.0
 
-Текущая версия разработки: **1.0.0-rc.7**. Переход к стабильной версии определяется критериями ниже, а не только изменением номера версии.
+Текущая версия разработки: **1.0.0-rc.8**. Переход к стабильной версии определяется критериями ниже, а не только изменением номера версии.
 
 ## Обязательные release gates
 
@@ -23,7 +23,8 @@
 - **RC.4 (released):** исправлены межфайловые helper summaries, Points-to unknown/top propagation, recursive summary widening, mock classification/override semantics и обязательный row-level Jest reset. Добавлены adversarial inter-file fixtures и Node compatibility check.
 - **RC.5 (released):** shareable real-run handoff — диагностический отчёт, заполняемая execution form, проверка Scenario ID/reportId и финализация общего JSON.
 - **RC.6 (released):** Jest `26.6.0` закреплён в `devDependencies`; real-Jest integration обязателен для `npm test`, без молчаливого skip. Runner продолжает предпочитать Jest целевого проекта; `JEST_BIN` используется для явной проверки другой установки. Следующая задача — matrix ESM/CJS и V8/Babel в consuming project.
-- **RC.7 (current):** обновление Node/Jest, корректность harness и test batching, безопасное исключение неподдерживаемых сценариев, runtime exception outcomes, V8/Istanbul remapping, CLI validation и CI. Оставшиеся проверки перечислены в `VALIDATION_STATUS.md`. Lockfile не включён в RC.7 из-за недоступности npm registry и остаётся обязательным pre-stable gate.
+- **RC.7:** обновление Node/Jest, корректность harness и test batching, безопасное исключение неподдерживаемых сценариев, runtime exception outcomes, V8/Istanbul remapping, CLI validation и CI. Оставшиеся проверки перечислены в `VALIDATION_STATUS.md`. Lockfile не включён в RC.7 из-за недоступности npm registry и остаётся обязательным pre-stable gate.
+- **RC.8 (current):** async-local runtime MC/DC context, falsy throw tracking, fail-closed Jest version detection (including symlink/Windows launcher resolution), per-pass and total Coverage Feedback timeouts, setup-mock preservation, hardened test runner (integer concurrency, non-empty discovery, per-file timeout and bounded output), ESM/CJS + V8/Babel + setup-mock integration coverage, and Ubuntu/Windows CI on Node 24/26. CI uses `npm ci` when a package lock is present; this source archive has no lockfile and documents the remaining reproducibility gate.
 - **Stable 1.0.0:** все gates закрыты либо каждый ограниченный capability явно принят как documented non-goal; нет известных output regressions.
 
 
@@ -50,3 +51,14 @@ Every `--analysis-report` run also produces a fillable `*.analysis-run-form.json
 - Expected exceptions are retained on branch and MC/DC execution cases; unsupported destructured parameters and unsupported solver outcomes are reported instead of receiving fabricated values.
 - Syntax errors and missing CLI values fail explicitly; output directories must already exist.
 - Test suite runs discovered test modules with bounded concurrency; Node 24/26 CI workflow added.
+
+
+### v1.0.0-rc.8 — runtime isolation and CI hardening
+
+- Added `AsyncLocalStorage` for callback context and per-decision frame stacks so `await` and parallel callbacks do not share MC/DC frames; late callbacks cannot be attributed to a later scenario.
+- Harness distinguishes a thrown value from the truthiness of that value and uses `clearAllMocks()` to preserve setup-file mock implementations.
+- Jest version probing follows symlinks and Windows `.cmd`/`.bat` shims; unknown versions fail closed.
+- Added `--jest-timeout` (120 seconds default) and `--coverage-feedback-timeout` (600 seconds default), with an explicit `execution-timeout` status and cleanup after timeout/harness-build failure.
+- Test runner validates positive integer concurrency and per-file timeout, refuses an empty suite, bounds captured output, and terminates Windows process trees on timeout.
+- Added regression coverage for async callback isolation, falsy throw handling, Jest launcher version detection, time budgets, and real-Jest CJS/Babel/setup mocks.
+- GitHub Actions tests Node 24/26 on Ubuntu and Windows and uses checkout/setup-node v7. It chooses `npm ci` when the repository lockfile is present. The archive source snapshot did not contain that lockfile; this remains a release reproducibility gate rather than an invented lockfile.

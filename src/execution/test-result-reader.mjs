@@ -31,6 +31,8 @@ export function readJestTestResults(fileName, cases, fs) {
       numFailedTests: report.numFailedTests ?? assertions.filter(item => item.status === 'failed').length,
       numPendingTests: report.numPendingTests ?? assertions.filter(item => item.status === 'pending').length,
       ...(Number.isInteger(report.setupHookCalls) ? { setupHookCalls: report.setupHookCalls } : {}),
+      ...(Number.isInteger(report.jestClearAllMocksCalls) ? { jestClearAllMocksCalls: report.jestClearAllMocksCalls } : {}),
+      // Read the legacy field when consuming reports emitted by older harnesses.
       ...(Number.isInteger(report.jestResetAllMocksCalls) ? { jestResetAllMocksCalls: report.jestResetAllMocksCalls } : {}),
       cases: caseResults,
     };

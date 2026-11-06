@@ -13,6 +13,13 @@ assert.equal(defaults.constraintEngine, 'hybrid');
 assert.equal(defaults.constraintDiagnostics, false);
 assert.equal(defaults.analysisReport, false);
 assert.equal(defaults.analysisReportValueMode, 'shape');
+assert.equal(defaults.jestTimeoutMs, 120_000);
+assert.equal(defaults.coverageFeedbackTimeoutMs, 600_000);
+const customTimeouts = parseCliArgs(['src/example.js', '--jest-timeout', '30000', '--coverage-feedback-timeout', '180000']);
+assert.equal(customTimeouts.jestTimeoutMs, 30_000);
+assert.equal(customTimeouts.coverageFeedbackTimeoutMs, 180_000);
+assert.throws(() => parseCliArgs(['src/example.js', '--jest-timeout', '0']), /integer between/);
+assert.throws(() => parseCliArgs(['src/example.js', '--coverage-feedback-timeout', '1.5']), /integer between/);
 
 const analysisReportArgs = parseCliArgs(['src/example.ts', '--analysis-report', '--analysis-report-values', 'hash', '--analysis-report-max-scenarios', '120']);
 assert.equal(analysisReportArgs.analysisReport, true);
@@ -51,6 +58,7 @@ assert.ok(logs.join('\n').includes('Usage:'));
 assert.ok(logs.join('\n').includes('--analysis-report'));
 assert.ok(logs.join('\n').includes('--analysis-report-values'));
 assert.ok(logs.join('\n').includes('--analysis-report-form-out'));
+assert.ok(logs.join('\n').includes('--jest-timeout'));
 
 const entry = spawnSync(process.execPath, ['branch-scenarios.mjs', '--help'], { encoding: 'utf8' });
 assert.equal(entry.status, 0, entry.stderr);

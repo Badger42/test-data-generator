@@ -15,7 +15,7 @@ const outputFromFile = path.join(tempDir, 'from-file.json');
 const outputWithJest = path.join(tempDir, 'with-jest.json');
 const coverageFile = path.join(tempDir, 'coverage-final.json');
 const fakeJestScript = path.join(projectDir, 'tests', 'fixtures', 'fake-jest-runner.cjs');
-const fakeJestCommand = path.join(tempDir, 'fake-jest');
+const fakeJestCommand = fakeJestScript;
 
 function run(args, extra = {}, sourceFile = fixture, functionName = 'coverageTarget') {
   const result = spawnSync(process.execPath, [cli, sourceFile, '--function', functionName, '--mcdc', ...args], {
@@ -70,8 +70,7 @@ try {
   // A minimal Jest-compatible runner executes the generated adapter hooks and
   // target scenarios, then writes a synthetic Istanbul report. This tests the
   // integration without requiring a network-installed Jest in this workspace.
-  fs.writeFileSync(fakeJestCommand, `#!/bin/sh\nexec "${process.execPath}" "${fakeJestScript}" "$@"\n`, { mode: 0o755 });
-  fs.chmodSync(fakeJestCommand, 0o755);
+  const fakeJestCommand = fakeJestScript;
 
   run(['--coverage-feedback', '--coverage-provider', 'babel', '--jest-bin', fakeJestCommand, '--jest-setup', path.join(projectDir, 'tests', 'fixtures', 'coverage-feedback-setup.mjs'), '--out', outputWithJest]);
   const withJest = JSON.parse(fs.readFileSync(outputWithJest, 'utf8'));
@@ -97,7 +96,7 @@ try {
   assert.ok(fs.existsSync(withJest.coverageFeedback.coverageFile));
   assert.equal(withJest.coverageFeedback.branchCoverage.allFileBranchesCovered, true);
   assert.equal(withJest.coverageFeedback.execution.testResults.setupHookCalls, withJest.coverageFeedback.execution.generatedCases);
-  assert.equal(withJest.coverageFeedback.execution.testResults.jestResetAllMocksCalls, withJest.coverageFeedback.execution.generatedCases, 'Jest mocks must be reset before every test.each row');
+  assert.equal(withJest.coverageFeedback.execution.testResults.jestClearAllMocksCalls, withJest.coverageFeedback.execution.generatedCases, 'Jest mock call history must be cleared before every test.each row');
 
   // Project setup can hydrate scenario-specific mock templates before each call.
   const mockOutput = path.join(tempDir, 'with-mocks.json');
@@ -111,7 +110,7 @@ try {
   assert.ok(withMocks.functions[0].scenarios.every(scenario => Array.isArray(scenario.mocks) && scenario.mocks.length === 1));
   assert.equal(withMocks.coverageFeedback.execution.testResults.numFailedTests, 0);
   assert.equal(withMocks.coverageFeedback.execution.testResults.setupHookCalls, withMocks.coverageFeedback.execution.generatedCases);
-  assert.equal(withMocks.coverageFeedback.execution.testResults.jestResetAllMocksCalls, withMocks.coverageFeedback.execution.generatedCases, 'mock-backed test.each rows must each begin with resetAllMocks');
+  assert.equal(withMocks.coverageFeedback.execution.testResults.jestClearAllMocksCalls, withMocks.coverageFeedback.execution.generatedCases, 'mock-backed test.each rows must each begin with clearAllMocks');
 
   // Callback MC/DC input scopes resolve both the function argument and callback item/index.
   const callbackOutput = path.join(tempDir, 'with-callback-mcdc.json');

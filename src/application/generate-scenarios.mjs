@@ -25,7 +25,25 @@ function thrownErrorDescriptor(statement, ts) {
       const name = qualifiedName[qualifiedName.length - 1];
       return { name, source: expression.getText(statement.getSourceFile()) };
     }
-    return { name: null, source: expression?.getText(statement.getSourceFile()) ?? null };
+    const source = expression?.getText(statement.getSourceFile()) ?? null;
+    let value = expression;
+    while (value && ts.isParenthesizedExpression(value)) value = value.expression;
+    if (value && ts.isStringLiteralLike(value)) return { name: null, source, primitive: { type: 'string', value: value.text } };
+    if (value && ts.isNoSubstitutionTemplateLiteral(value)) return { name: null, source, primitive: { type: 'string', value: value.text } };
+    if (value && ts.isNumericLiteral(value)) {
+      const numericValue = Number(value.text);
+      if (Number.isFinite(numericValue)) return { name: null, source, primitive: { type: 'number', value: numericValue } };
+    }
+    if (value?.kind === ts.SyntaxKind.TrueKeyword) return { name: null, source, primitive: { type: 'boolean', value: true } };
+    if (value?.kind === ts.SyntaxKind.FalseKeyword) return { name: null, source, primitive: { type: 'boolean', value: false } };
+    if (value?.kind === ts.SyntaxKind.NullKeyword) return { name: null, source, primitive: { type: 'null', value: null } };
+    if (value && ts.isIdentifier(value) && value.text === 'undefined') return { name: null, source, primitive: { type: 'undefined' } };
+    if (value && ts.isPrefixUnaryExpression(value) && ts.isNumericLiteral(value.operand) &&
+        (value.operator === ts.SyntaxKind.MinusToken || value.operator === ts.SyntaxKind.PlusToken)) {
+      const numericValue = Number(value.operand.text) * (value.operator === ts.SyntaxKind.MinusToken ? -1 : 1);
+      if (Number.isFinite(numericValue)) return { name: null, source, primitive: { type: 'number', value: numericValue } };
+    }
+    return { name: null, source, unverifiable: true };
   }
   if (ts.isBlock(statement)) {
     const last = statement.statements[statement.statements.length - 1];
