@@ -1,1 +1,3 @@
 * text=auto eol=lf
+
+# Keep source positions and frozen AST offsets stable on Windows.
