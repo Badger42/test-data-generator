@@ -60,7 +60,7 @@ Real Jest проверяется отдельно, с настоящей вер�
 
 `src/testing/batching/` состоит из `execution-signature.mjs`, `test-batch-builder.mjs` и `jest-each-generator.mjs`.
 
-Группируются только соседние совместимые сценарии с одной execution shape и устойчивой идентичностью mock methods. Порядок регистрации сохраняется. Различающиеся arguments, expected values и supported mock payloads остаются row data. Сценарии, требующие изоляции, имеющие неизвестную mock identity или несовместимый lifecycle, запускаются индивидуально. Каждая строка `test.each` — отдельный тест со своим Scenario ID. Harness вызывает `jest.resetAllMocks()` перед каждой строкой, затем optional project reset hook и row-specific mock application.
+Группируются только соседние совместимые сценарии с одной execution shape и устойчивой идентичностью mock methods. Порядок регистрации сохраняется. Различающиеся arguments, expected values и supported mock payloads остаются row data. Сценарии, требующие изоляции, имеющие неизвестную mock identity или несовместимый lifecycle, запускаются индивидуально. Каждая строка `test.each` — отдельный тест со своим Scenario ID. Harness вызывает `jest.clearAllMocks()` перед каждой строкой, чтобы очистить историю вызовов, сохранив реализации моков из setup-файлов; затем выполняет optional project reset hook и row-specific mock application.
 
 Настройки: `--no-test-batching`, `--test-batch-min-size`, `--test-batch-max-size`. Batching не заменяет ScenarioCase и выполняется после minimization.
 
