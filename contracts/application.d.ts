@@ -1,3 +1,12 @@
+export interface MockExclusionRules {
+  /** Receiver/service paths whose methods should never be mocked. */
+  services?: string[];
+  /** Imported module specifiers whose exports should never be mocked. */
+  libraries?: string[];
+  /** Exact call paths or trailing-wildcard groups, e.g. externalServices.getPersonData. */
+  methods?: string[];
+}
+
 export interface GenerateScenariosOptions {
   file: string;
   functionName: string | null;
@@ -6,6 +15,7 @@ export interface GenerateScenariosOptions {
   tsconfig: string | null;
   jestConfig: string | null;
   jestBin: string | null;
+  mockExclusions?: MockExclusionRules;
   jestSetup: string | null;
   coverageFrom: string | null;
   coverageProvider: 'v8' | 'babel';

@@ -14,5 +14,10 @@
   "analysisReportValueMode": "shape",
   "testBatching": true,
   "testBatchMinSize": 2,
-  "testBatchMaxSize": 100
+  "testBatchMaxSize": 100,
+  "mockExclusions": {
+    "services": [],
+    "libraries": [],
+    "methods": []
+  }
 }

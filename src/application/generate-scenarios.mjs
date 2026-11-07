@@ -130,6 +130,16 @@ export function validateGenerateOptions(args) {
   if (args.testBatching !== false && (!Number.isInteger(args.testBatchMinSize ?? 2) || (args.testBatchMinSize ?? 2) < 2)) throw new Error('--test-batch-min-size must be an integer >= 2.');
   if (!Number.isInteger(args.testBatchMaxSize ?? 100) || (args.testBatchMaxSize ?? 100) < (args.testBatchMinSize ?? 2)) throw new Error('--test-batch-max-size must be >= --test-batch-min-size.');
   if (args.mockBehaviorOverrides != null && (typeof args.mockBehaviorOverrides !== 'object' || Array.isArray(args.mockBehaviorOverrides))) throw new Error('mockBehaviorOverrides must be an object keyed by mock call identity.');
+  if (args.mockExclusions != null) {
+    if (typeof args.mockExclusions !== 'object' || Array.isArray(args.mockExclusions)) throw new Error('--mock-exclusions must be an object.');
+    for (const key of Object.keys(args.mockExclusions)) {
+      if (!['services', 'libraries', 'methods'].includes(key)) throw new Error(`Unknown mock exclusion category: ${key}`);
+      const values = args.mockExclusions[key];
+      if (!Array.isArray(values) || values.some(value => typeof value !== 'string' || !value.trim())) {
+        throw new Error(`mockExclusions.${key} must be an array of non-empty strings.`);
+      }
+    }
+  }
   if (!['shape', 'hash', 'include'].includes(args.analysisReportValueMode ?? 'shape')) throw new Error('--analysis-report-values must be shape, hash or include.');
   if (!Number.isInteger(args.analysisReportMaxScenarios ?? 500) || (args.analysisReportMaxScenarios ?? 500) < 1 || (args.analysisReportMaxScenarios ?? 500) > 5000) throw new Error('--analysis-report-max-scenarios must be an integer from 1 to 5000.');
   if (args.analysisReportOut != null && (typeof args.analysisReportOut !== 'string' || !args.analysisReportOut.trim())) throw new Error('--analysis-report-out requires a file path.');
@@ -188,6 +198,7 @@ export function generateScenarios(args, runtime = {}) {
       generateMcdc: args.mcdc,
       constraintEngine: args.constraintEngine ?? 'hybrid',
       mockBehaviorOverrides: args.mockBehaviorOverrides ?? {},
+      mockExclusions: args.mockExclusions ?? {},
       includeEvidence: args.includeEvidence === true,
     },
   }, functionAnalyzer));
