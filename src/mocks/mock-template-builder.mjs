@@ -8,6 +8,7 @@ export function createMockTemplateBuilder(options = {}) {
     const templates = [];
     const seen = new Set();
     for (const site of input.callSites ?? []) {
+      if (site.mockExcluded) continue;
       const siteKey = site.callSiteId ?? site.callExpression;
       if (seen.has(siteKey)) continue;
       seen.add(siteKey);
