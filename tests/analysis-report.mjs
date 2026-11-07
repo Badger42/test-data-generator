@@ -36,7 +36,11 @@ const dataFlowModel = {
   memorySsa: { locations: [], accesses: [], definitions: [], phiNodes: [], diagnostics: [], limits: {} },
   pointsTo: { allocations: [], pointsTo: {}, aliasPairs: [], unknownSymbols: [], unknownHeapFields: [], constraints: {}, convergence: { converged: true }, diagnostics: [], limits: {} },
   functionSummaries: [{ functionId: 'src/helper.ts::getAge@0', symbolId: 'helper#getAge', name: 'getAge', sourceSpan: { file: 'src/helper.ts', startLine: 1 }, purity: 'pure', confidence: 'high', calls: [], returns: [], effects: [] }],
-  callSites: [{ callId: 'call:42', callee: 'getAge', targetFunctionId: 'src/helper.ts::getAge@0', resolution: 'local-summary', knownPure: true, arguments: [{ dependencies: ['user'] }], sourceSpan: { file: 'src/check.ts', startLine: 1, startColumn: 20 } }],
+  callSites: [
+    { callId: 'call:42', callee: 'getAge', targetFunctionId: 'src/helper.ts::getAge@0', resolution: 'local-summary', knownPure: true, arguments: [{ dependencies: ['user'] }], sourceSpan: { file: 'src/check.ts', startLine: 1, startColumn: 20 } },
+    { callId: 'call:43', callee: 'items.some', resolution: 'builtin-intrinsic', knownPure: false, arguments: [], sourceSpan: { file: 'src/check.ts', startLine: 2, startColumn: 4 } },
+    { callId: 'call:44', callee: 'api.fetch', resolution: 'external-dependency', knownPure: false, arguments: [], sourceSpan: { file: 'src/check.ts', startLine: 3, startColumn: 4 } },
+  ],
   interprocedural: { contextSensitive: { contexts: [], diagnostics: [] }, diagnostics: [] },
   arrayPipelines: [], loopFlow: { loops: [] }, reduceFlows: [], warnings: [],
 };
@@ -45,10 +49,18 @@ const scenario = {
   target: { branchId: 'if-1', kind: 'if', outcome: true, line: 1, column: 30, condition: 'user.age > 18', sourceText: 'user.age > 18' },
   arguments: [{ age: 21, email: 'person@example.test' }], assumptions: ['user.age'], unsupported: [],
   mocks: [{ call: 'service.loadUser', behavior: 'mockResolvedValue', resolvedValue: { email: 'person@example.test' }, evidence: [{ source: 'static-analysis', status: 'candidate', confidence: 0.8 }] }],
+  externalCalls: [{
+    call: 'api.fetch', callId: 'api.fetch', callSiteId: 'src/check.ts:100:120',
+    classification: 'external-dependency', executionContext: 'function-body', reachability: 'direct-static-call-site',
+    sourceSpan: { file: 'src/check.ts', startLine: 3, startColumn: 4 },
+    callArguments: [{ index: 0, expression: 'user.id', kind: 'path', path: ['user', 'id'], value: 42, resolvedFromScenario: true, confidence: 'high' }],
+    mock: { behavior: 'mockResolvedValue', value: { ok: true }, source: 'type-derived-suggestion', confidence: 'type-derived-candidate', appliedAutomatically: false, setupRequired: true },
+  }],
   evidence: [{ source: 'static-analysis', status: 'candidate', confidence: 0.9, message: 'SSA use resolved.' }],
 };
 const functionResult = {
   name: 'check', summary: { scenariosGenerated: 1, branchOutcomesFound: 2 }, scenarios: [scenario],
+  scenarioGroups: [{ id: 'scenario-group-abc', fingerprint: 'abc', size: 2, scenarioIds: ['case-1', 'case-2'], targets: [{ scenarioId: 'case-1', branchId: 'if-1', outcome: true, kind: 'if' }], arguments: [{ age: 21 }], mocks: scenario.mocks }],
   _dataFlowModel: dataFlowModel,
 };
 const builder = createAnalysisReportBuilder();
@@ -68,7 +80,14 @@ assert.equal(shape.project.imports.total, 0);
 assert.equal(shape.project.functionIndex.total, 1);
 assert.match(shape.project.fingerprint, /^[a-f0-9]{64}$/);
 assert.equal(shape.project.fileDigests[0].sha256, shape.project.source.sha256);
-assert.equal(shape.callGraph.edgeCount, 1);
+assert.equal(shape.callGraph.edgeCount, 3);
+assert.equal(shape.callGraph.edges.find(item => item.callId === 'call:43').resolution, 'builtin-intrinsic');
+assert.equal(shape.callGraph.edges.find(item => item.callId === 'call:44').resolution, 'external-dependency');
+assert.equal(shape.functions[0].scenarioGroups.count, 1);
+assert.equal(shape.functions[0].scenarios[0].externalCalls[0].classification, 'external-dependency');
+assert.equal(shape.functions[0].scenarios[0].externalCalls[0].callArguments[0].value.type, 'number');
+assert.equal(shape.functions[0].scenarios[0].externalCalls[0].mock.value.fields.ok.type, 'boolean');
+assert.equal(JSON.stringify(shape).includes('person@example.test'), false, 'shape mode must redact scenario and mock values');
 assert.equal(shape.functions[0].dataFlow.scalarSsa.definitions, 1);
 assert.equal(shape.functions[0].scenarios[0].arguments[0].fields.email.type, 'string');
 assert.equal(JSON.stringify(shape).includes('person@example.test'), false, 'shape mode must not leak actual test values');

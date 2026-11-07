@@ -14,6 +14,7 @@ import { createFunctionAnalysisSession } from '../analysis/function-analysis-ses
 import { createFunctionAnalyzerAdapter } from '../analysis/function-analyzer-adapter.mjs';
 import { createTypeScriptDataFlowAnalyzer } from '../data-flow/data-flow-analyzer.mjs';
 import { createDataFlowAnalyzerAdapter } from '../data-flow/data-flow-adapter.mjs';
+import { groupEquivalentScenarios } from '../scenarios/scenario-grouper.mjs';
 
 
 function thrownErrorDescriptor(statement, ts) {
@@ -192,6 +193,7 @@ export function generateScenarios(args, runtime = {}) {
   }, functionAnalyzer));
   const analyzedFunctionResults = analysisSessions.map(session => session.analyze());
   const functionResults = annotateExpectedThrowScenarios(analyzedFunctionResults, functions, sourceFile, project.compilerApi);
+  for (const analysis of functionResults) analysis.scenarioGroups = groupEquivalentScenarios(analysis.scenarios);
 
   const reportBuilder = createReportBuilder();
   const result = reportBuilder.build({

@@ -1,4 +1,5 @@
 import { createScenarioDeduplicator } from './scenario-deduplicator.mjs';
+import { createScenarioFingerprint } from './scenario-fingerprint.mjs';
 
 /** Scenario production boundary; all compiler/solver/AST operations are injected. */
 export function createScenarioGenerationService(dependencies) {
@@ -11,6 +12,68 @@ export function createScenarioGenerationService(dependencies) {
   if (typeof solveCondition !== 'function' || typeof recordScenario !== 'function' || !scenarioBuilder || !scenarioReportAdapter || !mockReportAdapter) {
     throw new TypeError('ScenarioGenerationService requires solver, state and ScenarioBuilder ports.');
   }
+
+function readScenarioArgument(fact, args, parameterMap) {
+  if (Object.prototype.hasOwnProperty.call(fact, 'value')) return { resolved: true, value: fact.value };
+  if (fact.kind === 'path' && fact.path?.length) {
+    const [root, ...segments] = fact.path;
+    const parameter = parameterMap.get(root);
+    if (!parameter) return { resolved: false };
+    let value = args[parameter.index];
+    for (const segment of segments) {
+      if (value == null) return { resolved: false };
+      value = value[segment];
+    }
+    return value === undefined ? { resolved: false } : { resolved: true, value };
+  }
+  return { resolved: false };
+}
+
+function projectExternalCalls(ctx, args, scenarioMocks = []) {
+  const templatesBySite = new Map((ctx.mockTemplates ?? []).map(template => [template.callSiteId, template]));
+  return (ctx.mockCallSites ?? []).map(site => {
+    const template = templatesBySite.get(site.callSiteId);
+    const assigned = scenarioMocks.find(mock => mock.callSiteId && mock.callSiteId === site.callSiteId)
+      ?? scenarioMocks.find(mock => (mock.callExpression ?? mock.call ?? mock.callId) === site.callExpression);
+    const hasAssignedValue = Boolean(assigned && (
+      Object.prototype.hasOwnProperty.call(assigned, 'value') ||
+      Object.prototype.hasOwnProperty.call(assigned, 'resolvedValue')
+    ));
+    const suggestedValues = template?.suggestedResolvedValues ?? [];
+    const value = hasAssignedValue
+      ? (Object.prototype.hasOwnProperty.call(assigned, 'value') ? assigned.value : assigned.resolvedValue)
+      : suggestedValues[0] ?? null;
+    return {
+      call: site.callExpression,
+      callId: site.callId,
+      callSiteId: site.callSiteId,
+      sourceSpan: site.sourceSpan,
+      classification: site.classification?.kind ?? 'external-dependency',
+      executionContext: site.executionContext ?? 'function-body',
+      reachability: site.reachability ?? 'direct-static-call-site',
+      ...(site.functionScope ? { functionScope: site.functionScope } : {}),
+      callArguments: (site.argumentFacts ?? []).map(fact => {
+        const resolved = readScenarioArgument(fact, args, ctx.parameterMap);
+        return {
+          index: fact.index,
+          expression: fact.expressionText,
+          kind: fact.kind,
+          ...(fact.path ? { path: fact.path } : {}),
+          ...(resolved.resolved ? { value: resolved.value, resolvedFromScenario: true } : { resolvedFromScenario: false }),
+          confidence: fact.confidence,
+        };
+      }),
+      mock: {
+        behavior: assigned?.behavior ?? template?.mockBehavior ?? (site.isPromise ? 'mockResolvedValue' : 'mockReturnValue'),
+        ...(value !== undefined ? { value } : {}),
+        source: hasAssignedValue ? 'scenario-solver-assignment' : 'type-derived-suggestion',
+        confidence: hasAssignedValue ? 'solver-candidate' : 'type-derived-candidate',
+        appliedAutomatically: false,
+        setupRequired: true,
+      },
+    };
+  });
+}
 
 function addScenarios(ctx, kind, node, conditionText, desired, incoming, targetLabel = null, solveNode = node, targetMetadata = {}) {
   const branchId = getBranchId(kind, node, ctx.sourceFile);
@@ -115,7 +178,8 @@ function addScenarios(ctx, kind, node, conditionText, desired, incoming, targetL
       unsupported: solution.unsupported,
       includeEvidence: ctx.includeEvidence,
     });
-    recordScenario(ctx, scenario, { loop: kind === 'loop' });
+    const externalCalls = projectExternalCalls(ctx, normalizedArgs, domainMocks);
+    recordScenario(ctx, externalCalls.length ? { ...scenario, externalCalls } : scenario, { loop: kind === 'loop' });
   }
   if (unsupportedSolutions.length) {
     recordUnsupportedBranch(ctx, { branchId, outcome: desired, reason: [...new Set(unsupportedSolutions.flatMap(solution => solution.unsupported ?? []))].join('; ') });
@@ -138,7 +202,7 @@ function addCustomSwitchScenario(ctx, branchId, condition, label, solutions, nod
     for (const assignment of solution.assignments.values()) applyAssignment(args, assignment, ctx.parameterMap, ctx.localMockMap, ctx.checker, node, mockValues);
     const normalizedArgs = serializable(args);
     const normalizedMocks = [...mockValues.values()].map(mock => ({ ...mock, resolvedValue: serializable(mock.resolvedValue) }));
-    const fingerprint = JSON.stringify(normalizedArgs);
+    const fingerprint = createScenarioFingerprint({ arguments: normalizedArgs, mocks: normalizedMocks });
     if (seen.has(fingerprint)) continue;
     seen.add(fingerprint);
     index += 1;
@@ -146,14 +210,16 @@ function addCustomSwitchScenario(ctx, branchId, condition, label, solutions, nod
     const sourceSpan = formatNodeSpan(ctx.sourceFile, node);
     const switchPosition = formatLine(ctx.sourceFile, switchStatement ?? node);
     const switchSpan = formatNodeSpan(ctx.sourceFile, switchStatement ?? node);
-    recordScenario(ctx, {
+    const scenario = {
       id: `${branchId}-${index}`,
       target: { branchId, kind: 'switch', line: position.line, column: position.column, ...sourceSpan, coverageLine: switchPosition.line, coverageColumn: switchPosition.column, coverageStartOffset: switchSpan.startOffset, coverageEndOffset: switchSpan.endOffset, coverageOutcomeIndex, condition, outcome: label },
       arguments: normalizedArgs,
       ...(normalizedMocks.length ? { mocks: normalizedMocks } : {}),
       assumptions: [...solution.assignments.keys()],
       unsupported: solution.unsupported,
-    });
+    };
+    const externalCalls = projectExternalCalls(ctx, normalizedArgs, normalizedMocks);
+    recordScenario(ctx, externalCalls.length ? { ...scenario, externalCalls } : scenario);
   }
   if (rejectedSolutions.length) recordUnsupportedBranch(ctx, { branchId, outcome: label, reason: [...new Set(rejectedSolutions.flatMap(solution => solution.unsupported ?? []))].join('; ') });
 }
@@ -183,13 +249,13 @@ function addLoopScenario(ctx, node, loopType, condition, outcome, solutions, met
     }
     const normalizedArgs = serializable(args);
     const normalizedMocks = [...mockValues.values()].map(mock => ({ ...mock, resolvedValue: serializable(mock.resolvedValue) }));
-    const fingerprint = JSON.stringify({ arguments: normalizedArgs, mocks: normalizedMocks });
+    const fingerprint = createScenarioFingerprint({ arguments: normalizedArgs, mocks: normalizedMocks });
     if (seen.has(fingerprint)) continue;
     seen.add(fingerprint);
     index += 1;
     const position = formatLine(ctx.sourceFile, node);
     const sourceSpan = formatNodeSpan(ctx.sourceFile, node);
-    recordScenario(ctx, {
+    const scenario = {
       id: `${branchId}-${String(outcome).replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-${index}`,
       target: {
         branchId,
@@ -207,7 +273,9 @@ function addLoopScenario(ctx, node, loopType, condition, outcome, solutions, met
       ...(normalizedMocks.length ? { mocks: normalizedMocks } : {}),
       assumptions: [...solution.assignments.keys()],
       unsupported: solution.unsupported,
-    }, { loop: true });
+    };
+    const externalCalls = projectExternalCalls(ctx, normalizedArgs, normalizedMocks);
+    recordScenario(ctx, externalCalls.length ? { ...scenario, externalCalls } : scenario, { loop: true });
   }
   if (rejectedSolutions.length) {
     recordUnsupportedBranch(ctx, {

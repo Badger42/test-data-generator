@@ -8,12 +8,29 @@ export function createMockTemplateBuilder(options = {}) {
     const templates = [];
     const seen = new Set();
     for (const site of input.callSites ?? []) {
-      if (seen.has(site.callExpression)) continue;
-      seen.add(site.callExpression);
+      const siteKey = site.callSiteId ?? site.callExpression;
+      if (seen.has(siteKey)) continue;
+      seen.add(siteKey);
       const possibleTypes = unionMembers(site.resolvedType).slice(0, 8);
       const resolvedValues = possibleTypes.map(type => defaultValueForType(type, input.checker, site.node));
       templates.push({
         call: site.callExpression,
+        callId: site.callId ?? site.callExpression,
+        ...(site.callSiteId ? { callSiteId: site.callSiteId } : {}),
+        ...(site.sourceSpan ? { sourceSpan: site.sourceSpan } : {}),
+        ...(site.classification ? { classification: site.classification } : {}),
+        nested: Boolean(site.nested),
+        executionContext: site.executionContext ?? 'function-body',
+        reachability: site.reachability ?? 'direct-static-call-site',
+        callArguments: (site.argumentFacts ?? []).map(fact => ({
+          index: fact.index,
+          expression: fact.expressionText,
+          kind: fact.kind,
+          ...(fact.path ? { path: fact.path } : {}),
+          ...(Object.prototype.hasOwnProperty.call(fact, 'value') ? { value: serialize(fact.value) } : {}),
+          confidence: fact.confidence,
+        })),
+        mockBehavior: site.isPromise ? 'mockResolvedValue' : 'mockReturnValue',
         returnType: input.checker.typeToString(site.returnType),
         ...(site.isPromise ? { resolvesTo: input.checker.typeToString(site.resolvedType) } : {}),
         suggestedResolvedValues: resolvedValues.map(serialize),

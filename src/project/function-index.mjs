@@ -190,7 +190,14 @@ export function buildProjectFunctionIndex(project) {
     const declarations = resolved?.declarations ?? (resolved?.valueDeclaration ? [resolved.valueDeclaration] : []);
     const declarationFile = declarations[0]?.getSourceFile?.().fileName?.split(path.sep).join('/') ?? '';
     if (declarationFile.includes('/node_modules/')) return { kind: 'external-dependency', confidence: 'high', symbolName: resolved?.getName?.() ?? text };
-    if (/\/typescript\/lib\/lib\..+\.d\.ts$/i.test(declarationFile)) return { kind: 'builtin-opaque', confidence: 'medium', symbolName: resolved?.getName?.() ?? text };
+    if (/\/typescript\/lib\/lib\..+\.d\.ts$/i.test(declarationFile)) {
+      return {
+        kind: 'builtin-intrinsic',
+        confidence: 'high',
+        source: 'typescript-standard-library',
+        symbolName: resolved?.getName?.() ?? text,
+      };
+    }
     const hasImplementation = declarations.some(declaration => Boolean(declaration.body));
     const contractOnly = declarations.length > 0 && declarations.every(declaration =>
       ts.isMethodSignature?.(declaration) || ts.isCallSignatureDeclaration?.(declaration) ||

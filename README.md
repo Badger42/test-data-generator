@@ -14,6 +14,8 @@
 - Coverage feedback, per-scenario attribution и минимизация набора тестов.
 - Jest `test.each` batching для соседних совместимых сценариев; несовместимые случаи запускаются индивидуально.
 - Стабильный JSON-отчёт; подробные статические evidence включаются через `--include-evidence`.
+- В сценариях `externalCalls` перечислены внешние вызовы по call-site: выражение, аргументы, расположение в исходнике и кандидат значения для mock return. Встроенные API JavaScript классифицируются отдельно и не считаются внешними зависимостями.
+- `scenarioGroups` объединяет сценарии с идентичными `arguments + mocks`, сохраняя все branch targets. Это отдельная функция от Jest `test.each` batching: batching объединяет соседние случаи с одинаковой формой выполнения, даже если входные значения и значения моков различаются.
 
 ## Быстрый старт
 
@@ -81,6 +83,8 @@ Example:
 ```bash
 node branch-scenarios.mjs src/feature.ts --function calculate --mcdc --coverage-feedback --include-evidence --analysis-report
 ```
+
+В основном `*.scenarios.json` у каждой функции также есть `scenarioGroups` — группы одинаковых входных данных и моков с `scenarioIds` и всеми целевыми ветвями. Каждая запись `scenario.externalCalls` содержит конкретный вызов, факты о его аргументах и предполагаемое значение мока. Это статические кандидаты, а не гарантия выполнения или автоматически установленный Jest mock: поле `appliedAutomatically` остаётся `false`, для установки моков нужен Jest setup.
 
 Use `--analysis-report-form-out <file.json>` to choose a custom form path. After running tests, fill `*.analysis-run-form.json` (keep every `scenarioId` unchanged), then create the merged report with `node tools/finalize-analysis-report.mjs <analysis-report.json> <analysis-run-form.json>`. Attach the resulting `*.final.json` here. For failures, also attach the smallest relevant source files with secrets removed and the exact test command. See `docs/README.md` for the workflow.
 

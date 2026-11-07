@@ -28,6 +28,31 @@ const functionResults = [{ name: 'run', scenarios: [
   { id: 'scenario-2', target: { branchId: 'if-1', outcome: false } },
 ] }];
 
+const capturedForm = createAnalysisRunForm({
+  analysisReport,
+  functionResults,
+  coverageFeedback: {
+    runner: 'jest',
+    execution: {
+      testResults: {
+        numTotalTests: 1, numPassedTests: 1, numFailedTests: 0, numPendingTests: 0,
+        cases: [{
+          id: 'coverage-case-1',
+          status: 'passed',
+          title: '[Branch Scenario] shared',
+          references: [{ scenarioId: 'scenario-1' }, { scenarioId: 'scenario-2' }],
+        }],
+      },
+      testBatching: { batches: [{ id: 'batch-0001', scenarioIds: ['coverage-case-1'] }], individual: [] },
+    },
+  },
+});
+assert.deepEqual(capturedForm.testResults.cases.map(item => item.status), ['passed', 'passed'],
+  'one deduplicated execution case must update every linked scenario');
+assert.deepEqual(capturedForm.testResults.cases.map(item => item.batchId), ['batch-0001', 'batch-0001']);
+assert.equal(capturedForm.testResults.total, 1, 'executed-case count remains distinct from planned scenario count');
+assert.equal(capturedForm.execution.status, 'captured-by-generator');
+
 const form = createAnalysisRunForm({ analysisReport, functionResults });
 assert.equal(validateAnalysisRunForm(form).valid, true);
 assert.equal(form.testResults.total, null, 'unexecuted scenarios must not be represented as zero passed tests');

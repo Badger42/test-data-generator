@@ -7,6 +7,7 @@ import { createScenarioBuilder } from '../src/scenarios/scenario-builder.mjs';
 import { createMockStatePlanner } from '../src/mocks/mock-state-planner.mjs';
 import { createMockReportAdapter } from '../src/reporting/mock-report-adapter.mjs';
 import { createScenarioReportAdapter } from '../src/reporting/scenario-report-adapter.mjs';
+import { groupEquivalentScenarios } from '../src/scenarios/scenario-grouper.mjs';
 
 const UNDEFINED = Symbol('undefined');
 function cloneTestValue(value) {
@@ -112,5 +113,15 @@ const reportScenario = createScenarioReportAdapter().project(scenario, {
 });
 assert.deepEqual(Object.keys(reportScenario), ['id', 'target', 'arguments', 'mocks', 'assumptions', 'unsupported']);
 assert.deepEqual(reportScenario.mocks, reportMocks);
+
+const grouped = groupEquivalentScenarios([
+  { id: 'branch-a', arguments: [{ id: 7 }], mocks: [{ call: 'api.read', behavior: 'mockReturnValue', resolvedValue: { ok: true } }], target: { branchId: 'if-1', outcome: true } },
+  { id: 'branch-b', arguments: [{ id: 7 }], mocks: [{ resolvedValue: { ok: true }, behavior: 'mockReturnValue', call: 'api.read' }], target: { branchId: 'if-2', outcome: false } },
+  { id: 'branch-c', arguments: [{ id: 7 }], mocks: [{ call: 'api.read', behavior: 'mockReturnValue', resolvedValue: { ok: false } }], target: { branchId: 'if-3', outcome: true } },
+]);
+assert.equal(grouped.length, 1, 'only exact arguments + mocks duplicates are grouped');
+assert.equal(grouped[0].size, 2);
+assert.deepEqual(grouped[0].scenarioIds, ['branch-a', 'branch-b']);
+assert.deepEqual(grouped[0].targets.map(item => item.branchId), ['if-1', 'if-2']);
 
 console.log('Scenario modules passed: undefined serialization, assignment materialization, mock projection, fingerprinting, evidence and report compatibility.');
