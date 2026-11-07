@@ -102,7 +102,72 @@ export function tested(input: { id: string; text: string }) {
   assert.equal(templates.find(item => item.call === 'api.load').mockBehavior, 'mockResolvedValue');
   assert.ok(templates.some(item => item.nested));
 
-  console.log('External call discovery passed: direct sites, nested helper and callback bodies, argument provenance and per-site mock templates.');
+  // A precise exclusion leaves other methods of the same service mockable.
+  const exclusionSource = path.join(temp, 'mock-exclusions.ts');
+  const parserDir = path.join(temp, 'node_modules', 'external-parser');
+  fs.mkdirSync(parserDir, { recursive: true });
+  fs.writeFileSync(path.join(parserDir, 'package.json'), JSON.stringify({
+    name: 'external-parser', types: './index.d.ts', main: './index.js',
+  }));
+  fs.writeFileSync(path.join(parserDir, 'index.d.ts'), 'export function parse(value: string): boolean;\\n');
+  fs.writeFileSync(path.join(parserDir, 'index.js'), 'exports.parse = value => Boolean(value);\\n');
+  fs.writeFileSync(exclusionSource, `
+import { parse } from 'external-parser';
+declare const externalServices: {
+  getPersonData(id: string): { active: boolean };
+  getAddress(id: string): { city: string };
+};
+export function mockExclusionsTarget(input: { id: string }) {
+  const person = externalServices.getPersonData(input.id);
+  const address = externalServices.getAddress(input.id);
+  const parsed = parse(input.id);
+  return Boolean(person.active && address.city && parsed);
+}
+`);
+  const exclusionProject = loadTypescriptProject({ file: exclusionSource });
+  const exclusionFunction = exclusionProject.functionIndex.entries.find(entry => entry.name === 'mockExclusionsTarget');
+  assert.ok(exclusionFunction);
+  const exclusionInput = {
+    functionNode: exclusionFunction.node,
+    checker: exclusionProject.checker,
+    sourceFile: exclusionFunction.sourceFile,
+    functionIndex: exclusionProject.functionIndex,
+    relativeFile: 'mock-exclusions.ts',
+    unwrap: node => node,
+    mockExclusions: {
+      methods: ['externalServices.getPersonData'],
+      libraries: ['external-parser'],
+    },
+  };
+  const exclusionSites = discovery.discoverCallSites(exclusionInput);
+  const personSite = exclusionSites.find(site => site.callExpression === 'externalServices.getPersonData');
+  const addressSite = exclusionSites.find(site => site.callExpression === 'externalServices.getAddress');
+  const parserSite = exclusionSites.find(site => site.callExpression === 'parse');
+  assert.equal(personSite.mockExcluded, true);
+  assert.deepEqual(personSite.mockExclusion, { kind: 'method', pattern: 'externalServices.getPersonData', call: 'externalServices.getPersonData' });
+  assert.equal(addressSite.mockExcluded, undefined);
+  assert.equal(parserSite.mockExcluded, true);
+  assert.equal(parserSite.mockExclusion.kind, 'library');
+  assert.equal(parserSite.mockExclusion.module, 'external-parser');
+
+  const excludedBindings = discovery.discoverLocalMockBindings(exclusionInput);
+  assert.equal(excludedBindings.has('person'), false, 'excluded call results must not become solver mock bindings');
+  assert.equal(excludedBindings.has('address'), true, 'non-excluded sibling calls retain solver bindings');
+  const exclusionTemplates = createMockTemplateBuilder({
+    defaultValueForType: type => type.flags & ts.TypeFlags.BooleanLike ? false
+      : type.flags & ts.TypeFlags.Object ? { active: false, city: '' } : '',
+    unionMembers: type => [type],
+    serialize: value => value,
+  }).build({ callSites: exclusionSites, checker: exclusionProject.checker });
+  assert.deepEqual(exclusionTemplates.map(item => item.call), ['externalServices.getAddress']);
+
+  const serviceExclusions = discovery.discoverCallSites({
+    ...exclusionInput,
+    mockExclusions: { services: ['externalServices'] },
+  });
+  assert.ok(serviceExclusions.filter(site => site.callExpression.startsWith('externalServices.')).every(site => site.mockExcluded),
+    'service-level rules must exclude all methods on the receiver');
+  console.log('External call discovery passed: call-site metadata and granular mock exclusion policies.');
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });
 }

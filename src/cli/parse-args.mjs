@@ -15,6 +15,7 @@ export function parseCliArgs(argv, runConfig = {}) {
     minimalSuite: false, minimalSuiteOut: null, testBatching: true, testBatchMinSize: 2, testBatchMaxSize: 100,
     constraintEngine: 'hybrid', constraintDiagnostics: false, includeEvidence: false,
     analysisReport: false, analysisReportOut: null, analysisReportFormOut: null, analysisReportValueMode: 'shape', analysisReportMaxScenarios: 500,
+    mockExclusions: { services: [], libraries: [], methods: [] },
   };
 
   if (runConfig == null || typeof runConfig !== 'object' || Array.isArray(runConfig)) {
@@ -67,6 +68,21 @@ export function parseCliArgs(argv, runConfig = {}) {
     else if (!arg.startsWith('-') && !fileArgumentSeen) { result.file = arg; fileArgumentSeen = true; }
     else throw new Error(`Unknown argument: ${arg}`);
   }
+  if (result.mockExclusions == null || typeof result.mockExclusions !== 'object' || Array.isArray(result.mockExclusions)) {
+    throw new Error('mockExclusions must be an object with services, libraries and methods arrays.');
+  }
+  for (const key of Object.keys(result.mockExclusions)) {
+    if (!['services', 'libraries', 'methods'].includes(key)) throw new Error(`Unknown mock exclusion category: ${key}`);
+    const values = result.mockExclusions[key];
+    if (!Array.isArray(values) || values.some(value => typeof value !== 'string' || !value.trim())) {
+      throw new Error(`mockExclusions.${key} must be an array of non-empty strings.`);
+    }
+  }
+  result.mockExclusions = {
+    services: [...(result.mockExclusions.services ?? [])],
+    libraries: [...(result.mockExclusions.libraries ?? [])],
+    methods: [...(result.mockExclusions.methods ?? [])],
+  };
   if (result.runConfig && result.noRunConfig) throw new Error('--run-config cannot be combined with --no-run-config.');
   for (const [name, value] of [['--jest-timeout', result.jestTimeoutMs], ['--coverage-feedback-timeout', result.coverageFeedbackTimeoutMs]]) {
     if (!Number.isSafeInteger(value) || value < 1 || value > 86_400_000) {
