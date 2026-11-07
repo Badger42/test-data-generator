@@ -7,6 +7,7 @@ import { createMockStatePlanner } from '../src/mocks/mock-state-planner.mjs';
 import { createMockPlanner } from '../src/mocks/mock-planner.mjs';
 import { createJestMockAdapter } from '../src/mocks/adapters/jest-mock-adapter.mjs';
 import { createMockReportAdapter } from '../src/reporting/mock-report-adapter.mjs';
+import { createAssignmentMaterializer } from '../src/scenarios/assignment-materializer.mjs';
 
 const fixture = fileURLToPath(new URL('./fixtures/mock-planner-fixture.ts', import.meta.url));
 const program = ts.createProgram([fixture], { strict: true, target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext });
@@ -55,6 +56,31 @@ assert.equal(discovered.bindings.get('status').isPromise, false);
 assert.equal(discovered.bindings.has('pending'), false, 'an un-awaited Promise root must not be treated as its resolved value');
 assert.deepEqual(discovered.templates.map(item => item.call).sort(), ['pricing.getFare', 'pricing.getPending', 'pricing.getStatus']);
 assert.deepEqual(discovered.templates.find(item => item.call === 'pricing.getFare').suggestedResolvedValues, [{ amount: 0, currency: '' }]);
+
+const moduleTarget = {
+  version: 1, id: 'module:esm:remote-api:isRemoteActive', kind: 'module-export',
+  support: 'automatic', moduleMode: 'esm', moduleSpecifier: 'remote-api',
+  exportPath: ['isRemoteActive'],
+};
+const syntheticBinding = {
+  localName: '__bsg_call_result_10_20',
+  call: 'isRemoteActive', callId: 'isRemoteActive', callExpression: 'isRemoteActive',
+  callSiteId: 'service.mjs:10:20', isPromise: true, awaited: true,
+  mockTarget: moduleTarget,
+};
+const materializedDirectCall = createAssignmentMaterializer({
+  cloneValue: value => structuredClone(value),
+}).materialize({
+  baseArguments: [],
+  parameterMap: new Map(),
+  mockBindingMap: new Map([[syntheticBinding.localName, syntheticBinding]]),
+  assignments: new Map([['direct-call', {
+    path: [syntheticBinding.localName], value: true,
+  }]]),
+  getMockDefault: () => false,
+});
+assert.deepEqual(materializedDirectCall.mockAssignments[0].binding.mockTarget, moduleTarget,
+  'solver-created direct-call bindings must retain the module target through the JSON-safe materialization boundary');
 
 const mergedPlan = statePlanner.plan({ mockAssignments: [
   { localName: 'fareAmount', binding: { call: 'pricing.getFare', callId: 'pricing.getFare', callExpression: 'pricing.getFare', isPromise: true }, value: { amount: 120 } },
