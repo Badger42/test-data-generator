@@ -8,9 +8,7 @@ import path from 'node:path';
 const projectDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const cli = path.join(projectDir, 'branch-scenarios.mjs');
 const fixture = path.join(projectDir, 'examples', 'coverage-feedback-iterative-target.js');
-const fakeJestScript = path.join(projectDir, 'tests', 'fixtures', 'fake-jest-runner.cjs');
 const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'branch-scenarios-iterative-'));
-const fakeJestCommand = fakeJestScript;
 const output = path.join(tempDir, 'iterative.json');
 
 try {
@@ -22,7 +20,6 @@ try {
     '--coverage-feedback',
     '--coverage-iterations', '3',
     '--coverage-goal', '100',
-    '--jest-bin', fakeJestCommand,
     '--out', output,
   ], { cwd: projectDir, encoding: 'utf8' });
 
