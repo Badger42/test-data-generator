@@ -96,7 +96,7 @@ export function tested(input: { id: string; text: string }) {
     unionMembers: type => [type],
     serialize: value => value,
   }).build({ callSites: externalSites, checker: project.checker });
-  assert.equal(templates.length, 5, 'templates must be preserved per call-site, not collapsed by method expression');
+  assert.equal(templates.length, 6, 'templates must be preserved per call-site, not collapsed by method expression');
   assert.equal(templates.find(item => item.call === 'fetch').mockBehavior, 'mockResolvedValue');
   assert.ok(templates.every(item => item.callSiteId && item.callArguments.length === 1));
   assert.equal(templates.find(item => item.call === 'api.load').mockBehavior, 'mockResolvedValue');
