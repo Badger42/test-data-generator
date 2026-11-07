@@ -163,6 +163,10 @@ export function createMockTargetResolver(ts) {
       'fetch', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval',
       'queueMicrotask', 'structuredClone', 'atob', 'btoa', 'alert', 'confirm', 'prompt',
     ]);
+    const globalFunctions = new Set([
+      'fetch', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval',
+      'queueMicrotask', 'structuredClone', 'atob', 'btoa', 'alert', 'confirm', 'prompt',
+    ]);
     const memberAllowlist = {
       globalThis: globalFunctions,
       window: new Set(['fetch', 'requestAnimationFrame', 'cancelAnimationFrame', 'matchMedia', 'open', 'postMessage']),
@@ -177,6 +181,18 @@ export function createMockTargetResolver(ts) {
       localStorage: new Set(['getItem', 'setItem', 'removeItem', 'clear']),
       sessionStorage: new Set(['getItem', 'setItem', 'removeItem', 'clear']),
     };
+
+    if (segments.length === 0 && globalFunctions.has(root.text)) {
+      return {
+        version: 1,
+        id: 'global:globalThis::' + root.text,
+        kind: 'global-member',
+        support: 'automatic',
+        globalName: 'globalThis',
+        receiverPath: [],
+        memberName: root.text,
+      };
+    }
 
     if (root.text === 'globalThis') {
       if (segments.length === 1 && globalFunctions.has(segments[0])) {
