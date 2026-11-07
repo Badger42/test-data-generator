@@ -123,6 +123,41 @@
     },
     "mockBehaviorOverrides": {
       "type": "object"
+    },
+    "mockExclusions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "services": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "libraries": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "methods": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "default": {
+        "services": [],
+        "libraries": [],
+        "methods": []
+      }
     }
   }
 }
