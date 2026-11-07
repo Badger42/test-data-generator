@@ -1514,7 +1514,7 @@ function analyzeArrayCallbacksInNode(node, incoming, ctx) {
   return getArrayCallbackAnalyzer().analyzeInNode(node, incoming, ctx);
 }
 
-function discoverMockContext(fn, checker, sourceFile, functionIndex = null, mockBehaviorOverrides = {}, program = null, mockExclusions = {}) {
+function discoverMockContext(fn, checker, sourceFile, functionIndex = null, mockBehaviorOverrides = {}, program = null) {
   return mockPlanner.discover({
     functionNode: fn.node ?? fn,
     checker,
@@ -1523,7 +1523,6 @@ function discoverMockContext(fn, checker, sourceFile, functionIndex = null, mock
     relativeFile: path.relative(process.cwd(), sourceFile.fileName).split(path.sep).join('/'),
     functionIndex,
     mockBehaviorOverrides,
-    mockExclusions,
     program,
   });
 }

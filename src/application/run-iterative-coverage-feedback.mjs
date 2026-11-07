@@ -117,7 +117,6 @@ export function createIterativeCoverageFeedbackUseCase({
         const expanded = analyzeFunction(node, sourceFileNode, checker, nextMaxScenarios, args.mcdc, {
           constraintEngine: args.constraintEngine ?? 'hybrid',
           mockBehaviorOverrides: args.mockBehaviorOverrides ?? {},
-          mockExclusions: args.mockExclusions ?? {},
           coverageExpansion: true,
           maxAlternatives: nextMaxAlternatives,
         });
