@@ -8,6 +8,7 @@ export function createConstraintAnalysisService(dependencies) {
     constraintPathHint, buildConstraintSeed, isStrictPathPrefix, deleteConstraintPath,
     readConstraintPath, sameValue, makeAssignment, isDefinitelyAssignable,
     substituteKnownAliases, evaluateStaticCondition, unwrap, unsupportedSolution,
+    replaceExternalCallResults = null,
     recursiveAstFallbackAdapter,
   } = dependencies;
 
@@ -43,6 +44,9 @@ function trySolveWithConstraintIR(node, desired, operationContext, incomingSolut
   let ir;
   try {
     const pathTypes = {};
+    // External call results that are not assigned to a local variable are
+    // projected to synthetic mock roots before compiling the condition.
+    const compilerNode = replaceExternalCallResults?.(node, operationContext) ?? node;
     const compilerOptions = {
       resolveAlias: operationContext.constraints.expressionAliasResolver,
       isSymbolicRoot: identifier => {
@@ -64,7 +68,7 @@ function trySolveWithConstraintIR(node, desired, operationContext, incomingSolut
         } catch { return false; }
       },
     };
-    const provisional = compileTypescriptCondition(node, ts, compilerOptions);
+    const provisional = compileTypescriptCondition(compilerNode, ts, compilerOptions);
     const paths = constraintPathRefsForAtoms(provisional.atoms, collectConstraintPaths);
     for (const ref of paths) {
       const path = ref.path;
@@ -75,7 +79,7 @@ function trySolveWithConstraintIR(node, desired, operationContext, incomingSolut
       }
       pathTypes[JSON.stringify(path)] = hint;
     }
-    ir = compileTypescriptCondition(node, ts, { ...compilerOptions, pathTypes });
+    ir = compileTypescriptCondition(compilerNode, ts, { ...compilerOptions, pathTypes });
   } catch (error) {
     operationContext.events.recordConstraintFallback(`IR compilation: ${error.message}`);
     return null;

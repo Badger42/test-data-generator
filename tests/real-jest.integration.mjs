@@ -237,6 +237,77 @@ module.exports = { process(source, filename) {
   assert.equal(tsReport.coverageFeedback.status, 'passed');
   assert.ok(tsReport.coverageFeedback.totals.branches.total > 0, 'transformed TypeScript must contribute branch coverage');
 
+
+  // Calls in mutually exclusive if branches must not leak across scenarios.
+  const branchApiFile = path.join(tempDir, 'branch-api.mjs');
+  const branchTargetFile = path.join(tempDir, 'branch-target.mjs');
+  const branchOutput = path.join(tempDir, 'real-jest-callsite-reachability.json');
+  fs.writeFileSync(branchApiFile, "export function choose(label) { throw new Error('real branch dependency executed: ' + label); }\n");
+  fs.writeFileSync(branchTargetFile, [
+    "import { choose } from './branch-api.mjs';",
+    '/** @param {{ primary: boolean }} input */',
+    'export function reachabilityTarget(input) {',
+    "  if (input.primary) return choose('primary');",
+    "  return choose('secondary');",
+    '}',
+    '',
+  ].join('\n'));
+  const branchRun = spawnSync(process.execPath, [
+    cli, branchTargetFile, '--function', 'reachabilityTarget', '--out', branchOutput,
+  ], { cwd: tempDir, encoding: 'utf8', env: { ...process.env } });
+  assert.equal(branchRun.status, 0, 'Call-site reachability integration failed:\n' + branchRun.stdout + '\n' + branchRun.stderr);
+  const branchReport = JSON.parse(fs.readFileSync(branchOutput, 'utf8'));
+  const reachabilityScenarios = branchReport.functions[0].scenarios.filter(item => item.target?.kind === 'if');
+  const primaryScenario = reachabilityScenarios.find(item => item.target.outcome === true);
+  const secondaryScenario = reachabilityScenarios.find(item => item.target.outcome === false);
+  assert.ok(primaryScenario && secondaryScenario, 'both outcomes of the routing branch should be generated');
+  assert.deepEqual(primaryScenario.externalCalls.map(item => item.callArguments[0]?.value), ['primary']);
+  assert.deepEqual(secondaryScenario.externalCalls.map(item => item.callArguments[0]?.value), ['secondary']);
+
+  // A real ESM dependency throws if called. Passing coverage feedback proves
+  // Jest registered the ESM module mock before importing the target module and
+  // the Solver assigned a result to a direct awaited call expression.
+  const remoteApiFile = path.join(tempDir, 'remote-api.mjs');
+  const esmTargetFile = path.join(tempDir, 'esm-module-target.mjs');
+  const esmOutput = path.join(tempDir, 'real-jest-esm-module-mock.json');
+  fs.writeFileSync(remoteApiFile, [
+    '/** @param {string} id @returns {Promise<boolean>} */',
+    "export async function isRemoteActive(id) {",
+    "  throw new Error('real ESM dependency executed: ' + id);",
+    '}',
+    '',
+  ].join('\n'));
+  fs.writeFileSync(esmTargetFile, [
+    "import { isRemoteActive } from './remote-api.mjs';",
+    '/** @param {{ id: string }} input */',
+    'export async function esmMockTarget(input) {',
+    '  if (await isRemoteActive(input.id)) return "active";',
+    '  return "inactive";',
+    '}',
+    '',
+  ].join('\n'));
+  const esmRun = spawnSync(process.execPath, [
+    cli, esmTargetFile,
+    '--function', 'esmMockTarget',
+    '--coverage-feedback',
+    '--coverage-provider', 'v8',
+    '--jest-bin', jestBin,
+    '--jest-config', configFile,
+    '--out', esmOutput,
+  ], { cwd: tempDir, encoding: 'utf8', env: { ...process.env } });
+  assert.equal(esmRun.status, 0, 'Real Jest ESM mock integration failed:\n' + esmRun.stdout + '\n' + esmRun.stderr +
+    '\nCoverage diagnostics: ' + readCoverageFailureDiagnostics(esmOutput));
+  const esmReport = JSON.parse(fs.readFileSync(esmOutput, 'utf8'));
+  assert.equal(esmReport.coverageFeedback.status, 'passed');
+  assert.equal(esmReport.coverageFeedback.execution.testResults.numFailedTests, 0);
+  assert.ok(esmReport.coverageFeedback.execution.testResults.numPassedTests > 0);
+  const directCallScenarios = esmReport.functions[0].scenarios.filter(item =>
+    item.externalCalls?.some(call => call.call?.includes('isRemoteActive')));
+  assert.ok(directCallScenarios.length >= 2, 'direct-call true/false witnesses should be retained in the scenario report');
+  assert.ok(directCallScenarios.every(item =>
+    item.mocks?.some(mock => mock.mockTarget?.kind === 'module-export')),
+  'Solver return-value assignments must become executable ESM module mocks');
+
   console.log(`Real Jest integration passed: ${report.coverageFeedback.execution.testResults.numPassedTests} ESM/V8 generated tests; ${report.coverageFeedback.totals.branches.covered}/${report.coverageFeedback.totals.branches.total} Istanbul branch counters covered; minimal suite ${minimal.selectedCases}/${minimal.candidateCases} cases; CJS/Babel/setup mock, TypeScript transform and falsy-throw compatibility passed.`);
 } finally {
   fs.rmSync(tempDir, { recursive: true, force: true });

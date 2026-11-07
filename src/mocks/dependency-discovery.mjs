@@ -120,6 +120,50 @@ export function createDependencyDiscovery(ts) {
       ts.forEachChild(node, visit);
     }
     visit(functionNode.body);
+
+    // Give direct dependency results a synthetic local root so Constraint IR can
+    // solve expressions such as await api.isActive(id) and api.getUser(id).active.
+    // Existing variable bindings keep their local name and are not duplicated.
+    const knownCallSites = new Set([...bindings.values()].map(binding => binding.callSiteId));
+    function registerDirectCallResults(node) {
+      if (isNestedFunction(node, functionNode)) return;
+      if (ts.isCallExpression(node) && isMockableExternalCall(node, input)) {
+        const callExpression = node.expression.getText(sourceFile);
+        const span = sourceSpan(sourceFile, node, input.relativeFile);
+        const identity = createCallSiteIdentity({
+          relativeFile: span.file, startOffset: span.startOffset, endOffset: span.endOffset, callExpression,
+        });
+        if (!knownCallSites.has(identity.callSiteId)) {
+          const callType = checker.getTypeAtLocation(node);
+          let resolvedType = callType;
+          let isPromise = false;
+          try {
+            const promised = checker.getPromisedTypeOfPromise(callType);
+            if (promised) { resolvedType = promised; isPromise = true; }
+          } catch { /* Keep the declared return type. */ }
+          const awaited = ts.isAwaitExpression(node.parent) && node.parent.expression === node;
+          // An un-awaited Promise is truthy regardless of its eventual result.
+          if (!isPromise || awaited) {
+            const localName = '__bsg_call_result_' + span.startOffset + '_' + span.endOffset;
+            bindings.set(localName, {
+              localName,
+              call: callExpression,
+              ...identity,
+              mockTarget: mockTargetResolver.resolve(node, { ...input, functionNode }),
+              resolvedType,
+              isPromise,
+              awaited,
+              directExpression: true,
+              sourceSpan: span,
+              argumentFacts: node.arguments.map((argument, index) => argumentFact(argument, index, checker, ts, sourceFile)),
+            });
+            knownCallSites.add(identity.callSiteId);
+          }
+        }
+      }
+      ts.forEachChild(node, registerDirectCallResults);
+    }
+    registerDirectCallResults(functionNode.body);
     return bindings;
   }
 
@@ -138,6 +182,51 @@ export function createDependencyDiscovery(ts) {
       return parent.name?.getText?.(sourceFile) ?? '<anonymous>';
     }
     return '<inline-callback>';
+  }
+
+  function isWithin(ancestor, descendant) {
+    for (let current = descendant; current; current = current.parent) {
+      if (current === ancestor) return true;
+    }
+    return false;
+  }
+
+  function executionGuards(node, root, sourceFile) {
+    const guards = [];
+    for (let current = node; current && current !== root; current = current.parent) {
+      const parent = current.parent;
+      if (!parent) break;
+      if (ts.isIfStatement(parent)) {
+        const expected = isWithin(parent.thenStatement, node) ? true
+          : parent.elseStatement && isWithin(parent.elseStatement, node) ? false : null;
+        if (expected !== null) {
+          const span = sourceSpan(sourceFile, parent.expression);
+          guards.push({
+            kind: 'if',
+            expressionNode: parent.expression,
+            expressionText: parent.expression.getText(sourceFile),
+            startOffset: span.startOffset,
+            endOffset: span.endOffset,
+            expected,
+          });
+        }
+      } else if (ts.isConditionalExpression(parent)) {
+        const expected = isWithin(parent.whenTrue, node) ? true
+          : isWithin(parent.whenFalse, node) ? false : null;
+        if (expected !== null) {
+          const span = sourceSpan(sourceFile, parent.condition);
+          guards.push({
+            kind: 'conditional',
+            expressionNode: parent.condition,
+            expressionText: parent.condition.getText(sourceFile),
+            startOffset: span.startOffset,
+            endOffset: span.endOffset,
+            expected,
+          });
+        }
+      }
+    }
+    return guards.reverse();
   }
 
   function discoverCallSites(input) {
@@ -179,6 +268,7 @@ export function createDependencyDiscovery(ts) {
             functionScope: functionScopeName(owner, sourceFile),
             executionContext: owner === functionNode ? 'function-body' : 'nested-function-body',
             reachability: owner === functionNode ? 'direct-static-call-site' : 'nested-invocation-not-proven',
+            executionGuards: executionGuards(node, functionNode, sourceFile),
             argumentFacts: node.arguments.map((argument, index) => argumentFact(argument, index, checker, ts, sourceFile)),
           });
         }

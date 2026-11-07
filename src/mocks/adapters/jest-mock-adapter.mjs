@@ -64,6 +64,7 @@ export function createJestMockAdapter(options = {}) {
   const registry = new Map();
   const dynamicRestorers = [];
   const diagnostics = [];
+  const preparedModuleTargets = new Set();
 
   function createMock(jestApi, targetId) {
     const existing = registry.get(targetId);
@@ -93,6 +94,7 @@ export function createJestMockAdapter(options = {}) {
   async function prepare(targets, jestApi, prepareOptions = {}) {
     const moduleGroups = new Map();
     diagnostics.length = 0;
+    preparedModuleTargets.clear();
     for (const target of targets ?? []) {
       if (!target || target.support !== 'automatic') {
         if (target) diagnostics.push({
@@ -117,7 +119,27 @@ export function createJestMockAdapter(options = {}) {
       moduleGroups.get(key).targets.push(target);
     }
 
+    let preparedModules = 0;
     for (const group of moduleGroups.values()) {
+      if (group.moduleMode === 'esm' && typeof jestApi?.unstable_mockModule !== 'function') {
+        diagnostics.push({
+          code: 'JEST_ESM_MOCKING_UNAVAILABLE',
+          module: group.moduleReference,
+          targetIds: group.targets.map(target => target.id),
+          reason: 'The current Jest runtime does not expose unstable_mockModule().',
+        });
+        continue;
+      }
+      if (group.moduleMode !== 'esm' && typeof jestApi?.mock !== 'function') {
+        diagnostics.push({
+          code: 'JEST_COMMONJS_MOCKING_UNAVAILABLE',
+          module: group.moduleReference,
+          targetIds: group.targets.map(target => target.id),
+          reason: 'The current Jest runtime does not expose jest.mock().',
+        });
+        continue;
+      }
+
       const moduleExports = {};
       let rootExport = null;
       for (const target of group.targets) {
@@ -126,51 +148,50 @@ export function createJestMockAdapter(options = {}) {
         else setExportPath(moduleExports, target.exportPath, mockFn);
       }
 
-      if (group.moduleMode === 'esm') {
-        if (typeof jestApi?.unstable_mockModule !== 'function') {
-          diagnostics.push({
-            code: 'JEST_ESM_MOCKING_UNAVAILABLE',
-            module: group.moduleReference,
-            reason: 'The current Jest runtime does not expose unstable_mockModule().',
+      try {
+        if (group.moduleMode === 'esm') {
+          await jestApi.unstable_mockModule(group.moduleReference, () => {
+            if (!rootExport) return moduleExports;
+            return Object.assign(rootExport, moduleExports);
           });
-          continue;
-        }
-        await jestApi.unstable_mockModule(group.moduleReference, () => {
-          if (!rootExport) return moduleExports;
-          return Object.assign(rootExport, moduleExports);
-        });
-      } else {
-        if (typeof jestApi?.mock !== 'function') {
-          diagnostics.push({
-            code: 'JEST_COMMONJS_MOCKING_UNAVAILABLE',
-            module: group.moduleReference,
-            reason: 'The current Jest runtime does not expose jest.mock().',
+        } else {
+          jestApi.mock(group.moduleReference, () => {
+            let actual = {};
+            try { actual = jestApi.requireActual?.(group.moduleReference) ?? {}; } catch { /* Partial mock fallback. */ }
+            if (rootExport) {
+              if (actual && (typeof actual === 'object' || typeof actual === 'function')) Object.assign(rootExport, actual);
+              return rootExport;
+            }
+            const output = actual && (typeof actual === 'object' || typeof actual === 'function')
+              ? Object.assign({}, actual) : {};
+            for (const target of group.targets) {
+              if (target.exportPath?.length) setExportPath(output, target.exportPath, registry.get(target.id));
+            }
+            output.__esModule = true;
+            return output;
           });
-          continue;
         }
-        jestApi.mock(group.moduleReference, () => {
-          let actual = {};
-          try { actual = jestApi.requireActual?.(group.moduleReference) ?? {}; } catch { /* Partial mock fallback. */ }
-          if (rootExport) {
-            if (actual && (typeof actual === 'object' || typeof actual === 'function')) Object.assign(rootExport, actual);
-            return rootExport;
-          }
-          const output = actual && (typeof actual === 'object' || typeof actual === 'function')
-            ? Object.assign({}, actual) : {};
-          for (const target of group.targets) {
-            if (target.exportPath?.length) setExportPath(output, target.exportPath, registry.get(target.id));
-          }
-          output.__esModule = true;
-          return output;
+        preparedModules += 1;
+        for (const target of group.targets) preparedModuleTargets.add(target.id);
+      } catch (error) {
+        for (const target of group.targets) registry.delete(target.id);
+        diagnostics.push({
+          code: group.moduleMode === 'esm' ? 'JEST_ESM_MOCK_REGISTRATION_FAILED' : 'JEST_COMMONJS_MOCK_REGISTRATION_FAILED',
+          module: group.moduleReference,
+          targetIds: group.targets.map(target => target.id),
+          reason: error instanceof Error ? error.message : String(error),
         });
       }
     }
 
     return Object.freeze({
-      preparedModules: moduleGroups.size,
-      preparedTargets: Object.freeze([...registry.keys()]),
+      preparedModules,
+      preparedTargets: Object.freeze([...preparedModuleTargets]),
       diagnostics: Object.freeze([...diagnostics]),
       requiresManualSetup: diagnostics.length > 0,
+      unpreparedTargets: Object.freeze((targets ?? [])
+        .filter(target => target?.support === 'automatic' && target.kind === 'module-export' && !preparedModuleTargets.has(target.id))
+        .map(target => target.id)),
     });
   }
 
@@ -262,6 +283,7 @@ export function createJestMockAdapter(options = {}) {
 
   function apply(mockPlan, suppliedRegistry = registry) {
     const applied = [];
+    const appliedTargetIds = [];
     for (const action of mockPlan?.actions ?? []) {
       const mockFn = suppliedRegistry instanceof Map
         ? (action.mockTarget?.id ? suppliedRegistry.get(action.mockTarget.id) : null) ??
@@ -313,8 +335,9 @@ export function createJestMockAdapter(options = {}) {
         applyStep(mockFn, action);
       }
       applied.push(action.callId);
+      if (action.mockTarget?.id) appliedTargetIds.push(action.mockTarget.id);
     }
-    return { applied, diagnostics: [...diagnostics] };
+    return { applied, appliedTargetIds, diagnostics: [...diagnostics] };
   }
 
   function conditionalAction(group) {
@@ -365,7 +388,16 @@ export function createJestMockAdapter(options = {}) {
     ])).values()];
     const scenarioRegistry = new Map(registry);
     for (const target of targets) {
-      if (target.kind === 'module-export') continue;
+      if (target.kind === 'module-export') {
+        if (!preparedModuleTargets.has(target.id)) {
+          diagnostics.push({
+            code: 'MOCK_MODULE_NOT_PREPARED',
+            targetId: target.id,
+            reason: 'The module mock was not registered before the analyzed module was imported.',
+          });
+        }
+        continue;
+      }
       const mockFn = patchTarget(target, jestApi, args, targetReceiver);
       if (mockFn) scenarioRegistry.set(target.id, mockFn);
     }
@@ -393,7 +425,7 @@ export function createJestMockAdapter(options = {}) {
         reason: mock.mockTarget?.reason ?? 'The mock target cannot be applied automatically.',
       });
     }
-    return { applied: result.applied, diagnostics: result.diagnostics };
+    return { applied: result.applied, appliedTargetIds: result.appliedTargetIds, diagnostics: result.diagnostics };
   }
 
   return Object.freeze({ prepare, apply, applyScenario, reset, diagnostics: () => [...diagnostics] });
