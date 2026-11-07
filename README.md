@@ -42,6 +42,26 @@
 
 После этого достаточно выполнить `node /path/to/generator/branch-scenarios.mjs`. Аргументы командной строки переопределяют значения файла конфигурации. Можно выбрать другой файл через `--run-config path/to/config.json` или отключить автоматическую загрузку через `--no-run-config`. Полный стартовый шаблон находится в `branch-scenarios.config.example.json`.
 
+### Исключения из автоматического мокирования
+
+Исключения задаются в `mockExclusions`. Они исключают вызов из автоматического создания solver bindings и mock templates. Сам вызов остаётся в `externalCalls` и помечается как `not-mocked`.
+
+```json
+{
+  "mockExclusions": {
+    "services": [],
+    "libraries": ["legacy-parser", "@company/real-time-client"],
+    "methods": ["externalServices.getPersonData"]
+  }
+}
+```
+
+- `services` — не мокать методы указанного объекта/сервиса.
+- `libraries` — не мокать вызовы, импортированные из указанных module specifiers.
+- `methods` — не мокать только полный путь метода; завершающий wildcard `.*` исключает группу методов.
+
+Точечное исключение `externalServices.getPersonData` не отключает мокирование соседних методов: `externalServices.getAddress` продолжит мокироваться. Исключения имеют приоритет над `mockBehaviorOverrides`.
+
 ```bash
 npm install
 node branch-scenarios.mjs src/passenger.ts --function getPassengerCategory

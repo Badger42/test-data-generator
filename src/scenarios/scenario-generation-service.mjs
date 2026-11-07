@@ -84,15 +84,7 @@ function projectExternalCalls(ctx, args, scenarioMocks = [], branchContext = nul
           confidence: fact.confidence,
         };
       }),
-      mock: site.mockExcluded ? {
-        behavior: 'not-mocked',
-        source: 'user-configuration',
-        confidence: 'explicit-user-configuration',
-        appliedAutomatically: false,
-        adapterSupport: 'excluded',
-        setupRequired: false,
-        exclusion: site.mockExclusion,
-      } : {
+      mock: {
         behavior: assigned?.behavior ?? template?.mockBehavior ?? (site.isPromise ? 'mockResolvedValue' : 'mockReturnValue'),
         ...(value !== undefined ? { value } : {}),
         source: hasAssignedValue ? 'scenario-solver-assignment' : 'type-derived-suggestion',

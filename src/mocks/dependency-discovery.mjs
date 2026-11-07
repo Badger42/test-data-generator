@@ -62,40 +62,6 @@ export function createDependencyDiscovery(ts) {
       ts.isArrowFunction(node) || ts.isMethodDeclaration?.(node));
   }
 
-  function isMockExcluded(callExpression, input) {
-    const exclusions = input.mockExclusions ?? {};
-    const access = [];
-    let current = callExpression.expression;
-    while (current && (ts.isPropertyAccessExpression(current) || ts.isElementAccessExpression(current))) {
-      if (ts.isPropertyAccessExpression(current)) access.unshift(current.name.text);
-      else if (current.argumentExpression && (ts.isStringLiteralLike(current.argumentExpression) || ts.isNumericLiteral(current.argumentExpression))) {
-        access.unshift(String(current.argumentExpression.text));
-      } else return null;
-      current = current.expression;
-    }
-    const rootName = current && ts.isIdentifier(current) ? current.text : null;
-    const fullPath = rootName ? [rootName, ...access].join('.') : callExpression.expression.getText();
-    const receiverPath = rootName ? [rootName, ...access.slice(0, -1)].join('.') : '';
-    const matches = (rules, candidate) => (rules ?? []).find(rule => {
-      if (typeof rule !== 'string' || !rule.trim()) return false;
-      const pattern = rule.trim();
-      if (pattern.endsWith('.*')) {
-        const prefix = pattern.slice(0, -2);
-        return candidate === prefix || candidate.startsWith(prefix + '.');
-      }
-      return candidate === pattern;
-    });
-    const methodRule = matches(exclusions.methods, fullPath);
-    if (methodRule) return { kind: 'method', pattern: methodRule, call: fullPath };
-    const serviceRule = matches(exclusions.services, receiverPath) ?? matches(exclusions.services, rootName ?? '');
-    if (serviceRule) return { kind: 'service', pattern: serviceRule, service: receiverPath || rootName };
-    const target = mockTargetResolver.resolve(callExpression, { ...input, callExpression });
-    const moduleSpecifier = target?.moduleSpecifier;
-    const libraryRule = moduleSpecifier && matches(exclusions.libraries, moduleSpecifier);
-    if (libraryRule) return { kind: 'library', pattern: libraryRule, module: moduleSpecifier };
-    return null;
-  }
-
   function isMockableExternalCall(callExpression, input) {
     const callText = callExpression.expression?.getText?.() ?? '';
     const overrides = input.mockBehaviorOverrides ?? {};
@@ -121,7 +87,7 @@ export function createDependencyDiscovery(ts) {
         let initializer = unwrap(node.initializer);
         const wasAwaited = Boolean(initializer && ts.isAwaitExpression(initializer));
         if (wasAwaited) initializer = unwrap(initializer.expression);
-        if (initializer && ts.isCallExpression(initializer) && isMockableExternalCall(initializer, input) && !isMockExcluded(initializer, input)) {
+        if (initializer && ts.isCallExpression(initializer) && isMockableExternalCall(initializer, input)) {
           const callType = checker.getTypeAtLocation(initializer);
           let resolvedType = callType;
           let isPromise = false;
@@ -161,7 +127,7 @@ export function createDependencyDiscovery(ts) {
     const knownCallSites = new Set([...bindings.values()].map(binding => binding.callSiteId));
     function registerDirectCallResults(node) {
       if (isNestedFunction(node, functionNode)) return;
-      if (ts.isCallExpression(node) && isMockableExternalCall(node, input) && !isMockExcluded(node, input)) {
+      if (ts.isCallExpression(node) && isMockableExternalCall(node, input)) {
         const callExpression = node.expression.getText(sourceFile);
         const span = sourceSpan(sourceFile, node, input.relativeFile);
         const identity = createCallSiteIdentity({
@@ -340,7 +306,6 @@ export function createDependencyDiscovery(ts) {
             if (promised) { resolvedType = promised; isPromise = true; }
           } catch { /* Keep the declared return type. */ }
           const owner = enclosingFunction(node, functionNode);
-          const mockExclusion = isMockExcluded(node, input);
           const classification = input.functionIndex?.classifyCall?.(node) ?? { kind: 'external-dependency', confidence: 'low', source: 'missing-function-index' };
           const fallthrough = owner === functionNode
             ? fallthroughGuards(node, functionNode, sourceFile)
@@ -353,7 +318,7 @@ export function createDependencyDiscovery(ts) {
             node,
             sourceSpan: span,
             classification,
-            ...(mockExclusion ? { mockExcluded: true, mockExclusion } : { mockTarget: mockTargetResolver.resolve(node, { ...input, functionNode }) }),
+            mockTarget: mockTargetResolver.resolve(node, { ...input, functionNode }),
             nested: owner !== functionNode,
             functionScope: functionScopeName(owner, sourceFile),
             executionContext: owner === functionNode ? 'function-body' : 'nested-function-body',

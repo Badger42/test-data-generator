@@ -13,6 +13,7 @@ export function createFunctionAnalyzerAdapter(analyzeFunction) {
         {
           constraintEngine: features.constraintEngine,
           mockBehaviorOverrides: features.mockBehaviorOverrides ?? {},
+          mockExclusions: features.mockExclusions ?? {},
           includeEvidence: features.includeEvidence === true,
           maxAlternatives: limits.maxAlternatives,
           analysisSessionId: environment.sessionId,
