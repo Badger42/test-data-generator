@@ -229,6 +229,58 @@ export function createDependencyDiscovery(ts) {
     return guards.reverse();
   }
 
+  function isAlwaysAbrupt(statement) {
+    if (!statement) return false;
+    if (ts.isReturnStatement(statement) || ts.isThrowStatement(statement)) return true;
+    if (ts.isBlock(statement)) {
+      for (const child of statement.statements) if (isAlwaysAbrupt(child)) return true;
+      return false;
+    }
+    if (ts.isIfStatement(statement)) {
+      return Boolean(statement.elseStatement) &&
+        isAlwaysAbrupt(statement.thenStatement) &&
+        isAlwaysAbrupt(statement.elseStatement);
+    }
+    return false;
+  }
+
+  function fallthroughGuards(node, root, sourceFile) {
+    const guards = [];
+    for (let current = node; current && current !== root; current = current.parent) {
+      const container = current.parent;
+      if (!container || !ts.isBlock(container)) continue;
+      let statement = current;
+      while (statement.parent && statement.parent !== container) statement = statement.parent;
+      const index = container.statements.indexOf(statement);
+      if (index <= 0) continue;
+
+      for (let priorIndex = 0; priorIndex < index; priorIndex += 1) {
+        const prior = container.statements[priorIndex];
+        if (isAlwaysAbrupt(prior)) return { guards, unreachable: true };
+        if (!ts.isIfStatement(prior)) continue;
+
+        const thenAbrupt = isAlwaysAbrupt(prior.thenStatement);
+        const elseAbrupt = isAlwaysAbrupt(prior.elseStatement);
+        if (thenAbrupt && elseAbrupt) return { guards, unreachable: true };
+        const expected = thenAbrupt ? false : elseAbrupt ? true : null;
+        if (expected === null) continue;
+
+        const span = sourceSpan(sourceFile, prior.expression);
+        guards.push({
+          kind: 'fallthrough',
+          expressionNode: prior.expression,
+          expressionText: prior.expression.getText(sourceFile),
+          startOffset: span.startOffset,
+          endOffset: span.endOffset,
+          expected,
+        });
+      }
+    }
+    const unique = new Map();
+    for (const guard of guards) unique.set(`${guard.startOffset}:${guard.endOffset}:${guard.expected}`, guard);
+    return { guards: [...unique.values()], unreachable: false };
+  }
+
   function discoverCallSites(input) {
     const { functionNode, checker, sourceFile } = input;
     const sites = [];
@@ -255,6 +307,9 @@ export function createDependencyDiscovery(ts) {
           } catch { /* Keep the declared return type. */ }
           const owner = enclosingFunction(node, functionNode);
           const classification = input.functionIndex?.classifyCall?.(node) ?? { kind: 'external-dependency', confidence: 'low', source: 'missing-function-index' };
+          const fallthrough = owner === functionNode
+            ? fallthroughGuards(node, functionNode, sourceFile)
+            : { guards: [], unreachable: false };
           sites.push({
             ...identity,
             returnType,
@@ -268,7 +323,8 @@ export function createDependencyDiscovery(ts) {
             functionScope: functionScopeName(owner, sourceFile),
             executionContext: owner === functionNode ? 'function-body' : 'nested-function-body',
             reachability: owner === functionNode ? 'direct-static-call-site' : 'nested-invocation-not-proven',
-            executionGuards: executionGuards(node, functionNode, sourceFile),
+            executionGuards: [...executionGuards(node, functionNode, sourceFile), ...fallthrough.guards],
+            invocationStatus: fallthrough.unreachable ? 'not-invoked' : 'conditional-or-reachable',
             argumentFacts: node.arguments.map((argument, index) => argumentFact(argument, index, checker, ts, sourceFile)),
           });
         }

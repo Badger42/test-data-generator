@@ -239,12 +239,15 @@ module.exports = { process(source, filename) {
 
 
   // Calls in mutually exclusive if branches must not leak across scenarios.
-  const branchApiFile = path.join(tempDir, 'branch-api.mjs');
+  const branchApiDir = path.join(tempDir, 'node_modules', 'branch-api');
+  const branchApiFile = path.join(branchApiDir, 'index.mjs');
   const branchTargetFile = path.join(tempDir, 'branch-target.mjs');
   const branchOutput = path.join(tempDir, 'real-jest-callsite-reachability.json');
+  fs.mkdirSync(branchApiDir, { recursive: true });
+  fs.writeFileSync(path.join(branchApiDir, 'package.json'), JSON.stringify({ name: 'branch-api', type: 'module', exports: './index.mjs' }));
   fs.writeFileSync(branchApiFile, "export function choose(label) { throw new Error('real branch dependency executed: ' + label); }\n");
   fs.writeFileSync(branchTargetFile, [
-    "import { choose } from './branch-api.mjs';",
+    "import { choose } from 'branch-api';",
     '/** @param {{ primary: boolean }} input */',
     'export function reachabilityTarget(input) {',
     "  if (input.primary) return choose('primary');",
@@ -267,9 +270,12 @@ module.exports = { process(source, filename) {
   // A real ESM dependency throws if called. Passing coverage feedback proves
   // Jest registered the ESM module mock before importing the target module and
   // the Solver assigned a result to a direct awaited call expression.
-  const remoteApiFile = path.join(tempDir, 'remote-api.mjs');
+  const remoteApiDir = path.join(tempDir, 'node_modules', 'remote-api');
+  const remoteApiFile = path.join(remoteApiDir, 'index.mjs');
   const esmTargetFile = path.join(tempDir, 'esm-module-target.mjs');
   const esmOutput = path.join(tempDir, 'real-jest-esm-module-mock.json');
+  fs.mkdirSync(remoteApiDir, { recursive: true });
+  fs.writeFileSync(path.join(remoteApiDir, 'package.json'), JSON.stringify({ name: 'remote-api', type: 'module', exports: './index.mjs' }));
   fs.writeFileSync(remoteApiFile, [
     '/** @param {string} id @returns {Promise<boolean>} */',
     "export async function isRemoteActive(id) {",
@@ -278,7 +284,7 @@ module.exports = { process(source, filename) {
     '',
   ].join('\n'));
   fs.writeFileSync(esmTargetFile, [
-    "import { isRemoteActive } from './remote-api.mjs';",
+    "import { isRemoteActive } from 'remote-api';",
     '/** @param {{ id: string }} input */',
     'export async function esmMockTarget(input) {',
     '  if (await isRemoteActive(input.id)) return "active";',
