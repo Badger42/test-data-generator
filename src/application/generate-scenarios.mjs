@@ -195,7 +195,17 @@ export function generateScenarios(args, runtime = {}) {
   const functionResults = annotateExpectedThrowScenarios(analyzedFunctionResults, functions, sourceFile, project.compilerApi);
   for (const analysis of functionResults) {
     const scenarioGroups = groupEquivalentScenarios(analysis.scenarios);
-    if (scenarioGroups.length) analysis.scenarioGroups = scenarioGroups;
+    if (scenarioGroups.length) {
+      // Detailed groups belong to the analysis report, not the stable public
+      // scenarios JSON contract. A non-enumerable metadata port keeps the
+      // report builder access without changing the generated scenarios DTO.
+      Object.defineProperty(analysis, 'scenarioGroups', {
+        value: scenarioGroups,
+        enumerable: false,
+        configurable: false,
+        writable: false,
+      });
+    }
   }
 
   const reportBuilder = createReportBuilder();

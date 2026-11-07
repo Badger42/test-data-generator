@@ -39,10 +39,21 @@ function isTypescriptStandardLibraryFile(filename) {
     /(?:^|[\\/])typescript[\\/]lib[\\/]lib\\..+\\.d\\.ts$/i.test(filename);
 }
 
-function isKnownBuiltinLibraryMember(symbol, filename) {
+function isKnownBuiltinLibraryMember(symbol, filename, ts) {
   if (!isTypescriptStandardLibraryFile(filename)) return false;
-  const owner = symbol?.parent?.getName?.() ?? '';
-  return BUILTIN_LIBRARY_OWNERS.has(owner);
+  // The checker symbol's parent is not consistently populated for members
+  // declared by standard-library interfaces. Resolve the owning AST declaration.
+  for (const declaration of symbol?.declarations ?? []) {
+    for (let current = declaration.parent; current && !ts.isSourceFile(current); current = current.parent) {
+      const typeDeclaration = ts.isInterfaceDeclaration(current) ||
+        ts.isClassDeclaration(current) || ts.isClassExpression(current);
+      if (!typeDeclaration) continue;
+      const owner = current.name?.text ?? '';
+      if (BUILTIN_LIBRARY_OWNERS.has(owner)) return true;
+      break;
+    }
+  }
+  return false;
 }
 
 
@@ -214,7 +225,7 @@ export function buildProjectFunctionIndex(project) {
     // TypeScript's own lib declarations live under node_modules/typescript,
     // so inspect known language builtins before the generic node_modules rule.
     // DOM host seams (fetch, Window, Navigator, timers, etc.) remain mockable.
-    if (isKnownBuiltinLibraryMember(resolved, declarationFile)) {
+    if (isKnownBuiltinLibraryMember(resolved, declarationFile, ts)) {
       return {
         kind: 'builtin-intrinsic',
         confidence: 'high',
