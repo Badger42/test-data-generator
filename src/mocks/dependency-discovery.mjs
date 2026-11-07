@@ -120,6 +120,50 @@ export function createDependencyDiscovery(ts) {
       ts.forEachChild(node, visit);
     }
     visit(functionNode.body);
+
+    // Give direct dependency results a synthetic local root so Constraint IR can
+    // solve expressions such as await api.isActive(id) and api.getUser(id).active.
+    // Existing variable bindings keep their local name and are not duplicated.
+    const knownCallSites = new Set([...bindings.values()].map(binding => binding.callSiteId));
+    function registerDirectCallResults(node) {
+      if (isNestedFunction(node, functionNode)) return;
+      if (ts.isCallExpression(node) && isMockableExternalCall(node, input)) {
+        const callExpression = node.expression.getText(sourceFile);
+        const span = sourceSpan(sourceFile, node, input.relativeFile);
+        const identity = createCallSiteIdentity({
+          relativeFile: span.file, startOffset: span.startOffset, endOffset: span.endOffset, callExpression,
+        });
+        if (!knownCallSites.has(identity.callSiteId)) {
+          const callType = checker.getTypeAtLocation(node);
+          let resolvedType = callType;
+          let isPromise = false;
+          try {
+            const promised = checker.getPromisedTypeOfPromise(callType);
+            if (promised) { resolvedType = promised; isPromise = true; }
+          } catch { /* Keep the declared return type. */ }
+          const awaited = ts.isAwaitExpression(node.parent) && node.parent.expression === node;
+          // An un-awaited Promise is truthy regardless of its eventual result.
+          if (!isPromise || awaited) {
+            const localName = '__bsg_call_result_' + span.startOffset + '_' + span.endOffset;
+            bindings.set(localName, {
+              localName,
+              call: callExpression,
+              ...identity,
+              mockTarget: mockTargetResolver.resolve(node, { ...input, functionNode }),
+              resolvedType,
+              isPromise,
+              awaited,
+              directExpression: true,
+              sourceSpan: span,
+              argumentFacts: node.arguments.map((argument, index) => argumentFact(argument, index, checker, ts, sourceFile)),
+            });
+            knownCallSites.add(identity.callSiteId);
+          }
+        }
+      }
+      ts.forEachChild(node, registerDirectCallResults);
+    }
+    registerDirectCallResults(functionNode.body);
     return bindings;
   }
 
@@ -138,6 +182,103 @@ export function createDependencyDiscovery(ts) {
       return parent.name?.getText?.(sourceFile) ?? '<anonymous>';
     }
     return '<inline-callback>';
+  }
+
+  function isWithin(ancestor, descendant) {
+    for (let current = descendant; current; current = current.parent) {
+      if (current === ancestor) return true;
+    }
+    return false;
+  }
+
+  function executionGuards(node, root, sourceFile) {
+    const guards = [];
+    for (let current = node; current && current !== root; current = current.parent) {
+      const parent = current.parent;
+      if (!parent) break;
+      if (ts.isIfStatement(parent)) {
+        const expected = isWithin(parent.thenStatement, node) ? true
+          : parent.elseStatement && isWithin(parent.elseStatement, node) ? false : null;
+        if (expected !== null) {
+          const span = sourceSpan(sourceFile, parent.expression);
+          guards.push({
+            kind: 'if',
+            expressionNode: parent.expression,
+            expressionText: parent.expression.getText(sourceFile),
+            startOffset: span.startOffset,
+            endOffset: span.endOffset,
+            expected,
+          });
+        }
+      } else if (ts.isConditionalExpression(parent)) {
+        const expected = isWithin(parent.whenTrue, node) ? true
+          : isWithin(parent.whenFalse, node) ? false : null;
+        if (expected !== null) {
+          const span = sourceSpan(sourceFile, parent.condition);
+          guards.push({
+            kind: 'conditional',
+            expressionNode: parent.condition,
+            expressionText: parent.condition.getText(sourceFile),
+            startOffset: span.startOffset,
+            endOffset: span.endOffset,
+            expected,
+          });
+        }
+      }
+    }
+    return guards.reverse();
+  }
+
+  function isAlwaysAbrupt(statement) {
+    if (!statement) return false;
+    if (ts.isReturnStatement(statement) || ts.isThrowStatement(statement)) return true;
+    if (ts.isBlock(statement)) {
+      for (const child of statement.statements) if (isAlwaysAbrupt(child)) return true;
+      return false;
+    }
+    if (ts.isIfStatement(statement)) {
+      return Boolean(statement.elseStatement) &&
+        isAlwaysAbrupt(statement.thenStatement) &&
+        isAlwaysAbrupt(statement.elseStatement);
+    }
+    return false;
+  }
+
+  function fallthroughGuards(node, root, sourceFile) {
+    const guards = [];
+    for (let current = node; current && current !== root; current = current.parent) {
+      const container = current.parent;
+      if (!container || !ts.isBlock(container)) continue;
+      let statement = current;
+      while (statement.parent && statement.parent !== container) statement = statement.parent;
+      const index = container.statements.indexOf(statement);
+      if (index <= 0) continue;
+
+      for (let priorIndex = 0; priorIndex < index; priorIndex += 1) {
+        const prior = container.statements[priorIndex];
+        if (isAlwaysAbrupt(prior)) return { guards, unreachable: true };
+        if (!ts.isIfStatement(prior)) continue;
+
+        const thenAbrupt = isAlwaysAbrupt(prior.thenStatement);
+        const elseAbrupt = isAlwaysAbrupt(prior.elseStatement);
+        if (thenAbrupt && elseAbrupt) return { guards, unreachable: true };
+        const expected = thenAbrupt ? false : elseAbrupt ? true : null;
+        if (expected === null) continue;
+
+        const span = sourceSpan(sourceFile, prior.expression);
+        guards.push({
+          kind: 'fallthrough',
+          expressionNode: prior.expression,
+          expressionText: prior.expression.getText(sourceFile),
+          startOffset: span.startOffset,
+          endOffset: span.endOffset,
+          expected,
+        });
+      }
+    }
+    const unique = new Map();
+    for (const guard of guards) unique.set(`${guard.startOffset}:${guard.endOffset}:${guard.expected}`, guard);
+    return { guards: [...unique.values()], unreachable: false };
   }
 
   function discoverCallSites(input) {
@@ -166,6 +307,9 @@ export function createDependencyDiscovery(ts) {
           } catch { /* Keep the declared return type. */ }
           const owner = enclosingFunction(node, functionNode);
           const classification = input.functionIndex?.classifyCall?.(node) ?? { kind: 'external-dependency', confidence: 'low', source: 'missing-function-index' };
+          const fallthrough = owner === functionNode
+            ? fallthroughGuards(node, functionNode, sourceFile)
+            : { guards: [], unreachable: false };
           sites.push({
             ...identity,
             returnType,
@@ -179,6 +323,14 @@ export function createDependencyDiscovery(ts) {
             functionScope: functionScopeName(owner, sourceFile),
             executionContext: owner === functionNode ? 'function-body' : 'nested-function-body',
             reachability: owner === functionNode ? 'direct-static-call-site' : 'nested-invocation-not-proven',
+            // A nested function may be invoked through an alias or after the
+            // lexical branch that created it. Its body is therefore not
+            // constrained by the surrounding declaration-site path.
+            executionGuards: owner === functionNode
+              ? [...executionGuards(node, functionNode, sourceFile), ...fallthrough.guards]
+              : [],
+            invocationStatus: owner !== functionNode ? 'nested-invocation-not-proven'
+              : fallthrough.unreachable ? 'not-invoked' : 'conditional-or-reachable',
             argumentFacts: node.arguments.map((argument, index) => argumentFact(argument, index, checker, ts, sourceFile)),
           });
         }

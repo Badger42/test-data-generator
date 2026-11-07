@@ -7,7 +7,7 @@ export function createScenarioGenerationService(dependencies) {
     getBranchId, solveCondition, combineSolutions, recordUnsupportedBranch, recordBranchOutcome,
     clearUnsupportedBranch, recordScenario, assignmentMaterializer, defaultValueForType,
     mockPlanner, scenarioEvidenceBuilder, scenarioBuilder, scenarioReportAdapter, mockReportAdapter, formatLine, formatNodeSpan,
-    cloneJson, applyAssignment, serializable,
+    cloneJson, applyAssignment, serializable, evaluateCallSiteGuard = null,
   } = dependencies;
   if (typeof solveCondition !== 'function' || typeof recordScenario !== 'function' || !scenarioBuilder || !scenarioReportAdapter || !mockReportAdapter) {
     throw new TypeError('ScenarioGenerationService requires solver, state and ScenarioBuilder ports.');
@@ -29,9 +29,29 @@ function readScenarioArgument(fact, args, parameterMap) {
   return { resolved: false };
 }
 
-function projectExternalCalls(ctx, args, scenarioMocks = []) {
+function projectExternalCalls(ctx, args, scenarioMocks = [], branchContext = null) {
   const templatesBySite = new Map((ctx.mockTemplates ?? []).map(template => [template.callSiteId, template]));
-  return (ctx.mockCallSites ?? []).map(site => {
+  const reachableSites = (ctx.mockCallSites ?? []).filter(site => {
+    if (site.invocationStatus === 'not-invoked') return false;
+    for (const guard of site.executionGuards ?? []) {
+      let actualOutcome = null;
+      if (branchContext?.node) {
+        const start = branchContext.node.getStart?.(ctx.sourceFile);
+        const end = branchContext.node.getEnd?.();
+        if (start === guard.startOffset && end === guard.endOffset) {
+          actualOutcome = Boolean(branchContext.outcome);
+        }
+      }
+      if (actualOutcome === null && evaluateCallSiteGuard) {
+        actualOutcome = evaluateCallSiteGuard(guard, args, ctx, scenarioMocks);
+      }
+      // Only prune a site when its path condition is provably opposite to the
+      // concrete scenario. Unknown guards remain visible as conservative candidates.
+      if (actualOutcome !== null && Boolean(actualOutcome) !== Boolean(guard.expected)) return false;
+    }
+    return true;
+  });
+  return reachableSites.map(site => {
     const template = templatesBySite.get(site.callSiteId);
     const assigned = scenarioMocks.find(mock => mock.callSiteId && mock.callSiteId === site.callSiteId)
       ?? scenarioMocks.find(mock => (mock.callExpression ?? mock.call ?? mock.callId) === site.callExpression);
@@ -180,7 +200,7 @@ function addScenarios(ctx, kind, node, conditionText, desired, incoming, targetL
       unsupported: solution.unsupported,
       includeEvidence: ctx.includeEvidence,
     });
-    const externalCalls = projectExternalCalls(ctx, normalizedArgs, domainMocks);
+    const externalCalls = projectExternalCalls(ctx, normalizedArgs, domainMocks, { node: solveNode, outcome: desired });
     recordScenario(ctx, externalCalls.length ? { ...scenario, externalCalls } : scenario, { loop: kind === 'loop' });
   }
   if (unsupportedSolutions.length) {

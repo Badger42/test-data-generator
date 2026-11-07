@@ -63,10 +63,32 @@ const second = {
 };
 const applied = adapter.applyScenario([first, second], [], null, jestApi);
 assert.deepEqual(applied.applied, ['module:esm:remote-api:loadRemote']);
+assert.deepEqual(applied.appliedTargetIds, [esmTarget.id], 'adapter reports the exact mock targets applied to this scenario');
 assert.deepEqual(await esmExports.loadRemote('first'), { active: true });
 assert.deepEqual(await esmExports.loadRemote('second'), { active: false });
 adapter.reset();
 assert.equal(await esmExports.loadRemote('first'), undefined, 'reset should clear the previous test row implementation');
+
+const unavailableAdapter = createJestMockAdapter();
+const unavailableSetup = await unavailableAdapter.prepare([esmTarget], { fn: createFakeMock });
+assert.deepEqual(unavailableSetup.unpreparedTargets, [esmTarget.id]);
+assert.ok(unavailableSetup.diagnostics.some(item => item.code === 'JEST_ESM_MOCKING_UNAVAILABLE'));
+assert.throws(() => unavailableAdapter.applyScenario([{
+  callId: 'getRemote', callExpression: 'getRemote', mockTarget: esmTarget,
+  behavior: 'mockResolvedValue', value: { active: true },
+}], [], null, { fn: createFakeMock }), /No Jest mock registered/,
+'module mocks must not silently fall back to the real dependency when Jest cannot prepare ESM mocking');
+
+const unpatchableAdapter = createJestMockAdapter();
+const unpatchableTarget = {
+  version: 1, id: 'parameter:0:api:getUser', kind: 'object-member', support: 'automatic',
+  parameterIndex: 0, receiverPath: ['api'], memberName: 'getUser',
+};
+assert.throws(() => unpatchableAdapter.applyScenario([{
+  callId: 'api.getUser', callExpression: 'api.getUser', mockTarget: unpatchableTarget,
+  behavior: 'mockReturnValue', value: 'must-not-use-real-dependency',
+}], [null], null, jestApi), /No Jest mock registered/,
+'dynamic targets that cannot be patched must fail rather than execute the real dependency');
 
 const cjsTarget = {
   version: 1, id: 'module:commonjs:legacy:lookup', kind: 'module-export',

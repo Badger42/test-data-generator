@@ -100,6 +100,33 @@ export interface MockBindingFact {
   sourceSpan: SourceSpan;
 }
 
+/** JSON-safe description of a concrete Jest replacement target. */
+export type MockTarget =
+  | {
+      version: 1; id: string; kind: 'module-export'; support: 'automatic' | 'manual-setup-required';
+      moduleMode: 'esm' | 'commonjs'; moduleSpecifier: string; resolvedModulePath?: string;
+      exportPath: string[]; reason?: string;
+    }
+  | {
+      version: 1; id: string; kind: 'object-member'; support: 'automatic' | 'manual-setup-required';
+      parameterIndex: number; receiverPath: string[]; memberName: string; reason?: string;
+    }
+  | {
+      version: 1; id: string; kind: 'parameter-callable'; support: 'automatic' | 'manual-setup-required';
+      parameterIndex: number; reason?: string;
+    }
+  | {
+      version: 1; id: string; kind: 'this-member'; support: 'automatic' | 'manual-setup-required';
+      receiverPath: string[]; memberName: string; reason?: string;
+    }
+  | {
+      version: 1; id: string; kind: 'global-member'; support: 'automatic' | 'manual-setup-required';
+      globalName: string; receiverPath: string[]; memberName: string; reason?: string;
+    }
+  | {
+      version: 1; id: string; kind: 'unresolved'; support: 'manual-setup-required'; reason: string;
+    };
+
 export interface FunctionDataModel {
   functionId: string;
   parameters: ParameterModel[];
@@ -242,6 +269,7 @@ export interface MockAction {
   callId: string;
   callExpression: string;
   callSiteId?: string;
+  mockTarget?: MockTarget;
   behavior: 'mockReturnValue' | 'mockResolvedValue' | 'mockRejectedValue' | 'mockImplementation' | 'sequence' | 'conditional';
   value?: SerializedValue;
   error?: { name: string; message: string };

@@ -7,7 +7,7 @@ import { compileTypescriptCondition } from '../constraints/compile-typescript-co
 import { collectConstraintPaths, createConstraintIR, logical, negate } from '../constraints/constraint-ir.mjs';
 import { createExpressionAliasResolver } from '../data-flow/typescript-expression-facts.mjs';
 import { createTypeScriptDataFlowAnalyzer } from '../data-flow/data-flow-analyzer.mjs';
-import { ConstraintSolver } from '../solver/constraint-solver.mjs';
+import { ConstraintSolver, evaluateConstraint } from '../solver/constraint-solver.mjs';
 import { formatLine, formatNodeSpan, coverageAnchorMetadata } from '../ast/source-spans.mjs';
 import { createAstFacade } from '../ast/ast-facade.mjs';
 import { createPathResolver } from '../ast/path-resolver.mjs';
@@ -1024,6 +1024,68 @@ function getBranchId(kind, node, sourceFile) {
   return `${kind}-${pos.line}-${pos.column}`;
 }
 
+function replaceExternalCallResults(node, operationContext) {
+  const bindingsBySpan = new Map();
+  for (const binding of operationContext?.paths?.localMockMap?.values?.() ?? []) {
+    if (!binding.sourceSpan) continue;
+    bindingsBySpan.set(`${binding.sourceSpan.startOffset}:${binding.sourceSpan.endOffset}`, binding);
+  }
+  if (!bindingsBySpan.size) return node;
+
+  const bindingFor = call => {
+    const sourceFile = call.getSourceFile?.();
+    if (!sourceFile) return null;
+    const key = `${call.getStart(sourceFile)}:${call.getEnd()}`;
+    return bindingsBySpan.get(key) ?? null;
+  };
+  const transformed = ts.transform(node, [context => root => {
+    const visit = current => {
+      if (ts.isAwaitExpression(current)) {
+        const call = unwrap(current.expression);
+        const binding = call && ts.isCallExpression(call) ? bindingFor(call) : null;
+        if (binding) return ts.factory.createIdentifier(binding.localName);
+      }
+      if (ts.isCallExpression(current)) {
+        const binding = bindingFor(current);
+        if (binding) return ts.factory.createIdentifier(binding.localName);
+      }
+      return ts.visitEachChild(current, visit, context);
+    };
+    return visit(root);
+  }]);
+  const result = transformed.transformed[0];
+  transformed.dispose();
+  return result;
+}
+
+function evaluateCallSiteGuard(guard, args, ctx, scenarioMocks = []) {
+  try {
+    const operationContext = {
+      paths: { localMockMap: ctx.localMockMap },
+    };
+    const expression = replaceExternalCallResults(guard.expressionNode, operationContext);
+    const compilerOptions = {
+      resolveAlias: ctx.expressionAliasResolver,
+      isSymbolicRoot: identifier =>
+        ctx.parameterMap.has(identifier.text) ||
+        ctx.localMockMap.has(identifier.text) ||
+        ctx.pathAliases.has(identifier.text),
+    };
+    const ir = compileTypescriptCondition(expression, ts, compilerOptions);
+    if (ir.atoms.some(item => item.operator === 'unsupported')) return null;
+    const scope = {};
+    for (const [name, parameter] of ctx.parameterMap) scope[name] = args[parameter.index];
+    for (const binding of ctx.localMockMap.values()) {
+      const mock = scenarioMocks.find(item => item.callSiteId === binding.callSiteId);
+      if (mock && Object.prototype.hasOwnProperty.call(mock, 'value')) scope[binding.localName] = mock.value;
+    }
+    return Boolean(evaluateConstraint(ir.expression, scope));
+  } catch {
+    // Do not prune a call-site unless the guard can be evaluated soundly.
+    return null;
+  }
+}
+
 function getMcdcDecisionId(kind, node, sourceFile) {
   return getBranchId(`mcdc-${kind}`, node, sourceFile);
 }
@@ -1122,7 +1184,7 @@ const scenarioGenerationService = createScenarioGenerationService({
   getBranchId, solveCondition, combineSolutions, recordUnsupportedBranch, recordBranchOutcome,
   clearUnsupportedBranch, recordScenario, assignmentMaterializer, defaultValueForType,
   mockPlanner, scenarioEvidenceBuilder, scenarioBuilder, scenarioReportAdapter, mockReportAdapter, formatLine, formatNodeSpan,
-  cloneJson, applyAssignment, serializable,
+  cloneJson, applyAssignment, serializable, evaluateCallSiteGuard,
 });
 const { addScenarios, addCustomSwitchScenario, addLoopScenario } = scenarioGenerationService;
 
@@ -1281,6 +1343,7 @@ constraintAnalysisService = createConstraintAnalysisService({
   constraintPathHint, buildConstraintSeed, isStrictPathPrefix, deleteConstraintPath,
   readConstraintPath, sameValue, makeAssignment, isDefinitelyAssignable,
   substituteKnownAliases, evaluateStaticCondition, unwrap, unsupportedSolution,
+  replaceExternalCallResults,
   recursiveAstFallbackAdapter,
 });
 

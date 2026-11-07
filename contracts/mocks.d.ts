@@ -1,4 +1,4 @@
-import type { AnalysisWarning, Evidence, MockAction, MockBindingFact, SerializedValue, SourceSpan } from './domain.js';
+import type { AnalysisWarning, Evidence, MockAction, MockBindingFact, MockTarget, SerializedValue, SourceSpan } from './domain.js';
 
 export type MockBehavior =
   | 'mockReturnValue'
@@ -39,6 +39,16 @@ export interface MockCallSite {
   executionContext?: 'function-body' | 'nested-function-body' | string;
   reachability?: 'direct-static-call-site' | 'nested-invocation-not-proven' | string;
   argumentFacts?: MockCallArgumentFact[];
+  executionGuards?: Array<{
+    kind: 'if' | 'conditional' | 'fallthrough';
+    expressionNode: import('typescript').Expression;
+    expressionText: string;
+    startOffset: number;
+    endOffset: number;
+    expected: boolean;
+  }>;
+  invocationStatus?: 'not-invoked' | 'conditional-or-reachable' | 'nested-invocation-not-proven';
+  mockTarget?: MockTarget;
 }
 
 /** Transitional compiler-side binding. TypeScript types must not cross into MockPlan. */
@@ -48,6 +58,9 @@ export interface MockDependencyBinding {
   callId: string;
   callExpression: string;
   callSiteId: string;
+  mockTarget?: MockTarget;
+  directExpression?: boolean;
+  resolvedType?: unknown;
   isPromise: boolean;
   awaited: boolean;
   sourceSpan?: SourceSpan;
@@ -68,6 +81,7 @@ export interface MockPlanAction {
   callId: string;
   callExpression: string;
   callSiteId?: string | null;
+  mockTarget?: MockTarget;
   behavior: MockBehavior | 'sequence' | 'conditional';
   value?: SerializedValue;
   error?: { name: string; message: string };
@@ -141,7 +155,23 @@ export interface JestMockFunction {
 }
 
 export interface JestMockAdapterPort {
+  prepare(
+    targets: MockTarget[],
+    jestApi: Record<string, unknown>,
+    options?: { resolveModule?: (specifier: string, target: MockTarget) => string | null },
+  ): Promise<{
+    preparedModules: number;
+    preparedTargets: string[];
+    unpreparedTargets: string[];
+    diagnostics: Array<Record<string, unknown>>;
+    requiresManualSetup: boolean;
+  }>;
   apply(plan: MockPlan, registry: ReadonlyMap<string, JestMockFunction> | Record<string, JestMockFunction>): { applied: string[] };
+  applyScenario(
+    mocks: MockAction[], args: unknown[], targetReceiver: unknown, jestApi: Record<string, unknown>,
+  ): { applied: string[]; appliedTargetIds: string[]; diagnostics: Array<Record<string, unknown>> };
+  reset(): void;
+  diagnostics(): Array<Record<string, unknown>>;
 }
 
 export type { MockBindingFact };

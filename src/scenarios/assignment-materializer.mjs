@@ -102,6 +102,7 @@ export function createAssignmentMaterializer(options = {}) {
             callId: String(binding.callId ?? binding.call ?? binding.callExpression ?? 'unknown-call'),
             callExpression: String(binding.callExpression ?? binding.call ?? binding.callId ?? 'unknown-call'),
             ...(binding.callSiteId ? { callSiteId: String(binding.callSiteId) } : {}),
+            ...(binding.mockTarget ? { mockTarget: clone(binding.mockTarget) } : {}),
             isPromise: Boolean(binding.isPromise),
             awaited: Boolean(binding.awaited),
             ...(binding.sourceSpan ? { sourceSpan: clone(binding.sourceSpan) } : {}),

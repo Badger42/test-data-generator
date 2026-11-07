@@ -22,6 +22,10 @@ export function tested(input: { id: string; text: string }) {
   function localHelper(value: string) {
     return api.inspect(normalize(value));
   }
+  if (input.id) {
+    const deferred = (value: string) => api.inspect(value);
+    void deferred;
+  }
   const direct = api.inspect(input.id);
   const loaded = api.load(input.id);
   const found = [input.text].some(value => api.inspect(normalize(value)));
@@ -43,10 +47,10 @@ export function tested(input: { id: string; text: string }) {
   });
 
   const externalSites = discovered.filter(site => ['api.inspect', 'api.load', 'fetch'].includes(site.callExpression));
-  assert.equal(externalSites.length, 5,
+  assert.equal(externalSites.length, 6,
     'external calls in direct code, local function bodies and inline callbacks must be found');
   assert.deepEqual(externalSites.filter(site => site.callExpression === 'api.inspect').map(site => site.nested).sort(),
-    [false, true, true]);
+    [false, true, true, true]);
   assert.equal(discovered.some(site => site.callExpression === 'normalize'), false,
     'an imported project-local function must not be classified as an external dependency');
   assert.equal(discovered.some(site => site.callExpression === 'localHelper'), false,
@@ -73,6 +77,11 @@ export function tested(input: { id: string; text: string }) {
   assert.ok(local, 'nested local-function body must be identified');
   assert.equal(local.executionContext, 'nested-function-body');
   assert.equal(local.reachability, 'nested-invocation-not-proven');
+  const deferred = externalSites.find(site => site.functionScope === 'deferred');
+  assert.ok(deferred, 'nested function declared under a branch must still be discovered');
+  assert.equal(deferred.executionContext, 'nested-function-body');
+  assert.deepEqual(deferred.executionGuards, [],
+    'a nested function body must not inherit the lexical guard of its declaration site');
   const callback = externalSites.find(site => site.nested && site.functionScope === '<inline-callback>');
   assert.ok(callback, 'inline callback body must be traversed');
   const direct = externalSites.find(site => site.callExpression === 'api.inspect' && !site.nested);
@@ -87,7 +96,7 @@ export function tested(input: { id: string; text: string }) {
     unionMembers: type => [type],
     serialize: value => value,
   }).build({ callSites: externalSites, checker: project.checker });
-  assert.equal(templates.length, 5, 'templates must be preserved per call-site, not collapsed by method expression');
+  assert.equal(templates.length, 6, 'templates must be preserved per call-site, not collapsed by method expression');
   assert.equal(templates.find(item => item.call === 'fetch').mockBehavior, 'mockResolvedValue');
   assert.ok(templates.every(item => item.callSiteId && item.callArguments.length === 1));
   assert.equal(templates.find(item => item.call === 'api.load').mockBehavior, 'mockResolvedValue');
