@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Badger42/test-data-generator/blob/main/docs/schemas/branch-scenarios.config.schema.json",
+  "title": "Branch Scenario Generator run configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "file": {
+      "type": "string"
+    },
+    "functionName": {
+      "type": "string"
+    },
+    "exportName": {
+      "type": "string"
+    },
+    "out": {
+      "type": "string"
+    },
+    "tsconfig": {
+      "type": "string"
+    },
+    "jestConfig": {
+      "type": "string"
+    },
+    "jestSetup": {
+      "type": "string"
+    },
+    "coverageFrom": {
+      "type": "string"
+    },
+    "coverageProvider": {
+      "enum": [
+        "v8",
+        "babel"
+      ]
+    },
+    "maxScenarios": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "coverageIterations": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10
+    },
+    "coverageGoal": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "jestTimeoutMs": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 86400000
+    },
+    "coverageFeedbackTimeoutMs": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 86400000
+    },
+    "all": {
+      "type": "boolean"
+    },
+    "mcdc": {
+      "type": "boolean"
+    },
+    "coverageFeedback": {
+      "type": "boolean"
+    },
+    "minimalSuite": {
+      "type": "boolean"
+    },
+    "minimalSuiteOut": {
+      "type": "string"
+    },
+    "testBatching": {
+      "type": "boolean"
+    },
+    "testBatchMinSize": {
+      "type": "integer",
+      "minimum": 2
+    },
+    "testBatchMaxSize": {
+      "type": "integer",
+      "minimum": 2
+    },
+    "constraintEngine": {
+      "enum": [
+        "hybrid",
+        "legacy"
+      ]
+    },
+    "constraintDiagnostics": {
+      "type": "boolean"
+    },
+    "includeEvidence": {
+      "type": "boolean"
+    },
+    "analysisReport": {
+      "type": "boolean"
+    },
+    "analysisReportOut": {
+      "type": "string"
+    },
+    "analysisReportFormOut": {
+      "type": "string"
+    },
+    "analysisReportValueMode": {
+      "enum": [
+        "shape",
+        "hash",
+        "include"
+      ]
+    },
+    "analysisReportMaxScenarios": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5000
+    },
+    "mockBehaviorOverrides": {
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "./docs/schemas/branch-scenarios.config.schema.json",
+  "file": "src/path/to/function.js",
+  "functionName": "functionName",
+  "out": "test-data/function.scenarios.json",
+  "maxScenarios": 40,
+  "coverageIterations": 3,
+  "coverageGoal": 100,
+  "coverageProvider": "v8",
+  "mcdc": true,
+  "coverageFeedback": false,
+  "includeEvidence": false,
+  "analysisReport": true,
+  "analysisReportValueMode": "shape",
+  "testBatching": true,
+  "testBatchMinSize": 2,
+  "testBatchMaxSize": 100
+}
