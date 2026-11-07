@@ -173,7 +173,7 @@
     {
       "id": "scenarios",
       "target": "src/scenarios",
-      "purpose": "ScenarioCase construction, evidence, materialization and deduplication.",
+      "purpose": "ScenarioCase construction, evidence, materialization, exact payload grouping and deduplication.",
       "implementedFiles": [
         "src/scenarios/assignment-materializer.mjs",
         "src/scenarios/data-flow-evidence.mjs",
@@ -182,6 +182,7 @@
         "src/scenarios/scenario-deduplicator.mjs",
         "src/scenarios/scenario-evidence-builder.mjs",
         "src/scenarios/scenario-fingerprint.mjs",
+        "src/scenarios/scenario-grouper.mjs",
         "src/scenarios/scenario-generation-service.mjs",
         "src/scenarios/serializers/undefined-value.mjs"
       ],

@@ -14,6 +14,7 @@ import { createFunctionAnalysisSession } from '../analysis/function-analysis-ses
 import { createFunctionAnalyzerAdapter } from '../analysis/function-analyzer-adapter.mjs';
 import { createTypeScriptDataFlowAnalyzer } from '../data-flow/data-flow-analyzer.mjs';
 import { createDataFlowAnalyzerAdapter } from '../data-flow/data-flow-adapter.mjs';
+import { groupEquivalentScenarios } from '../scenarios/scenario-grouper.mjs';
 
 
 function thrownErrorDescriptor(statement, ts) {
@@ -192,6 +193,20 @@ export function generateScenarios(args, runtime = {}) {
   }, functionAnalyzer));
   const analyzedFunctionResults = analysisSessions.map(session => session.analyze());
   const functionResults = annotateExpectedThrowScenarios(analyzedFunctionResults, functions, sourceFile, project.compilerApi);
+  for (const analysis of functionResults) {
+    const scenarioGroups = groupEquivalentScenarios(analysis.scenarios);
+    if (scenarioGroups.length) {
+      // Detailed groups belong to the analysis report, not the stable public
+      // scenarios JSON contract. A non-enumerable metadata port keeps the
+      // report builder access without changing the generated scenarios DTO.
+      Object.defineProperty(analysis, 'scenarioGroups', {
+        value: scenarioGroups,
+        enumerable: false,
+        configurable: false,
+        writable: false,
+      });
+    }
+  }
 
   const reportBuilder = createReportBuilder();
   const result = reportBuilder.build({

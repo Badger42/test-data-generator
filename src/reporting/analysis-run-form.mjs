@@ -35,12 +35,34 @@ export function createAnalysisRunForm(input) {
   if (!analysisReport?.reportId) throw new TypeError('AnalysisRunForm requires an analysisReport with reportId.');
 
   const capturedResults = coverageFeedback?.execution?.testResults ?? null;
-  const capturedById = new Map((capturedResults?.cases ?? []).map(item => [item.id, item]));
-  const batching = coverageFeedback?.execution?.testBatching;
-  const batchByScenario = new Map();
-  for (const batch of batching?.batches ?? []) {
-    for (const scenarioId of batch.scenarioIds ?? []) batchByScenario.set(scenarioId, batch.id);
+  const capturedByScenario = new Map();
+  for (const item of capturedResults?.cases ?? []) {
+    const scenarioIds = new Set([
+      ...(typeof item.scenarioId === 'string' ? [item.scenarioId] : []),
+      // Older coverage feedback used scenario IDs directly as case IDs.
+      ...(typeof item.id === 'string' ? [item.id] : []),
+      ...(item.references ?? []).map(reference => reference?.scenarioId).filter(value => typeof value === 'string'),
+    ]);
+    for (const scenarioId of scenarioIds) {
+      const matches = capturedByScenario.get(scenarioId) ?? [];
+      matches.push(item);
+      capturedByScenario.set(scenarioId, matches);
+    }
   }
+  const batching = coverageFeedback?.execution?.testBatching;
+  // Batches contain execution-case IDs (coverage-case-*), not scenario IDs.
+  const batchByExecutionCase = new Map();
+  for (const batch of batching?.batches ?? []) {
+    for (const executionCaseId of batch.scenarioIds ?? []) batchByExecutionCase.set(executionCaseId, batch.id);
+  }
+  const batchByScenario = new Map();
+  for (const [scenarioId, capturedCases] of capturedByScenario) {
+    const batchId = capturedCases.map(item => batchByExecutionCase.get(item.id)).find(Boolean);
+    if (batchId) batchByScenario.set(scenarioId, batchId);
+  }
+  const statusPriority = { failed: 5, passed: 4, skipped: 3, pending: 2, 'not-run': 1 };
+  const selectCaptured = matches => [...matches].sort((left, right) =>
+    (statusPriority[caseStatus(right.status)] ?? 0) - (statusPriority[caseStatus(left.status)] ?? 0))[0] ?? null;
 
   const totalPlannedCases = functionResults.reduce((total, result) => total + (result.scenarios?.length ?? 0), 0);
   const cases = [];
@@ -51,7 +73,8 @@ export function createAnalysisRunForm(input) {
     const functionName = result.name ?? analysisReport.functions[index]?.name ?? 'anonymous';
     for (const scenario of result.scenarios ?? []) {
       if (cases.length >= maxCases) { truncatedCases = totalPlannedCases - cases.length; break outer; }
-      const captured = capturedById.get(scenario.id);
+      const capturedMatches = capturedByScenario.get(scenario.id) ?? [];
+      const captured = selectCaptured(capturedMatches);
       const target = scenario.target ?? {};
       const status = captured ? caseStatus(captured.status) : 'not-run';
       cases.push({

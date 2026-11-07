@@ -22,8 +22,18 @@ function argumentFact(argument, index, checker, ts, sourceFile) {
   let current = argument;
   while (current && (ts.isParenthesizedExpression(current) || ts.isAsExpression(current) || ts.isTypeAssertionExpression(current) || ts.isNonNullExpression(current))) current = current.expression;
   const expressionText = argument.getText(sourceFile);
-  if (current && (ts.isStringLiteralLike(current) || ts.isNumericLiteral(current) || current.kind === ts.SyntaxKind.TrueKeyword || current.kind === ts.SyntaxKind.FalseKeyword || current.kind === ts.SyntaxKind.NullKeyword)) {
-    return { index, kind: 'literal', expressionText, confidence: 'high' };
+  if (current && (ts.isStringLiteralLike(current) || ts.isNumericLiteral(current) || current.kind === ts.SyntaxKind.TrueKeyword || current.kind === ts.SyntaxKind.FalseKeyword || current.kind === ts.SyntaxKind.NullKeyword || (ts.isIdentifier(current) && current.text === 'undefined'))) {
+    const value = ts.isStringLiteralLike(current) ? current.text
+      : ts.isNumericLiteral(current) ? Number(current.text)
+      : current.kind === ts.SyntaxKind.TrueKeyword ? true
+      : current.kind === ts.SyntaxKind.FalseKeyword ? false
+      : current.kind === ts.SyntaxKind.NullKeyword ? null
+      : { $undefined: true };
+    return { index, kind: 'literal', expressionText, value, confidence: 'high' };
+  }
+  if (current && ts.isPrefixUnaryExpression(current) && ts.isNumericLiteral(current.operand) &&
+      (current.operator === ts.SyntaxKind.MinusToken || current.operator === ts.SyntaxKind.PlusToken)) {
+    return { index, kind: 'literal', expressionText, value: Number(current.operand.text) * (current.operator === ts.SyntaxKind.MinusToken ? -1 : 1), confidence: 'high' };
   }
   const segments = [];
   let root = current;
@@ -109,13 +119,31 @@ export function createDependencyDiscovery(ts) {
     return bindings;
   }
 
+  function enclosingFunction(node, root) {
+    for (let current = node.parent; current && current !== root; current = current.parent) {
+      if (ts.isFunctionDeclaration(current) || ts.isFunctionExpression(current) ||
+          ts.isArrowFunction(current) || ts.isMethodDeclaration?.(current)) return current;
+    }
+    return root;
+  }
+
+  function functionScopeName(node, sourceFile) {
+    if (node.name) return node.name.getText(sourceFile);
+    const parent = node.parent;
+    if (parent && (ts.isVariableDeclaration(parent) || ts.isPropertyAssignment(parent) || ts.isMethodDeclaration?.(parent))) {
+      return parent.name?.getText?.(sourceFile) ?? '<anonymous>';
+    }
+    return '<inline-callback>';
+  }
+
   function discoverCallSites(input) {
     const { functionNode, checker, sourceFile } = input;
     const sites = [];
     const seen = new Set();
     if (!functionNode?.body) return sites;
     function visit(node) {
-      if (isNestedFunction(node, functionNode)) return;
+      // Enter nested declarations and callbacks: local functions aren't mocked,
+      // but external calls inside their bodies still need to be documented.
       if (ts.isCallExpression(node) && isMockableExternalCall(node, input)) {
         const callExpression = node.expression.getText(sourceFile);
         const span = sourceSpan(sourceFile, node, input.relativeFile);
@@ -132,6 +160,8 @@ export function createDependencyDiscovery(ts) {
             const promised = checker.getPromisedTypeOfPromise(returnType);
             if (promised) { resolvedType = promised; isPromise = true; }
           } catch { /* Keep the declared return type. */ }
+          const owner = enclosingFunction(node, functionNode);
+          const classification = input.functionIndex?.classifyCall?.(node) ?? { kind: 'external-dependency', confidence: 'low', source: 'missing-function-index' };
           sites.push({
             ...identity,
             returnType,
@@ -139,6 +169,11 @@ export function createDependencyDiscovery(ts) {
             isPromise,
             node,
             sourceSpan: span,
+            classification,
+            nested: owner !== functionNode,
+            functionScope: functionScopeName(owner, sourceFile),
+            executionContext: owner === functionNode ? 'function-body' : 'nested-function-body',
+            reachability: owner === functionNode ? 'direct-static-call-site' : 'nested-invocation-not-proven',
             argumentFacts: node.arguments.map((argument, index) => argumentFact(argument, index, checker, ts, sourceFile)),
           });
         }

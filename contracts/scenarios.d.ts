@@ -102,3 +102,30 @@ export interface ScenarioReportAdapterPort {
 }
 
 export type { MockAction };
+
+export interface ScenarioGroupingTarget {
+  scenarioId: string | null;
+  branchId: string | null;
+  outcome: unknown;
+  kind: string | null;
+}
+
+export interface EquivalentScenarioGroup {
+  id: string;
+  fingerprint: string;
+  size: number;
+  arguments: SerializedValue[];
+  mocks: Array<Record<string, unknown>>;
+  scenarioIds: readonly string[];
+  targets: readonly ScenarioGroupingTarget[];
+}
+
+/** Group exact argument + mock payload duplicates without merging branch targets. */
+export declare function groupEquivalentScenarios(
+  scenarios: ReadonlyArray<{
+    id: string;
+    arguments: SerializedValue[];
+    mocks?: Array<Record<string, unknown>>;
+    target?: { branchId?: string; outcome?: unknown; kind?: string };
+  }>,
+): EquivalentScenarioGroup[];

@@ -6,6 +6,24 @@ export type MockBehavior =
   | 'mockRejectedValue'
   | 'mockImplementation';
 
+export interface MockCallArgumentFact {
+  index: number;
+  kind: string;
+  expressionText: string;
+  path?: string[];
+  value?: SerializedValue;
+  confidence?: string;
+}
+
+export interface MockCallClassification {
+  kind: 'project-function' | 'project-unindexed' | 'external-dependency' | 'builtin-intrinsic' | 'builtin-opaque' | 'pure-intrinsic' | 'unresolved' | string;
+  confidence?: string;
+  source?: string;
+  symbolName?: string;
+  targetFunctionId?: string;
+  symbolId?: string;
+}
+
 export interface MockCallSite {
   callId: string;
   callExpression: string;
@@ -15,6 +33,12 @@ export interface MockCallSite {
   isPromise: boolean;
   node?: import('typescript').CallExpression;
   sourceSpan: SourceSpan;
+  classification?: MockCallClassification;
+  nested?: boolean;
+  functionScope?: string;
+  executionContext?: 'function-body' | 'nested-function-body' | string;
+  reachability?: 'direct-static-call-site' | 'nested-invocation-not-proven' | string;
+  argumentFacts?: MockCallArgumentFact[];
 }
 
 /** Transitional compiler-side binding. TypeScript types must not cross into MockPlan. */
