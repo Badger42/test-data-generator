@@ -19,6 +19,7 @@ export function createMockTemplateBuilder(options = {}) {
         ...(site.callSiteId ? { callSiteId: site.callSiteId } : {}),
         ...(site.sourceSpan ? { sourceSpan: site.sourceSpan } : {}),
         ...(site.classification ? { classification: site.classification } : {}),
+        ...(site.mockTarget ? { mockTarget: site.mockTarget } : {}),
         nested: Boolean(site.nested),
         executionContext: site.executionContext ?? 'function-body',
         reachability: site.reachability ?? 'direct-static-call-site',
@@ -35,7 +36,9 @@ export function createMockTemplateBuilder(options = {}) {
         ...(site.isPromise ? { resolvesTo: input.checker.typeToString(site.resolvedType) } : {}),
         suggestedResolvedValues: resolvedValues.map(serialize),
         ...(site.isPromise ? { suggestedRejection: { name: 'Error', message: 'mock error' } } : {}),
-        note: 'Template only: associate the appropriate value with the branch scenario when configuring the Jest mock.',
+        note: site.mockTarget?.support === 'automatic'
+          ? 'Static candidate; the Jest adapter can apply this target during coverage-feedback execution.'
+          : 'Static candidate; this target requires project Jest setup or manual resolution.',
       });
     }
     return templates;

@@ -14,7 +14,8 @@
 - Coverage feedback, per-scenario attribution и минимизация набора тестов.
 - Jest `test.each` batching для соседних совместимых сценариев; несовместимые случаи запускаются индивидуально.
 - Стабильный JSON-отчёт; подробные статические evidence включаются через `--include-evidence`.
-- В сценариях `externalCalls` перечислены внешние вызовы по call-site: выражение, аргументы, расположение в исходнике и кандидат значения для mock return. Встроенные API JavaScript классифицируются отдельно и не считаются внешними зависимостями.
+- В сценариях `externalCalls` перечислены внешние вызовы по call-site: выражение, аргументы, расположение в исходнике, `mockTarget` и кандидат поведения/значения.
+- Jest-адаптер автоматически подготавливает поддерживаемые module exports до импорта тестируемого файла и применяет scenario-specific mocks для импортов, DI-параметров, `this` и известных global APIs. Неоднозначные dynamic bindings остаются явно помеченными `manual-setup-required`.
 - `scenarioGroups` объединяет сценарии с идентичными `arguments + mocks`, сохраняя все branch targets. Это отдельная функция от Jest `test.each` batching: batching объединяет соседние случаи с одинаковой формой выполнения, даже если входные значения и значения моков различаются.
 
 ## Быстрый старт
@@ -84,7 +85,7 @@ Example:
 node branch-scenarios.mjs src/feature.ts --function calculate --mcdc --coverage-feedback --include-evidence --analysis-report
 ```
 
-В `*.analysis-report.json` у каждой функции есть `scenarioGroups` — группы одинаковых входных данных и моков с `scenarioIds` и всеми целевыми ветвями. Основной `*.scenarios.json` сохраняет прежний формат. Каждая запись `scenario.externalCalls` в нём содержит конкретный вызов, факты о его аргументах и предполагаемое значение мока. Это статические кандидаты, а не гарантия выполнения или автоматически установленный Jest mock: поле `appliedAutomatically` остаётся `false`, для установки моков нужен Jest setup.
+В `*.analysis-report.json` у каждой функции есть `scenarioGroups` — группы одинаковых входных данных и моков с `scenarioIds` и всеми целевыми ветвями. Основной `*.scenarios.json` сохраняет прежний формат. Каждая запись `scenario.externalCalls` содержит конкретный вызов, его аргументы, `mockTarget` и сценарный кандидат ответа. При `--coverage-feedback` Jest-адаптер автоматически применяет поддерживаемые цели (`module-export`, `object-member`, `parameter-callable`, `this-member`, `global-member`) до/во время каждого теста. Неразрешённые или динамические связи помечаются `manual-setup-required`; для них остаётся hook `__BRANCH_SCENARIO_APPLY_MOCKS__`. `appliedAutomatically` в статическом JSON остаётся `false`, поскольку фактическое применение происходит только во время выполнения Jest.
 
 Use `--analysis-report-form-out <file.json>` to choose a custom form path. After running tests, fill `*.analysis-run-form.json` (keep every `scenarioId` unchanged), then create the merged report with `node tools/finalize-analysis-report.mjs <analysis-report.json> <analysis-run-form.json>`. Attach the resulting `*.final.json` here. For failures, also attach the smallest relevant source files with secrets removed and the exact test command. See `docs/README.md` for the workflow.
 

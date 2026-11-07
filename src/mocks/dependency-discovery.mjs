@@ -1,4 +1,5 @@
 import { createCallSiteIdentity } from './call-identity.mjs';
+import { createMockTargetResolver } from './mock-target-resolver.mjs';
 
 /** TypeScript AST adapter for discovering local values backed by dependency calls. */
 function sourceSpan(sourceFile, node, fileName) {
@@ -54,6 +55,8 @@ function argumentFact(argument, index, checker, ts, sourceFile) {
 export function createDependencyDiscovery(ts) {
   if (!ts) throw new TypeError('DependencyDiscovery requires an injected TypeScript API.');
 
+  const mockTargetResolver = createMockTargetResolver(ts);
+
   function isNestedFunction(node, root) {
     return node !== root && (ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node) ||
       ts.isArrowFunction(node) || ts.isMethodDeclaration?.(node));
@@ -104,6 +107,7 @@ export function createDependencyDiscovery(ts) {
               localName: node.name.text,
               call: callExpression,
               ...identity,
+              mockTarget: mockTargetResolver.resolve(initializer, { ...input, functionNode }),
               resolvedType,
               isPromise,
               awaited: wasAwaited,
@@ -170,6 +174,7 @@ export function createDependencyDiscovery(ts) {
             node,
             sourceSpan: span,
             classification,
+            mockTarget: mockTargetResolver.resolve(node, { ...input, functionNode }),
             nested: owner !== functionNode,
             functionScope: functionScopeName(owner, sourceFile),
             executionContext: owner === functionNode ? 'function-body' : 'nested-function-body',

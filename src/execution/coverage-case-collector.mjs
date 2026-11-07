@@ -1,3 +1,34 @@
+/**
+ * Converts the stable scenario mock description into the runtime adapter payload.
+ * External call-site descriptions are promoted to executable row mocks only when
+ * a concrete target descriptor is available.
+ */
+function collectScenarioMocks(scenario) {
+  const mocks = new Map();
+  for (const mock of scenario.mocks ?? []) {
+    const key = mock.callSiteId ?? mock.mockTarget?.id ?? mock.callId ?? mock.call;
+    mocks.set(key, { ...mock });
+  }
+  for (const call of scenario.externalCalls ?? []) {
+    if (!call.mockTarget) continue;
+    const key = call.callSiteId ?? call.mockTarget.id;
+    const current = mocks.get(key) ?? {
+      callId: call.callId ?? call.mockTarget.id,
+      callExpression: call.call ?? call.callExpression ?? 'unknown-call',
+      callSiteId: call.callSiteId,
+      mockTarget: call.mockTarget,
+      behavior: call.mock?.behavior ?? 'mockReturnValue',
+      ...(Object.prototype.hasOwnProperty.call(call.mock ?? {}, 'value') ? { value: call.mock.value } : {}),
+    };
+    mocks.set(key, {
+      ...current,
+      mockTarget: call.mockTarget,
+      callArguments: call.callArguments ?? current.callArguments ?? [],
+    });
+  }
+  return [...mocks.values()];
+}
+
 /** Deduplicates runnable branch and MC/DC scenarios into Jest execution cases. */
 function collectCoverageExecutionCases(functionResults) {
   const byFingerprint = new Map();
@@ -9,7 +40,7 @@ function collectCoverageExecutionCases(functionResults) {
     const expectedException = scenario.expectedException ?? reference?.expectedException ?? null;
     const payload = {
       arguments: scenario.arguments,
-      mocks: scenario.mocks ?? [],
+      mocks: collectScenarioMocks(scenario),
       expectedException,
     };
     const fingerprint = JSON.stringify(payload);
@@ -18,7 +49,7 @@ function collectCoverageExecutionCases(functionResults) {
       item = {
         id: `coverage-case-${byFingerprint.size + 1}`,
         arguments: scenario.arguments,
-        mocks: scenario.mocks ?? [],
+        mocks: collectScenarioMocks(scenario),
         ...(expectedException ? { expectedException } : {}),
         references: [],
       };
