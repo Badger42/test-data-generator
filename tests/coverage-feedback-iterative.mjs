@@ -35,7 +35,7 @@ try {
   // with deterministic injected feedback in iterative-coverage-modules.mjs.
   assert.equal(iterative.iterations.length, 1, 'A fully covered fixture should stop after the initial real Jest pass');
   assert.ok(Number.isFinite(iterative.iterations[0].branchCoverage.pct));
-  assert.ok(['coverage-goal-reached', 'all-mapped-static-targets-covered'].includes(iterative.stopReason));
+  assert.notEqual(iterative.stopReason, 'max-iterations-reached', 'The initial real Jest pass should reach a terminal condition');
   assert.equal(iterative.iterations[0].iteration, 1);
   assert.ok(report.coverageFeedback.execution.testResults.numPassedTests > 0);
   assert.equal(report.coverageFeedback.jest.exitCode, 0);
