@@ -49,6 +49,8 @@ export interface MockCallSite {
   }>;
   invocationStatus?: 'not-invoked' | 'conditional-or-reachable' | 'nested-invocation-not-proven';
   mockTarget?: MockTarget;
+  mockExcluded?: boolean;
+  mockExclusion?: { kind: 'service' | 'library' | 'method'; pattern: string; call?: string; service?: string; module?: string };
 }
 
 /** Transitional compiler-side binding. TypeScript types must not cross into MockPlan. */
@@ -130,12 +132,14 @@ export interface DependencyDiscoveryPort {
     sourceFile: import('typescript').SourceFile;
     unwrap?: (node: import('typescript').Expression) => import('typescript').Expression;
     relativeFile?: string;
+    mockExclusions?: { services?: string[]; libraries?: string[]; methods?: string[] };
   }): Map<string, MockDependencyBinding>;
   discoverCallSites(input: {
     functionNode: import('typescript').FunctionLikeDeclaration;
     checker: import('typescript').TypeChecker;
     sourceFile: import('typescript').SourceFile;
     relativeFile?: string;
+    mockExclusions?: { services?: string[]; libraries?: string[]; methods?: string[] };
   }): MockCallSite[];
 }
 
