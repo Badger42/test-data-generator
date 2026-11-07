@@ -22,32 +22,21 @@ try {
   fs.writeFileSync(path.join(packageRoot, 'package.json'), '{}');
   const sourceFile = path.join(sourceDir, 'target.js');
   fs.writeFileSync(sourceFile, 'export function target(value) { return value; }');
-  const explicitJest = path.join(temp, 'jest.cjs');
-  fs.writeFileSync(explicitJest, '');
-
   const jestRunner = createJestRunner({ fs, path, process, spawnSync: () => ({ status: 0 }) });
-  assert.deepEqual(jestRunner.findJestRunner(explicitJest, sourceFile, null), {
-    command: process.execPath, prefixArgs: [explicitJest], shell: false, version: null,
-  });
+  const pinnedRunner = jestRunner.findJestRunner();
+  assert.equal(pinnedRunner.command, process.execPath);
+  assert.equal(pinnedRunner.shell, false);
+  assert.equal(pinnedRunner.version, '30.5.2');
+  assert.match(pinnedRunner.prefixArgs[0], /node_modules[\\/]jest[\\/]bin[\\/]jest\.js$/);
   assert.equal(jestRunner.resolveJestWorkingDirectory(sourceFile, null), packageRoot);
 
-  // When generator and consuming project both have Jest installed, select the
-  // consuming project's executable rather than the generator's devDependency.
-  const generatorRoot = path.join(temp, 'generator');
-  const generatorJest = path.join(generatorRoot, 'node_modules', 'jest', 'bin', 'jest.js');
-  const targetJest = path.join(packageRoot, 'node_modules', 'jest', 'bin', 'jest.js');
-  fs.mkdirSync(path.dirname(generatorJest), { recursive: true });
-  fs.mkdirSync(path.dirname(targetJest), { recursive: true });
-  fs.writeFileSync(generatorJest, '');
-  fs.writeFileSync(targetJest, '');
-  const projectFirstRunner = createJestRunner({
-    fs, path,
-    process: { cwd: () => generatorRoot, platform: process.platform, execPath: process.execPath },
-    spawnSync: () => ({ status: 0 }),
-  });
-  assert.deepEqual(projectFirstRunner.findJestRunner(null, sourceFile, null), {
-    command: process.execPath, prefixArgs: [targetJest], shell: false, version: null,
-  });
+  // A consumer project's own Jest must not influence the generator runtime.
+  const consumerJest = path.join(packageRoot, 'node_modules', 'jest', 'bin', 'jest.js');
+  fs.mkdirSync(path.dirname(consumerJest), { recursive: true });
+  fs.writeFileSync(consumerJest, '');
+  assert.deepEqual(jestRunner.findJestRunner(), pinnedRunner,
+    'Jest resolution must stay anchored to the generator even when the target project has its own installation');
+
   assert.equal(jestRunner.run('cmd', [], {}).status, 0);
 
   // Resolve the real package version through a symlink and a Windows .cmd shim.
