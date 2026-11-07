@@ -1,5 +1,8 @@
+import { createRequire } from 'node:module';
+
 /** Jest executable discovery and process execution adapter. */
 export function createJestRunner({ fs, path, process, spawnSync }) {
+  const require = createRequire(import.meta.url);
   function safeRealPath(candidate) {
     try {
       return typeof fs.realpathSync === 'function' ? fs.realpathSync(candidate) : candidate;
@@ -69,41 +72,24 @@ export function createJestRunner({ fs, path, process, spawnSync }) {
     return { ...runner, version: getRunnerVersion(runner.command, runner.prefixArgs, runner.shell) };
   }
 
-  function findJestRunner(explicitPath, sourceFile, jestConfig) {
-    if (explicitPath) {
-      const candidate = path.resolve(explicitPath);
-      if (!fs.existsSync(candidate)) throw new Error(`Jest executable does not exist: ${candidate}`);
-      const isNodeScript = /\.(?:cjs|mjs|js)$/i.test(candidate);
-      const shimTarget = process.platform === 'win32' ? resolveWindowsShimTarget(candidate) : null;
-      const nodeScript = isNodeScript ? candidate : shimTarget;
-      return withVersion({
-        command: nodeScript ? process.execPath : candidate,
-        prefixArgs: nodeScript ? [nodeScript] : [],
-        shell: !nodeScript && process.platform === 'win32' && /\.(?:cmd|bat)$/i.test(candidate),
-      });
+  function findJestRunner() {
+    let candidate;
+    try {
+      // createRequire is anchored to this generator module, never to the
+      // consuming project's cwd or the analyzed source file.
+      candidate = require.resolve('jest/bin/jest.js');
+    } catch {
+      throw new Error('The generator requires its pinned Jest 30.5.2 dependency. Run npm install in the generator installation.');
     }
-
-    // Prefer the consuming project's Jest over the generator's own devDependency.
-    const searchRoots = [...new Set([
-      ...(jestConfig ? [path.dirname(path.resolve(jestConfig))] : []),
-      path.dirname(sourceFile),
-      process.cwd(),
-    ])];
-    for (const root of searchRoots) {
-      let current = path.resolve(root);
-      while (true) {
-        const candidate = path.join(current, 'node_modules', 'jest', 'bin', 'jest.js');
-        if (fs.existsSync(candidate)) {
-          return withVersion({ command: process.execPath, prefixArgs: [candidate], shell: false });
-        }
-        const parent = path.dirname(current);
-        if (parent === current) break;
-        current = parent;
-      }
+    candidate = path.resolve(candidate);
+    if (!fs.existsSync(candidate)) {
+      throw new Error(`The generator Jest entry point does not exist: ${candidate}`);
     }
-
-    // Also support a globally installed Jest executable available on PATH.
-    return withVersion({ command: 'jest', prefixArgs: [], shell: process.platform === 'win32' });
+    return withVersion({
+      command: process.execPath,
+      prefixArgs: [candidate],
+      shell: false,
+    });
   }
 
   function findNearestPackageRoot(startDirectory) {
