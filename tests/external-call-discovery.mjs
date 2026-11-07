@@ -25,7 +25,8 @@ export function tested(input: { id: string; text: string }) {
   const direct = api.inspect(input.id);
   const loaded = api.load(input.id);
   const found = [input.text].some(value => api.inspect(normalize(value)));
-  return Boolean(direct && localHelper(input.text) && found && loaded.active);
+  const response = fetch(input.text);
+  return Boolean(direct && localHelper(input.text) && found && loaded.active && response);
 }
 `);
   const project = loadTypescriptProject({ file: source });
@@ -41,8 +42,8 @@ export function tested(input: { id: string; text: string }) {
     unwrap: node => node,
   });
 
-  const externalSites = discovered.filter(site => site.callExpression === 'api.inspect' || site.callExpression === 'api.load');
-  assert.equal(externalSites.length, 4,
+  const externalSites = discovered.filter(site => ['api.inspect', 'api.load', 'fetch'].includes(site.callExpression));
+  assert.equal(externalSites.length, 5,
     'external calls in direct code, local function bodies and inline callbacks must be found');
   assert.deepEqual(externalSites.filter(site => site.callExpression === 'api.inspect').map(site => site.nested).sort(),
     [false, true, true]);
@@ -59,6 +60,15 @@ export function tested(input: { id: string; text: string }) {
   assert.ok(arraySomeCall);
   assert.equal(project.functionIndex.classifyCall(arraySomeCall).kind, 'builtin-intrinsic',
     'native Array.prototype methods must not be treated as external dependencies');
+  let fetchCall = null;
+  const visitFetch = node => {
+    if (ts.isCallExpression(node) && node.expression.getText(tested.sourceFile) === 'fetch') fetchCall = node;
+    ts.forEachChild(node, visitFetch);
+  };
+  visitFetch(tested.node);
+  assert.ok(fetchCall);
+  assert.equal(project.functionIndex.classifyCall(fetchCall).kind, 'external-dependency',
+    'host APIs declared in TypeScript DOM libraries must remain mockable external dependencies');
   const local = externalSites.find(site => site.nested && site.functionScope === 'localHelper');
   assert.ok(local, 'nested local-function body must be identified');
   assert.equal(local.executionContext, 'nested-function-body');
@@ -77,7 +87,8 @@ export function tested(input: { id: string; text: string }) {
     unionMembers: type => [type],
     serialize: value => value,
   }).build({ callSites: externalSites, checker: project.checker });
-  assert.equal(templates.length, 4, 'templates must be preserved per call-site, not collapsed by method expression');
+  assert.equal(templates.length, 5, 'templates must be preserved per call-site, not collapsed by method expression');
+  assert.equal(templates.find(item => item.call === 'fetch').mockBehavior, 'mockResolvedValue');
   assert.ok(templates.every(item => item.callSiteId && item.callArguments.length === 1));
   assert.equal(templates.find(item => item.call === 'api.load').mockBehavior, 'mockResolvedValue');
   assert.ok(templates.some(item => item.nested));

@@ -39,6 +39,8 @@ export function createAnalysisRunForm(input) {
   for (const item of capturedResults?.cases ?? []) {
     const scenarioIds = new Set([
       ...(typeof item.scenarioId === 'string' ? [item.scenarioId] : []),
+      // Older coverage feedback used scenario IDs directly as case IDs.
+      ...(typeof item.id === 'string' ? [item.id] : []),
       ...(item.references ?? []).map(reference => reference?.scenarioId).filter(value => typeof value === 'string'),
     ]);
     for (const scenarioId of scenarioIds) {

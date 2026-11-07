@@ -193,7 +193,10 @@ export function generateScenarios(args, runtime = {}) {
   }, functionAnalyzer));
   const analyzedFunctionResults = analysisSessions.map(session => session.analyze());
   const functionResults = annotateExpectedThrowScenarios(analyzedFunctionResults, functions, sourceFile, project.compilerApi);
-  for (const analysis of functionResults) analysis.scenarioGroups = groupEquivalentScenarios(analysis.scenarios);
+  for (const analysis of functionResults) {
+    const scenarioGroups = groupEquivalentScenarios(analysis.scenarios);
+    if (scenarioGroups.length) analysis.scenarioGroups = scenarioGroups;
+  }
 
   const reportBuilder = createReportBuilder();
   const result = reportBuilder.build({

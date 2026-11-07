@@ -24,6 +24,28 @@ function normalizedRelative(root, filename) {
   return path.relative(root, filename).split(path.sep).join('/');
 }
 
+const BUILTIN_LIBRARY_OWNERS = new Set([
+  'Array', 'ReadonlyArray', 'String', 'Number', 'Boolean', 'BigInt',
+  'RegExp', 'Date', 'Map', 'ReadonlyMap', 'Set', 'ReadonlySet',
+  'WeakMap', 'WeakSet', 'Promise', 'Object', 'Function',
+  'ArrayConstructor', 'StringConstructor', 'NumberConstructor',
+  'BooleanConstructor', 'BigIntConstructor', 'RegExpConstructor',
+  'DateConstructor', 'PromiseConstructor', 'ObjectConstructor',
+  'FunctionConstructor', 'Math', 'JSON', 'Symbol', 'SymbolConstructor',
+]);
+
+function isTypescriptStandardLibraryFile(filename) {
+  return /(?:^|[\\/])node_modules[\\/]typescript[\\/]lib[\\/]lib\\..+\\.d\\.ts$/i.test(filename) ||
+    /(?:^|[\\/])typescript[\\/]lib[\\/]lib\\..+\\.d\\.ts$/i.test(filename);
+}
+
+function isKnownBuiltinLibraryMember(symbol, filename) {
+  if (!isTypescriptStandardLibraryFile(filename)) return false;
+  const owner = symbol?.parent?.getName?.() ?? '';
+  return BUILTIN_LIBRARY_OWNERS.has(owner);
+}
+
+
 function hasExportModifierInAncestors(node, sourceFile, ts) {
   for (let current = node; current && current !== sourceFile; current = current.parent) {
     if (current.modifiers?.some(modifier =>
@@ -189,15 +211,18 @@ export function buildProjectFunctionIndex(project) {
     const resolved = resolveAliasedSymbol(symbol, checker, ts);
     const declarations = resolved?.declarations ?? (resolved?.valueDeclaration ? [resolved.valueDeclaration] : []);
     const declarationFile = declarations[0]?.getSourceFile?.().fileName?.split(path.sep).join('/') ?? '';
-    if (declarationFile.includes('/node_modules/')) return { kind: 'external-dependency', confidence: 'high', symbolName: resolved?.getName?.() ?? text };
-    if (/\/typescript\/lib\/lib\..+\.d\.ts$/i.test(declarationFile)) {
+    // TypeScript's own lib declarations live under node_modules/typescript,
+    // so inspect known language builtins before the generic node_modules rule.
+    // DOM host seams (fetch, Window, Navigator, timers, etc.) remain mockable.
+    if (isKnownBuiltinLibraryMember(resolved, declarationFile)) {
       return {
         kind: 'builtin-intrinsic',
         confidence: 'high',
-        source: 'typescript-standard-library',
+        source: 'javascript-standard-library',
         symbolName: resolved?.getName?.() ?? text,
       };
     }
+    if (declarationFile.includes('/node_modules/')) return { kind: 'external-dependency', confidence: 'high', symbolName: resolved?.getName?.() ?? text };
     const hasImplementation = declarations.some(declaration => Boolean(declaration.body));
     const contractOnly = declarations.length > 0 && declarations.every(declaration =>
       ts.isMethodSignature?.(declaration) || ts.isCallSignatureDeclaration?.(declaration) ||
