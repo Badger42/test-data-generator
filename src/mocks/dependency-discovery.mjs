@@ -323,8 +323,14 @@ export function createDependencyDiscovery(ts) {
             functionScope: functionScopeName(owner, sourceFile),
             executionContext: owner === functionNode ? 'function-body' : 'nested-function-body',
             reachability: owner === functionNode ? 'direct-static-call-site' : 'nested-invocation-not-proven',
-            executionGuards: [...executionGuards(node, functionNode, sourceFile), ...fallthrough.guards],
-            invocationStatus: fallthrough.unreachable ? 'not-invoked' : 'conditional-or-reachable',
+            // A nested function may be invoked through an alias or after the
+            // lexical branch that created it. Its body is therefore not
+            // constrained by the surrounding declaration-site path.
+            executionGuards: owner === functionNode
+              ? [...executionGuards(node, functionNode, sourceFile), ...fallthrough.guards]
+              : [],
+            invocationStatus: owner !== functionNode ? 'nested-invocation-not-proven'
+              : fallthrough.unreachable ? 'not-invoked' : 'conditional-or-reachable',
             argumentFacts: node.arguments.map((argument, index) => argumentFact(argument, index, checker, ts, sourceFile)),
           });
         }
