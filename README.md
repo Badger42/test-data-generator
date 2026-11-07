@@ -84,7 +84,7 @@ Example:
 node branch-scenarios.mjs src/feature.ts --function calculate --mcdc --coverage-feedback --include-evidence --analysis-report
 ```
 
-В основном `*.scenarios.json` у каждой функции также есть `scenarioGroups` — группы одинаковых входных данных и моков с `scenarioIds` и всеми целевыми ветвями. Каждая запись `scenario.externalCalls` содержит конкретный вызов, факты о его аргументах и предполагаемое значение мока. Это статические кандидаты, а не гарантия выполнения или автоматически установленный Jest mock: поле `appliedAutomatically` остаётся `false`, для установки моков нужен Jest setup.
+В `*.analysis-report.json` у каждой функции есть `scenarioGroups` — группы одинаковых входных данных и моков с `scenarioIds` и всеми целевыми ветвями. Основной `*.scenarios.json` сохраняет прежний формат. Каждая запись `scenario.externalCalls` в нём содержит конкретный вызов, факты о его аргументах и предполагаемое значение мока. Это статические кандидаты, а не гарантия выполнения или автоматически установленный Jest mock: поле `appliedAutomatically` остаётся `false`, для установки моков нужен Jest setup.
 
 Use `--analysis-report-form-out <file.json>` to choose a custom form path. After running tests, fill `*.analysis-run-form.json` (keep every `scenarioId` unchanged), then create the merged report with `node tools/finalize-analysis-report.mjs <analysis-report.json> <analysis-run-form.json>`. Attach the resulting `*.final.json` here. For failures, also attach the smallest relevant source files with secrets removed and the exact test command. See `docs/README.md` for the workflow.
 

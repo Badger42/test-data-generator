@@ -35,25 +35,33 @@ const BUILTIN_LIBRARY_OWNERS = new Set([
 ]);
 
 function isTypescriptStandardLibraryFile(filename) {
-  return /(?:^|[\\/])node_modules[\\/]typescript[\\/]lib[\\/]lib\\..+\\.d\\.ts$/i.test(filename) ||
-    /(?:^|[\\/])typescript[\\/]lib[\\/]lib\\..+\\.d\\.ts$/i.test(filename);
+  const normalized = String(filename ?? '').replace(/\\\\/g, '/');
+  return normalized.includes('/node_modules/typescript/lib/lib.') ||
+    normalized.includes('/typescript/lib/lib.');
 }
 
-function isKnownBuiltinLibraryMember(symbol, filename, ts) {
-  if (!isTypescriptStandardLibraryFile(filename)) return false;
-  // The checker symbol's parent is not consistently populated for members
-  // declared by standard-library interfaces. Resolve the owning AST declaration.
-  for (const declaration of symbol?.declarations ?? []) {
-    for (let current = declaration.parent; current && !ts.isSourceFile(current); current = current.parent) {
-      const typeDeclaration = ts.isInterfaceDeclaration(current) ||
-        ts.isClassDeclaration(current) || ts.isClassExpression(current);
-      if (!typeDeclaration) continue;
-      const owner = current.name?.text ?? '';
-      if (BUILTIN_LIBRARY_OWNERS.has(owner)) return true;
-      break;
-    }
-  }
-  return false;
+function builtinReceiverTypeName(type, ts) {
+  const symbol = type?.getSymbol?.() ?? type?.aliasSymbol;
+  const symbolName = symbol?.getName?.();
+  if (symbolName) return symbolName;
+  const flags = type?.flags ?? 0;
+  if (flags & ts.TypeFlags.StringLike) return 'String';
+  if (flags & ts.TypeFlags.NumberLike) return 'Number';
+  if (flags & ts.TypeFlags.BooleanLike) return 'Boolean';
+  if (flags & ts.TypeFlags.BigIntLike) return 'BigInt';
+  if (flags & ts.TypeFlags.ESSymbolLike) return 'Symbol';
+  return '';
+}
+
+function isKnownBuiltinLibraryMember(expression, checker, ts, filename) {
+  if (!isTypescriptStandardLibraryFile(filename) || !ts.isPropertyAccessExpression(expression)) return false;
+  let receiverType;
+  try { receiverType = checker.getTypeAtLocation(expression.expression); } catch { return false; }
+  const candidates = receiverType?.isUnion?.() ? receiverType.types : [receiverType];
+  const meaningful = candidates.filter(type =>
+    !(type.flags & (ts.TypeFlags.Null | ts.TypeFlags.Undefined | ts.TypeFlags.Void | ts.TypeFlags.Never)));
+  if (!meaningful.length) return false;
+  return meaningful.every(type => BUILTIN_LIBRARY_OWNERS.has(builtinReceiverTypeName(type, ts)));
 }
 
 
@@ -225,7 +233,7 @@ export function buildProjectFunctionIndex(project) {
     // TypeScript's own lib declarations live under node_modules/typescript,
     // so inspect known language builtins before the generic node_modules rule.
     // DOM host seams (fetch, Window, Navigator, timers, etc.) remain mockable.
-    if (isKnownBuiltinLibraryMember(resolved, declarationFile, ts)) {
+    if (isKnownBuiltinLibraryMember(expression, checker, ts, declarationFile)) {
       return {
         kind: 'builtin-intrinsic',
         confidence: 'high',
