@@ -15,6 +15,9 @@ export function createMockReportAdapter() {
     return (mockPlan?.actions ?? []).map(action => {
       const output = {
         call: action.callExpression,
+        ...(action.callSiteId || action.mockTarget ? { callId: action.callId } : {}),
+        ...(action.callSiteId ? { callSiteId: action.callSiteId } : {}),
+        ...(action.mockTarget ? { mockTarget: cloneJson(action.mockTarget) } : {}),
         behavior: action.behavior,
       };
       if (Object.prototype.hasOwnProperty.call(action, 'value')) output.resolvedValue = cloneJson(action.value);
@@ -35,6 +38,8 @@ export function createMockReportAdapter() {
       actions: reportMocks.map(mock => ({
         callId: String(mock.callId ?? mock.call ?? mock.callExpression ?? 'unknown-call'),
         callExpression: String(mock.callExpression ?? mock.call ?? mock.callId ?? 'unknown-call'),
+        ...(mock.callSiteId ? { callSiteId: String(mock.callSiteId) } : {}),
+        ...(mock.mockTarget ? { mockTarget: cloneJson(mock.mockTarget) } : {}),
         behavior: mock.behavior ?? 'mockReturnValue',
         ...(Object.prototype.hasOwnProperty.call(mock, 'resolvedValue') ? { value: cloneJson(mock.resolvedValue) } : Object.prototype.hasOwnProperty.call(mock, 'value') ? { value: cloneJson(mock.value) } : {}),
         ...(mock.error ? { error: cloneJson(mock.error) } : {}),

@@ -21,7 +21,7 @@ function stableStringify(value) {
 function mockIdentity(mock) {
   // Jest setup registries address mocks by method/call identity; source-site IDs
   // are a safe fallback only when the method identity is unavailable.
-  const methodIdentity = mock?.callId ?? mock?.callExpression ?? mock?.call;
+  const methodIdentity = mock?.mockTarget?.id ?? mock?.callId ?? mock?.callExpression ?? mock?.call;
   const rawIdentity = typeof methodIdentity === 'string' && methodIdentity.trim() && methodIdentity.trim() !== 'unknown-call'
     ? methodIdentity
     : mock?.callSiteId;

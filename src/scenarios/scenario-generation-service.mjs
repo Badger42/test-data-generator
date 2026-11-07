@@ -47,6 +47,7 @@ function projectExternalCalls(ctx, args, scenarioMocks = []) {
       call: site.callExpression,
       callId: site.callId,
       callSiteId: site.callSiteId,
+      ...(site.mockTarget ? { mockTarget: site.mockTarget } : {}),
       sourceSpan: site.sourceSpan,
       classification: site.classification?.kind ?? 'external-dependency',
       executionContext: site.executionContext ?? 'function-body',
@@ -69,7 +70,8 @@ function projectExternalCalls(ctx, args, scenarioMocks = []) {
         source: hasAssignedValue ? 'scenario-solver-assignment' : 'type-derived-suggestion',
         confidence: hasAssignedValue ? 'solver-candidate' : 'type-derived-candidate',
         appliedAutomatically: false,
-        setupRequired: true,
+        adapterSupport: site.mockTarget?.support ?? 'manual-setup-required',
+        setupRequired: site.mockTarget?.support !== 'automatic',
       },
     };
   });

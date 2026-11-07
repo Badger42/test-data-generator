@@ -116,6 +116,15 @@ function summarizeEvidence(evidence = [], project, mode = 'shape') {
   };
 }
 
+function summarizeMockTarget(target) {
+  if (!target) return null;
+  const fields = [
+    'version', 'id', 'kind', 'support', 'moduleMode', 'moduleSpecifier',
+    'exportPath', 'parameterIndex', 'receiverPath', 'memberName', 'globalName', 'reason',
+  ];
+  return Object.fromEntries(fields.filter(key => target[key] !== undefined).map(key => [key, safeJson(target[key])]));
+}
+
 function summarizeMock(mock, mode, project) {
   const valueFields = ['resolvedValue', 'value', 'error', 'sequence', 'cases', 'defaultAction'];
   const values = {};
@@ -125,6 +134,8 @@ function summarizeMock(mock, mode, project) {
   return {
     call: mock.call ?? mock.callExpression ?? mock.callId ?? 'unknown-call',
     callId: mock.callId ?? null,
+    ...(mock.callSiteId ? { callSiteId: mock.callSiteId } : {}),
+    ...(mock.mockTarget ? { mockTarget: summarizeMockTarget(mock.mockTarget) } : {}),
     behavior: mock.behavior ?? null,
     inputDependencies: mock.inputDependencies ?? [],
     dataFlowEffects: (mock.dataFlowEffects ?? []).map(effect => ({ kind: effect.kind, path: effect.path, certainty: effect.certainty, propagation: effect.propagation })),
@@ -154,6 +165,7 @@ function summarizeScenario(scenario, mode, project, includeSourceText) {
       call: safeText(call.call ?? call.callExpression ?? 'unknown-call', mode, project),
       callId: call.callId ?? null,
       callSiteId: call.callSiteId ?? null,
+      ...(call.mockTarget ? { mockTarget: summarizeMockTarget(call.mockTarget) } : {}),
       classification: call.classification ?? 'external-dependency',
       executionContext: call.executionContext ?? 'unknown',
       reachability: call.reachability ?? 'unknown',
@@ -174,7 +186,8 @@ function summarizeScenario(scenario, mode, project, includeSourceText) {
         source: call.mock.source ?? null,
         confidence: call.mock.confidence ?? null,
         appliedAutomatically: false,
-        setupRequired: true,
+        adapterSupport: call.mock.adapterSupport ?? call.mockTarget?.support ?? 'manual-setup-required',
+        setupRequired: call.mock.setupRequired ?? call.mockTarget?.support !== 'automatic',
       } : null,
     })),
     assumptions: scenario.assumptions ?? [],
@@ -627,6 +640,7 @@ export function createAnalysisReportBuilder() {
           call: safeText(item.call, mode, project),
           callId: item.callId ?? null,
           callSiteId: item.callSiteId ?? null,
+          ...(item.mockTarget ? { mockTarget: summarizeMockTarget(item.mockTarget) } : {}),
           classification: item.classification?.kind ?? null,
           nested: Boolean(item.nested),
           executionContext: item.executionContext ?? 'function-body',

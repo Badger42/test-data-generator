@@ -46,6 +46,7 @@ export function createFunctionContextBuilder(dependencies) {
       fn, checker, sourceFile,
       generationOptions.projectFunctionIndex ?? generationOptions.project?.functionIndex ?? null,
       generationOptions.mockBehaviorOverrides ?? {},
+      generationOptions.project?.program ?? null,
     );
     const localMockMap = mockDiscovery.bindings;
     const pathAliases = pathResolver.collectLocalPathAliases(fn.node);

@@ -203,6 +203,7 @@
         "src/mocks/index.mjs",
         "src/mocks/mock-planner.mjs",
         "src/mocks/mock-state-planner.mjs",
+        "src/mocks/mock-target-resolver.mjs",
         "src/mocks/mock-template-builder.mjs"
       ],
       "contractFiles": [

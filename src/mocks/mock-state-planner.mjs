@@ -42,13 +42,14 @@ export function createMockStatePlanner() {
       if (!binding) continue;
       const callExpression = String(binding.callExpression ?? binding.call ?? binding.callId ?? 'unknown-call');
       const callId = String(binding.callId ?? callExpression);
-      const key = callId;
+      const key = binding.callSiteId ?? callId;
       const existing = groups.get(key);
       if (!existing) {
         groups.set(key, {
           callId,
           callExpression,
           callSiteId: binding.callSiteId ?? null,
+          ...(binding.mockTarget ? { mockTarget: cloneJson(binding.mockTarget) } : {}),
           behavior: binding.isPromise || binding.awaited ? 'mockResolvedValue' : 'mockReturnValue',
           value: cloneJson(item.value),
           evidence: [{ source: 'solver', status: 'candidate', ...(binding.sourceSpan ? { sourceSpan: binding.sourceSpan } : {}), message: `Mock result materialized for ${callExpression}.` }],
@@ -99,6 +100,7 @@ export function createMockStatePlanner() {
       callId: action.callId,
       callExpression: action.callExpression,
       ...(action.callSiteId ? { callSiteId: action.callSiteId } : {}),
+      ...(action.mockTarget ? { mockTarget: cloneJson(action.mockTarget) } : {}),
       behavior: action.behavior,
       ...(Object.prototype.hasOwnProperty.call(action, 'value') ? { value: cloneJson(action.value) } : {}),
       ...(action.error ? { error: cloneJson(action.error) } : {}),
