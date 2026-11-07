@@ -54,7 +54,7 @@ function createCoverageFeedback(result, sourceFile, outputFile, args) {
   if (!runner.version) {
     return {
       version: 1, status: 'jest-version-undetectable',
-      error: 'Could not determine the Jest version for the selected executable. The generator's pinned Jest package must be installed correctly; unknown versions are not assumed compatible.',
+      error: 'Could not determine the Jest version for the selected executable. The generator-pinned Jest package must be installed correctly; unknown versions are not assumed compatible.',
       requiredJestVersion: '>=30.5.2 <31.0.0', actualJestVersion: null,
     };
   }
