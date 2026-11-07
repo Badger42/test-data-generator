@@ -8,6 +8,8 @@ Usage:
   node branch-scenarios.mjs <file.js|.jsx|.ts|.tsx> [options]
 
 Options:
+      --run-config <file>    Load a JSON run configuration (default: ./branch-scenarios.config.json)
+      --no-run-config        Disable automatic run-configuration discovery
   -f, --function <name>     Analyze only the named function
   -o, --out <file.json>     Output JSON file (default: <file>.scenarios.json)
       --config <path>       Use a specific tsconfig.json or jsconfig.json (default: auto-detect)

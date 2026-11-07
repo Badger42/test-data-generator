@@ -5,9 +5,10 @@ function requireOptionValue(argv, index, option) {
   return value;
 }
 
-export function parseCliArgs(argv) {
+export function parseCliArgs(argv, runConfig = {}) {
   const result = {
     file: null, functionName: null, exportName: null, out: null, tsconfig: null,
+    runConfig: null, noRunConfig: false,
     jestConfig: null, jestBin: null, jestSetup: null, coverageFrom: null,
     coverageProvider: 'v8', maxScenarios: 40, coverageIterations: 3,
     coverageGoal: 100, jestTimeoutMs: 120_000, coverageFeedbackTimeoutMs: 600_000, all: false, mcdc: false, coverageFeedback: false,
@@ -16,10 +17,23 @@ export function parseCliArgs(argv) {
     analysisReport: false, analysisReportOut: null, analysisReportFormOut: null, analysisReportValueMode: 'shape', analysisReportMaxScenarios: 500,
   };
 
+  if (runConfig == null || typeof runConfig !== 'object' || Array.isArray(runConfig)) {
+    throw new Error('Run configuration must contain a JSON object.');
+  }
+  const configKeys = new Set(Object.keys(result).filter(key => !['runConfig', 'noRunConfig', 'help'].includes(key)));
+  for (const key of Object.keys(runConfig)) {
+    if (key === '$schema') continue;
+    if (!configKeys.has(key)) throw new Error(`Unknown run configuration option: ${key}`);
+  }
+  Object.assign(result, Object.fromEntries(Object.entries(runConfig).filter(([key]) => key !== '$schema')));
+
+  let fileArgumentSeen = false;
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     const next = argv[i + 1];
-    if (arg === '--function' || arg === '-f') { result.functionName = requireOptionValue(argv, i, arg); i += 1; }
+    if (arg === '--run-config') { result.runConfig = requireOptionValue(argv, i, arg); i += 1; }
+    else if (arg === '--no-run-config') result.noRunConfig = true;
+    else if (arg === '--function' || arg === '-f') { result.functionName = requireOptionValue(argv, i, arg); i += 1; }
     else if (arg === '--out' || arg === '-o') { result.out = requireOptionValue(argv, i, arg); i += 1; }
     else if (arg === '--tsconfig' || arg === '--jsconfig' || arg === '--config') { result.tsconfig = requireOptionValue(argv, i, arg); i += 1; }
     else if (arg === '--export') { result.exportName = requireOptionValue(argv, i, arg); i += 1; }
@@ -50,9 +64,10 @@ export function parseCliArgs(argv) {
     else if (arg === '--all') result.all = true;
     else if (arg === '--mcdc') result.mcdc = true;
     else if (arg === '--help' || arg === '-h') result.help = true;
-    else if (!arg.startsWith('-') && !result.file) result.file = arg;
+    else if (!arg.startsWith('-') && !fileArgumentSeen) { result.file = arg; fileArgumentSeen = true; }
     else throw new Error(`Unknown argument: ${arg}`);
   }
+  if (result.runConfig && result.noRunConfig) throw new Error('--run-config cannot be combined with --no-run-config.');
   for (const [name, value] of [['--jest-timeout', result.jestTimeoutMs], ['--coverage-feedback-timeout', result.coverageFeedbackTimeoutMs]]) {
     if (!Number.isSafeInteger(value) || value < 1 || value > 86_400_000) {
       throw new Error(`${name} must be an integer between 1 and 86400000 milliseconds.`);

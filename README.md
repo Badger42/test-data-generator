@@ -22,6 +22,26 @@
 
 Установи зависимости генератора (TypeScript и Jest 30.5.2 для integration tests):
 
+### Конфигурация запуска
+
+Чтобы не передавать одни и те же параметры при каждом запуске, создай в рабочем каталоге файл `branch-scenarios.config.json`. CLI автоматически загрузит его. В конфигурации используются те же имена параметров в `camelCase`, что и в `src/cli/parse-args.mjs`; пути к исходному файлу и результатам задаются относительно каталога, из которого запускается CLI.
+
+```json
+{
+  "$schema": "./docs/schemas/branch-scenarios.config.schema.json",
+  "file": "src/passenger.ts",
+  "functionName": "getPassengerCategory",
+  "out": "test-data/passenger.scenarios.json",
+  "maxScenarios": 40,
+  "mcdc": true,
+  "coverageFeedback": true,
+  "analysisReport": true,
+  "coverageProvider": "v8"
+}
+```
+
+После этого достаточно выполнить `node /path/to/generator/branch-scenarios.mjs`. Аргументы командной строки переопределяют значения файла конфигурации. Можно выбрать другой файл через `--run-config path/to/config.json` или отключить автоматическую загрузку через `--no-run-config`. Полный стартовый шаблон находится в `branch-scenarios.config.example.json`.
+
 ```bash
 npm install
 node branch-scenarios.mjs src/passenger.ts --function getPassengerCategory
