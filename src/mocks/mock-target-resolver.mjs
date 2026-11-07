@@ -155,37 +155,67 @@ export function createMockTargetResolver(ts) {
 
   function fromGlobal(root, segments, input) {
     if (!ts.isIdentifier(root)) return null;
-    const objects = new Set(['globalThis', 'window', 'self', 'document', 'navigator', 'process', 'console', 'crypto', 'performance', 'location']);
-    const functions = new Set(['fetch', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'queueMicrotask', 'structuredClone', 'atob', 'btoa', 'alert', 'confirm', 'prompt']);
-    let symbol;
-    try { symbol = input.checker.getSymbolAtLocation(root); } catch { /* unresolved */ }
-    const declarations = declarationList(symbol);
-    const ambient = declarations.length > 0 && declarations.every(item => item.getSourceFile?.().isDeclarationFile === true);
-    if (objects.has(root.text)) {
-      if (!segments.length) return unknown(input.callExpression, 'The global object itself is not a mockable callable member.');
-      const memberName = segments[segments.length - 1];
-      return {
-        version: 1,
-        id: 'global:' + root.text + ':' + segments.slice(0, -1).join('.') + ':' + memberName,
-        kind: 'global-member',
-        support: 'automatic',
-        globalName: root.text,
-        receiverPath: segments.slice(0, -1),
-        memberName,
-      };
+    const globalObjects = new Set([
+      'globalThis', 'window', 'self', 'document', 'navigator', 'process',
+      'console', 'crypto', 'performance', 'location', 'localStorage', 'sessionStorage',
+    ]);
+    const globalFunctions = new Set([
+      'fetch', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval',
+      'queueMicrotask', 'structuredClone', 'atob', 'btoa', 'alert', 'confirm', 'prompt',
+    ]);
+    const memberAllowlist = {
+      globalThis: globalFunctions,
+      window: new Set(['fetch', 'requestAnimationFrame', 'cancelAnimationFrame', 'matchMedia', 'open', 'postMessage']),
+      self: new Set(['fetch', 'requestAnimationFrame', 'cancelAnimationFrame', 'postMessage']),
+      document: new Set(['querySelector', 'querySelectorAll', 'getElementById', 'createElement', 'createTextNode']),
+      navigator: new Set(['sendBeacon', 'share', 'clipboard', 'geolocation']),
+      process: new Set(['cwd', 'chdir', 'exit', 'nextTick', 'hrtime']),
+      console: new Set(['log', 'info', 'warn', 'error', 'debug', 'trace', 'table']),
+      crypto: new Set(['randomUUID', 'getRandomValues', 'subtle']),
+      performance: new Set(['now', 'mark', 'measure']),
+      location: new Set(['assign', 'replace', 'reload']),
+      localStorage: new Set(['getItem', 'setItem', 'removeItem', 'clear']),
+      sessionStorage: new Set(['getItem', 'setItem', 'removeItem', 'clear']),
+    };
+
+    if (root.text === 'globalThis') {
+      if (segments.length === 1 && globalFunctions.has(segments[0])) {
+        return {
+          version: 1,
+          id: 'global:globalThis::' + segments[0],
+          kind: 'global-member',
+          support: 'automatic',
+          globalName: 'globalThis',
+          receiverPath: [],
+          memberName: segments[0],
+        };
+      }
+      if (segments.length === 2 && globalObjects.has(segments[0]) && memberAllowlist[segments[0]]?.has(segments[1])) {
+        return {
+          version: 1,
+          id: 'global:globalThis:' + segments[0] + ':' + segments[1],
+          kind: 'global-member',
+          support: 'automatic',
+          globalName: 'globalThis',
+          receiverPath: [segments[0]],
+          memberName: segments[1],
+        };
+      }
+      return unknown(input.callExpression, 'Custom globalThis properties are not patched automatically; use the scenario mock hook or an imported/DI dependency seam.');
     }
-    if (!segments.length && (functions.has(root.text) || ambient)) {
-      return {
-        version: 1,
-        id: 'global:globalThis::' + root.text,
-        kind: 'global-member',
-        support: 'automatic',
-        globalName: 'globalThis',
-        receiverPath: [],
-        memberName: root.text,
-      };
+
+    if (!globalObjects.has(root.text) || segments.length !== 1 || !memberAllowlist[root.text]?.has(segments[0])) {
+      return null;
     }
-    return null;
+    return {
+      version: 1,
+      id: 'global:' + root.text + '::' + segments[0],
+      kind: 'global-member',
+      support: 'automatic',
+      globalName: root.text,
+      receiverPath: [],
+      memberName: segments[0],
+    };
   }
 
   function resolve(callExpression, input) {

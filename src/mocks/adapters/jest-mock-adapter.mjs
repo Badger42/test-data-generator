@@ -268,13 +268,15 @@ export function createJestMockAdapter(options = {}) {
           suppliedRegistry.get(action.callId) ?? suppliedRegistry.get(action.callExpression)
         : suppliedRegistry[action.mockTarget?.id] ?? suppliedRegistry[action.callId] ?? suppliedRegistry[action.callExpression];
       if (!mockFn) {
+        const error = new Error("No Jest mock registered for '" + action.callExpression + "'.");
+        error.code = 'MOCK_FUNCTION_NOT_REGISTERED';
         diagnostics.push({
-          code: 'MOCK_FUNCTION_NOT_REGISTERED',
+          code: error.code,
           targetId: action.mockTarget?.id ?? null,
           callExpression: action.callExpression,
-          reason: `No Jest mock is registered for '${action.callExpression}'.`,
+          reason: error.message,
         });
-        continue;
+        throw error;
       }
 
       if (action.behavior === 'sequence') {

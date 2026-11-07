@@ -15,7 +15,7 @@ export function createMockReportAdapter() {
     return (mockPlan?.actions ?? []).map(action => {
       const output = {
         call: action.callExpression,
-        ...(action.callId ? { callId: action.callId } : {}),
+        ...(action.callSiteId || action.mockTarget ? { callId: action.callId } : {}),
         ...(action.callSiteId ? { callSiteId: action.callSiteId } : {}),
         ...(action.mockTarget ? { mockTarget: cloneJson(action.mockTarget) } : {}),
         behavior: action.behavior,
