@@ -18,6 +18,7 @@
       "implementedFiles": [
         "branch-scenarios.mjs",
         "src/cli/help.mjs",
+        "src/cli/load-run-config.mjs",
         "src/cli/main.mjs",
         "src/cli/parse-args.mjs"
       ],
