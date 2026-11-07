@@ -54,7 +54,7 @@ function createCoverageFeedback(result, sourceFile, outputFile, args) {
   if (!runner.version) {
     return {
       version: 1, status: 'jest-version-undetectable',
-      error: 'Could not determine the Jest version for the selected executable. Use a standard Jest package entry point or a launcher that supports `--version`; unknown versions are not assumed compatible.',
+      error: 'Could not determine the Jest version for the selected executable. The generator's pinned Jest package must be installed correctly; unknown versions are not assumed compatible.',
       requiredJestVersion: '>=30.5.2 <31.0.0', actualJestVersion: null,
     };
   }
@@ -65,7 +65,7 @@ function createCoverageFeedback(result, sourceFile, outputFile, args) {
   if (!isSupported) {
     return {
       version: 1, status: 'jest-version-unsupported',
-      error: `Coverage feedback requires Jest >=30.5.2 <31.0.0; found ${runner.version}. Update the consuming project's Jest or pass --jest-bin to a supported installation.`,
+      error: `Coverage feedback requires Jest >=30.5.2 <31.0.0; found ${runner.version}. Reinstall the generator dependencies so its pinned Jest 30.5.2 runtime is available.`,
       requiredJestVersion: '>=30.5.2 <31.0.0', actualJestVersion: runner.version,
     };
   }
