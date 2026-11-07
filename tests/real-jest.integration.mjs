@@ -244,7 +244,11 @@ module.exports = { process(source, filename) {
   const branchTargetFile = path.join(tempDir, 'branch-target.mjs');
   const branchOutput = path.join(tempDir, 'real-jest-callsite-reachability.json');
   fs.mkdirSync(branchApiDir, { recursive: true });
-  fs.writeFileSync(path.join(branchApiDir, 'package.json'), JSON.stringify({ name: 'branch-api', type: 'module', exports: './index.mjs' }));
+  fs.writeFileSync(path.join(branchApiDir, 'package.json'), JSON.stringify({
+    name: 'branch-api', type: 'module',
+    exports: { '.': { types: './index.d.ts', import: './index.mjs', default: './index.mjs' } },
+  }));
+  fs.writeFileSync(path.join(branchApiDir, 'index.d.ts'), 'export function choose(label: string): string;\\n');
   fs.writeFileSync(branchApiFile, "export function choose(label) { throw new Error('real branch dependency executed: ' + label); }\n");
   fs.writeFileSync(branchTargetFile, [
     "import { choose } from 'branch-api';",
@@ -264,8 +268,10 @@ module.exports = { process(source, filename) {
   const primaryScenario = reachabilityScenarios.find(item => item.target.outcome === true);
   const secondaryScenario = reachabilityScenarios.find(item => item.target.outcome === false);
   assert.ok(primaryScenario && secondaryScenario, 'both outcomes of the routing branch should be generated');
-  assert.deepEqual(primaryScenario.externalCalls.map(item => item.callArguments[0]?.value), ['primary']);
-  assert.deepEqual(secondaryScenario.externalCalls.map(item => item.callArguments[0]?.value), ['secondary']);
+  assert.deepEqual((primaryScenario.externalCalls ?? []).map(item => item.callArguments[0]?.value), ['primary'],
+    'the primary branch must expose only its reachable dependency call; templates: ' + JSON.stringify(branchReport.functions[0].mockTemplates ?? []));
+  assert.deepEqual((secondaryScenario.externalCalls ?? []).map(item => item.callArguments[0]?.value), ['secondary'],
+    'the fall-through path must expose only its reachable dependency call');
 
   // A real ESM dependency throws if called. Passing coverage feedback proves
   // Jest registered the ESM module mock before importing the target module and
@@ -275,7 +281,11 @@ module.exports = { process(source, filename) {
   const esmTargetFile = path.join(tempDir, 'esm-module-target.mjs');
   const esmOutput = path.join(tempDir, 'real-jest-esm-module-mock.json');
   fs.mkdirSync(remoteApiDir, { recursive: true });
-  fs.writeFileSync(path.join(remoteApiDir, 'package.json'), JSON.stringify({ name: 'remote-api', type: 'module', exports: './index.mjs' }));
+  fs.writeFileSync(path.join(remoteApiDir, 'package.json'), JSON.stringify({
+    name: 'remote-api', type: 'module',
+    exports: { '.': { types: './index.d.ts', import: './index.mjs', default: './index.mjs' } },
+  }));
+  fs.writeFileSync(path.join(remoteApiDir, 'index.d.ts'), 'export function isRemoteActive(id: string): Promise<boolean>;\\n');
   fs.writeFileSync(remoteApiFile, [
     '/** @param {string} id @returns {Promise<boolean>} */',
     "export async function isRemoteActive(id) {",
