@@ -163,10 +163,6 @@ export function createMockTargetResolver(ts) {
       'fetch', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval',
       'queueMicrotask', 'structuredClone', 'atob', 'btoa', 'alert', 'confirm', 'prompt',
     ]);
-    const globalFunctions = new Set([
-      'fetch', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval',
-      'queueMicrotask', 'structuredClone', 'atob', 'btoa', 'alert', 'confirm', 'prompt',
-    ]);
     const memberAllowlist = {
       globalThis: globalFunctions,
       window: new Set(['fetch', 'requestAnimationFrame', 'cancelAnimationFrame', 'matchMedia', 'open', 'postMessage']),
